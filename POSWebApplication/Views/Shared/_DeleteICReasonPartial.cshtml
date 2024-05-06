@@ -1,0 +1,38 @@
+﻿@model ICReason
+<form asp-action="Delete" asp-controller="ICReason">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title" id="popupDialogLabel">Delete Inventory Issue Reason</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead class="text-md-center">
+                        <tr style="font-size: 14px">
+                            <th style="text-align: left;width: 40px">
+                                @Html.DisplayNameFor(model => model.ICReasonId)
+                            </th>
+                            <th style="text-align: left;width: 200px">
+                                @Html.DisplayNameFor(model => model.ICReasonCde)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-md-center">
+                        <tr style="font-size: 14px">
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.ICReasonId)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.ICReasonCde)
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" onclick="cleanDefaultContainer()">Close</button>
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </div>
+    </div>
+</form>

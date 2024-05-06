@@ -1,0 +1,45 @@
+﻿@model StockCategoryModelList
+<form asp-action="Delete" asp-controller="StockCategory">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title" id="popupDialogLabel">Delete Stock Category</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead class="text-md-center">
+                        <tr style="font-size: 14px">
+                            <th style="text-align: left;width: 40px">
+                                @Html.DisplayNameFor(model => model.StockCategory.CatgId)
+                            </th>
+                            <th style="text-align: left;width: 200px">
+                                @Html.DisplayNameFor(model => model.StockCategory.CategoryId)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.StockCategory.CategoryDesc)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-md-center">
+                        <tr style="font-size: 14px">
+                            <input type="hidden" asp-for="@Model.StockCategory.CatgId" />
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.StockCategory.CatgId)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.StockCategory.CategoryId)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.StockCategory.CategoryDesc)
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" onclick="cleanDefaultContainer()">Close</button>
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </div>
+    </div>
+</form>

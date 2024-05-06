@@ -1,0 +1,15 @@
+﻿@model IEnumerable<StockPkgH>
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-lg-2 col-md-2 col-sm-3 col-4 mb-2" style="font-size: 12px">
+            <div onclick="addStockPackage('@item.PkgHId')" style="cursor: pointer">
+                <img src="data:image/jpeg;base64,@item.Base64Image" class="bordered-image" alt="Image">
+                <div>
+                    <h5 class="price-tag">@string.Format("{0:N0}", item.SellingPrice)</h5>
+                    <span class="text-truncate" style="float: left">@Html.DisplayFor(modelItem => item.PkgNme)</span>
+                </div>
+            </div>
+        </div>
+    }
+</div>

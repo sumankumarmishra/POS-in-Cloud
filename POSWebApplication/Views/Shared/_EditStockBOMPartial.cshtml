@@ -1,0 +1,44 @@
+﻿@model StockBOMModelList
+<input asp-for="@Model.StockBOM.StkBOMId" type="hidden"/>
+<input asp-for="@Model.StockBOM.BOMId" type="hidden" />
+<td>
+    <input asp-for="@Model.StockBOM.OrdId" class="form-control form-control-sm"/>
+</td>
+<td>
+    @*<select asp-for="@Model.StockBOM.ItemId" class="form-control form-control-sm" onchange="callSelectItemController('@Model.StockBOM.BOMId',this.value)" disabled>
+        @foreach (var unit in Model.UnionStockBOMs)
+        {
+            <option>@unit.ItemId</option>
+        }
+    </select>*@
+    <input asp-for="@Model.StockBOM.ItemId" class="form-control form-control-sm" readonly />
+</td>
+@if (Model.BaseUnitFlg == true)
+{
+    <td>
+        <input asp-for="@Model.StockBOM.BaseUnit" class="form-control form-control-sm" readonly />
+    </td>
+}
+else
+{
+    <td>
+        <select id="IdBaseUnit" asp-for="@Model.StockBOM.BaseUnit" class="form-control form-control-sm">
+            @foreach (var uom in Model.ThisStockUOMs)
+            {
+                <option value="@uom.UOMCde">@uom.UOMCde</option>
+            }
+        </select>
+    </td>
+}
+<td>
+    <input asp-for="@Model.StockBOM.UOMRate" class="form-control form-control-sm" readonly />
+</td>
+<td>
+    <input id="decimalInput01" asp-for="@Model.StockBOM.Qty" type="number" step="0.01" min="0" class="form-control form-control-sm" onblur="formatDecimal('decimalInput01')" />
+</td>
+<td>
+    <a style="cursor: pointer" onclick="callDeleteBOMController('@Model.StockBOM.BOMId','@Model.StockBOM.StkBOMId')" class="form-control form-control-sm">
+        <i class="fas fa-trash btn-trash"></i>
+    </a>
+</td>
+    

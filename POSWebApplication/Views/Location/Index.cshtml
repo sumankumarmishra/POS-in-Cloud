@@ -1,0 +1,144 @@
+﻿@model IEnumerable<Location>
+
+@{
+    ViewData["Title"] = "Location List";
+}
+<style>
+    th, td {
+        overflow: hidden;
+        white-space: nowrap;
+    }
+</style>
+<div class="container-fluid">
+    <div class="col-12">
+        <div id="messageBox1" class="alert alert-info @((ViewBag.InfoMessage != null) ? "" : "d-none")" role="alert">
+            @ViewBag.InfoMessage
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div id="messageBox2" class="alert alert-danger @((ViewBag.WarningMessage != null) ? "" : "d-none")" role="alert">
+            @ViewBag.WarningMessage
+        </div>
+    </div>
+    @if (new[] { "accessLvl2" }.Contains(ViewData["User Role"]?.ToString()))
+    {
+        <div id="defaultContainer"></div>
+        <button class="btn btn-info m-1" onclick="callAddLocationController()">
+            New
+        </button>
+    }
+    else
+    {
+        <button class="btn btn-info m-1" disabled>
+            New
+        </button>
+    }
+    <div class="card">
+        <div class="card-header">
+            <h5>Location Setup</h5>
+        </div>
+        <div class="card-body table-responsive">
+            <table id="reportedDataTable" class="table table-bordered table-hover">
+                <thead class="text-md-center">
+                    <tr style="font-size: 14px">
+                        <th style="text-align: left">
+                            @Html.DisplayNameFor(model => model.LocCde)
+                        </th>
+                        <th style="text-align: left">
+                            @Html.DisplayNameFor(model => model.LocDesc)
+                        </th>
+                        <th style="width: 70px;text-align: left">
+                            @Html.DisplayNameFor(model => model.IsOutlet)
+                        </th>
+                        <th style="width: 40px">
+                            Edit
+                        </th>
+                        <th style="width: 40px">
+                            Delete
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="text-md-center">
+                    @foreach (var item in Model)
+                    {
+                        <tr style="font-size: 14px">
+                            <td style="width: 120px;text-align: left">
+                                @Html.DisplayFor(modelItem => item.LocCde)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(modelItem => item.LocDesc)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsOutlet)
+                            </td>
+                            @if (new[] { "accessLvl2" }.Contains(ViewData["User Role"]?.ToString()))
+                            {
+                                <td>
+                                    <a style="cursor: pointer" onclick="callEditLocationController('@item.LocCde')">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <i class="fas fa-edit"></i>
+                                </td>
+                            }
+                            @if (new[] { "accessLvl2" }.Contains(ViewData["User Role"]?.ToString()))
+                            {
+                                <td>
+                                    <a style="cursor: pointer" onclick="callDeleteLocationController('@item.LocCde')">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <i class="fas fa-trash"></i>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- CustomJs for Common-->
+<script src="../customjs/Common/Common.js"></script>
+<!-- CustomJs for Location -->
+<script src="../customjs/Location/Location.js"></script>
+<!-- jQuery -->
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- DataTables  & Plugins -->
+<script src="../../plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="../../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="../../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="../../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<!-- Page specific script -->
+<script>
+    $(function () {
+        $('#reportedDataTable').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": true,
+            "ordering": true,
+            "info": false,
+            "autoWidth": false,
+            "responsive": true,
+            "lengthMenu": [20, 50, 100],
+        });
+    });
+
+    $(function () {
+        setTimeout(() => {
+            $("#messageBox1, #messageBox2").fadeOut();
+        }, 3000);
+    });
+
+</script>

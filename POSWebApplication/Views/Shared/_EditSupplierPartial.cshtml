@@ -1,0 +1,131 @@
+﻿@model Supplier
+<form asp-action="Edit" asp-controller="Supplier">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title" id="popupDialogLabel">Edit Supplier</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead class="text-md-center">
+                        <tr style="font-size: 14px">
+                            <th style="min-width: 60px;text-align: left">
+                                @Html.DisplayNameFor(model => model.ApId)
+                            </th>
+                            <th style="min-width: 120px;text-align: left">
+                                <span style="color: red">*&nbsp;</span>@Html.DisplayNameFor(model => model.ApAcCde)
+                            </th>
+                            <th style="min-width: 120px;text-align: left">
+                                <span style="color: red">*&nbsp;</span>@Html.DisplayNameFor(model => model.ApNme)
+                            </th>
+                            <th style="min-width: 120px;text-align: left">
+                                @Html.DisplayNameFor(model => model.Addr)
+                            </th>
+                            <th style="min-width: 100px;text-align: left">
+                                @Html.DisplayNameFor(model => model.Phone)
+                            </th>
+                            <th style="min-width: 100px;text-align: left">
+                                @Html.DisplayNameFor(model => model.Email)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.PTerm)
+                            </th>
+                            <th style="text-align: left">
+                               @Html.DisplayNameFor(model => model.PTermDay)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.CreditFlg)
+                            </th>
+                            <th style="min-width: 100px;text-align: left">
+                                @Html.DisplayNameFor(model => model.CreditLimit)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.DiscPerc)
+                            </th>
+                            <th style="text-align: left">
+                                <span style="color: red">*&nbsp;</span>@Html.DisplayNameFor(model => model.TradeTenderCde)
+                            </th>
+                            <th style="width: 60px;text-align: left">
+                                @Html.DisplayNameFor(model => model.BadStatus)
+                            </th>
+                            <th style="width: 60px;text-align: left">
+                                @Html.DisplayNameFor(model => model.ActiveFlg)
+                            </th>
+                            <th style="width: 60px;text-align: left">
+                                @Html.DisplayNameFor(model => model.UserId)
+                            </th>
+                            <th style="width: 100px;text-align: left">
+                                @Html.DisplayNameFor(model => model.RevDteTime)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-md-center">
+                        <tr style="font-size: 12px">
+                            <td>
+                                <input asp-for="@Model.ApId" class="form-control form-control-sm" readonly/>
+                            </td>
+                            <td>
+                                <input type="text" asp-for="@Model.ApAcCde" class="form-control form-control-sm" />
+                            </td>
+                            <td>
+                                <input type="text" asp-for="@Model.ApNme" class="form-control form-control-sm" />
+                            </td>
+                            <td>
+                                <input type="text" asp-for="@Model.Addr" class="form-control form-control-sm" />
+                            </td>
+                            <td>
+                                <input type="text" asp-for="@Model.Phone" class="form-control form-control-sm" />
+                            </td>
+                            <td>
+                                <input type="email" asp-for="@Model.Email" class="form-control form-control-sm" />
+                            </td>
+                            <td>
+                                <input type="text" asp-for="@Model.PTerm" class="form-control form-control-sm" />
+                            </td>
+                            <td>
+                                <input type="number" asp-for="@Model.PTermDay" class="form-control form-control-sm" />
+                            </td>
+                            <td>
+                                <div class="form-check">
+                                    <input type="checkbox" asp-for="@Model.CreditFlg" class="form-check-input" style="width: 20px; height: 20px;">
+                                </div>
+                            </td>
+                            <td>
+                                <input type="number" asp-for="@Model.CreditLimit" class="form-control form-control-sm" />
+                            </td>
+                            <td>
+                                <input type="number" asp-for="@Model.DiscPerc" class="form-control form-control-sm" />
+                            </td>
+                            <td>
+                                <select asp-for="@Model.TradeTenderCde" class="form-control form-control-sm">
+                                    <option value="@ICReadOnlyValue.MMK">@ICReadOnlyValue.MMK</option>
+                                    <option value="@ICReadOnlyValue.USD">@ICReadOnlyValue.USD</option>
+                                </select>
+                            </td>
+                            <td>
+                                <div class="form-check">
+                                    <input type="checkbox" asp-for="@Model.BadStatus" class="form-check-input" style="width: 20px; height: 20px;">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-check">
+                                    <input type="checkbox" asp-for="@Model.ActiveFlg" class="form-check-input" style="width: 20px; height: 20px;">
+                                </div>
+                            </td>
+                            <td>
+                                <input asp-for="@Model.UserId" class="form-control form-control-sm" readonly/>
+                            </td>
+                            <td>
+                                <input asp-for="@Model.RevDteTime" class="form-control form-control-sm" readonly />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" onclick="cleanDefaultContainer()">Close</button>
+            <button type="submit" class="btn btn-info">Update</button>
+        </div>
+    </div>
+</form>

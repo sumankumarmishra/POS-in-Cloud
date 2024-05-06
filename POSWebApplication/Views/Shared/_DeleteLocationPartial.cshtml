@@ -1,0 +1,45 @@
+﻿@model LocationModelList
+<form asp-action="Delete" asp-controller="Location">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title" id="popupDialogLabel">Delete Location</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead class="text-md-center">
+                        <tr style="font-size: 14px">
+                            <th style="text-align: left;width: 160px">
+                                @Html.DisplayNameFor(model => model.Location.LocCde)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.Location.LocDesc)
+                            </th>
+                            <th style="width: 80px">
+                                @Html.DisplayNameFor(model => model.Location.IsOutlet)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-md-center">
+                        <tr style="font-size: 14px">
+                            <input type="hidden" asp-for="@Model.Location.LocCde" />
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.Location.LocCde)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.Location.LocDesc)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => model.Location.IsOutlet)
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" onclick="cleanDefaultContainer()">Close</button>
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </div>
+    </div>
+</form>

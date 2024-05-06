@@ -1,0 +1,44 @@
+﻿@model StockCategoryModelList
+<form asp-action="Edit" asp-controller="StockCategory">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title" id="popupDialogLabel">Update Stock Category</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead class="text-md-center">
+                        <tr style="font-size: 14px">
+                            <th style="text-align: left;width: 80px">
+                                @Html.DisplayNameFor(model => model.StockCategory.CatgId)
+                            </th>
+                            <th style="text-align: left;width: 200px">
+                                <span style="color: red">*&nbsp;</span>@Html.DisplayNameFor(model => model.StockCategory.CategoryId)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.StockCategory.CategoryDesc)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-md-center">
+                        <tr style="font-size: 12px">
+                            <td>
+                                <input asp-for="@Model.StockCategory.CatgId" class="form-control form-control-sm" readonly />
+                            </td>
+                            <td>
+                                <input asp-for="@Model.StockCategory.CategoryId" class="form-control form-control-sm" />
+                            </td>
+                            <td>
+                                <input asp-for="@Model.StockCategory.CategoryDesc" class="form-control form-control-sm" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" onclick="cleanDefaultContainer()">Close</button>
+            <button type="submit" class="btn btn-info">Save changes</button>
+        </div>
+    </div>
+</form>

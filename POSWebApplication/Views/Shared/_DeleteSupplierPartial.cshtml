@@ -1,0 +1,123 @@
+﻿@model Supplier
+<form asp-action="Delete" asp-controller="Supplier">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title" id="popupDialogLabel">Delete Supplier</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead class="text-md-center">
+                        <tr style="font-size: 14px">
+                            <th style="min-width: 60px;text-align: left">
+                                @Html.DisplayNameFor(model => model.ApId)
+                            </th>
+                            <th style="min-width: 120px;text-align: left">
+                                @Html.DisplayNameFor(model => model.ApAcCde)
+                            </th>
+                            <th style="min-width: 120px;text-align: left">
+                                @Html.DisplayNameFor(model => model.ApNme)
+                            </th>
+                            <th style="min-width: 120px;text-align: left">
+                                @Html.DisplayNameFor(model => model.Addr)
+                            </th>
+                            <th style="min-width: 100px;text-align: left">
+                                @Html.DisplayNameFor(model => model.Phone)
+                            </th>
+                            <th style="min-width: 100px;text-align: left">
+                                @Html.DisplayNameFor(model => model.Email)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.PTerm)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.PTermDay)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.CreditFlg)
+                            </th>
+                            <th style="min-width: 100px;text-align: left">
+                                @Html.DisplayNameFor(model => model.CreditLimit)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.DiscPerc)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.TradeTenderCde)
+                            </th>
+                            <th style="width: 60px;text-align: left">
+                                @Html.DisplayNameFor(model => model.BadStatus)
+                            </th>
+                            <th style="width: 60px;text-align: left">
+                                @Html.DisplayNameFor(model => model.ActiveFlg)
+                            </th>
+                            <th style="width: 60px;text-align: left">
+                                @Html.DisplayNameFor(model => model.UserId)
+                            </th>
+                            <th style="width: 100px;text-align: left">
+                                @Html.DisplayNameFor(model => model.RevDteTime)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-md-center">
+                        <tr style="font-size: 14px">
+                            <input type="hidden" asp-for="@Model.ApId" />
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.ApId)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.ApAcCde)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.ApNme)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.Addr)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.Phone)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.Email)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.PTerm)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.PTermDay)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => model.CreditFlg)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.CreditLimit)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.DiscPerc)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.TradeTenderCde)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => model.BadStatus)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => model.ActiveFlg)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.UserId)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.RevDteTime.Date)
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" onclick="cleanDefaultContainer()">Close</button>
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </div>
+    </div>
+</form>

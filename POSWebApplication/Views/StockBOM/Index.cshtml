@@ -1,0 +1,162 @@
+﻿@model StockBOMModelList
+
+@{
+    ViewData["Title"] = "BOM List";
+}
+<style>
+    th, td {
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    .loading-text {
+        display: none;
+        color: black;
+        font-size: 20px;
+        text-align: center;
+        margin-top: 20px;
+    }
+</style>
+
+@* <!--Stock BOM Items Modal -->
+<div class="modal" id="stockBOMItemsModal" tabindex="-1" role="dialog" aria-labelledby="billReprintModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Stock BOM For <span id="spanId"></span></h5>
+                <button type="button" class="close" onclick="closeStockBOMItemsModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body table-responsive" style="max-height: 550px">
+                <button class="btn btn-info m-1" onclick="addStockBOMItems()">
+                    New
+                </button>
+                <div id="tableLoadingScreen" class="loading-text">Loading...</div>
+                <table id="stockBOMItemsTable" class="table table-bordered table-hover">
+                    <thead class="text-md-center">
+                        <tr style="font-size: 12px">
+                            <th style="text-align: left">
+                                Order
+                            </th>
+                            <th style="width: 200px;text-align: left">
+                                ItemID
+                            </th>
+                            <th style="width: 120px;text-align: left">
+                                BaseUnit
+                            </th>
+                            <th style="width: 70px;text-align: left">
+                                Qty
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="stockBOMItemsListId" class="text-md-left" style="font-size: 14px">
+                        Stock BOM Items list will be come from StockBOM.js
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button id="modelCloseBtnId" class="btn" onclick="saveStockBOMItemes()" style="background-color: #31849B;color: white">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div> *@
+
+
+<div class="container-fluid">
+    <div id="defaultContainer"></div>
+    <div id="loadingTextId" class="loading-text">Loading...</div>
+    <div class="card">
+        <div class="card-header">
+            <h5>Bill of Materials(BOM)</h5>
+        </div>
+        <div class="card-body table-responsive">
+            <table id="reportedDataTable" class="table table-bordered table-hover">
+                <thead class="text-md-center">
+                    <tr style="font-size: 14px">
+                        <th style="text-align: left">
+                            @Html.DisplayNameFor(model => model.Stock.ItemId)
+                        </th>
+                        <th style="text-align: left">
+                            @Html.DisplayNameFor(model => model.Stock.BaseUnit)
+                        </th>
+                        <th style="text-align: left">
+                            @Html.DisplayNameFor(model => model.Stock.UnitCost)
+                        </th>
+                        <th style="text-align: left">
+                            @Html.DisplayNameFor(model => model.Stock.SellingPrice)
+                        </th>
+                        <th>-</th>
+                    </tr>
+                </thead>
+                <tbody class="text-md-center">
+                    @foreach (var item in Model.Stocks)
+                    {
+                        <tr style="font-size: 14px">
+                            <td style="text-align: left">
+                                @Html.DisplayFor(modelItem => item.ItemId)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(modelItem => item.BaseUnit)
+                            </td>
+                            <td style="text-align: right">
+                                @Html.DisplayFor(modelItem => item.UnitCost)
+                            </td>
+                            <td style="text-align: right">
+                                @Html.DisplayFor(modelItem => item.SellingPrice)
+                            </td>
+                            @if (new[] { "accessLvl2" }.Contains(ViewData["User Role"]?.ToString()))
+                            {
+                                <td>
+                                    <a style="cursor: pointer" onclick="callStockBOMController('@item.ItemId')">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <i class="fas fa-edit"></i>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- jQuery -->
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- DataTables  & Plugins -->
+<script src="../../plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="../../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="../../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="../../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<!-- CustomJs for Common-->
+<script src="../customjs/Common/Common.js"></script>
+<!-- CustomJs for StockBOM -->
+<script src="../customjs/StockBOM/StockBOM.js"></script>
+<!-- Page specific script -->
+<script>
+    $(function () {
+        $('#reportedDataTable').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": true,
+            "ordering": true,
+            "info": false,
+            "autoWidth": false,
+            "responsive": true,
+            "lengthMenu": [20, 50, 100],
+        });
+    });
+
+    $(function () {
+        setTimeout(() => {
+            $("#messageBox1, #messageBox2").fadeOut();
+        }, 3000);
+    });
+</script>

@@ -1,0 +1,39 @@
+﻿@model UserMenuGroup
+<form asp-action="Delete" asp-controller="MenuGroup">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title" id="popupDialogLabel">Delete Menu Group</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead class="text-md-center">
+                        <tr style="font-size: 14px">
+                            <th style="text-align: left;width:200px">
+                                <span style="color: red">*&nbsp;</span>@Html.DisplayNameFor(model => model.MnuGrpId)
+                            </th>
+                            <th style="text-align: left;width:200px">
+                                <span style="color: red">*&nbsp;</span>@Html.DisplayNameFor(model => model.MnuGrpNme)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-md-center">
+                        <tr style="font-size: 12px">
+                            <input asp-for="MnuGrpId" type="hidden"/>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(modelItem => modelItem.MnuGrpId )
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(modelItem => modelItem.MnuGrpNme)
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" onclick="cleanDefaultContainer()">Close</button>
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </div>
+    </div>
+</form>

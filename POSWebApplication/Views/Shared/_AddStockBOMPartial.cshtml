@@ -1,0 +1,107 @@
+﻿@model StockBOMModelList
+<form id="addForm" asp-action="Create" asp-controller="StockBOM">   
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title" id="popupDialogLabel">BOM for @Model.StockBOM.BOMId</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead class="text-md-center">
+                        <tr style="font-size: 14px">
+                            <th style="text-align: left;width: 80px">
+                                @Html.DisplayNameFor(model => model.StockBOM.OrdId)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.StockBOM.ItemId)
+                            </th>
+                            <th style="text-align: left;width: 180px">
+                                @Html.DisplayNameFor(model => model.StockBOM.BaseUnit)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.StockBOM.UOMRate)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.StockBOM.Qty)
+                            </th>
+                            <th style="width: 30px">
+                                -
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-md-center">
+                        @foreach (var bom in Model.ThisStockBOMs)
+                        {
+                            <tr id="@bom.OrdId" style="font-size: 14px">
+                                <td style="text-align:left">
+                                    @Html.DisplayFor(model=> bom.OrdId)
+                                </td>
+                                <td style="text-align:left">
+                                    @Html.DisplayFor(model=> bom.ItemId)
+                                </td>
+                                <td style="text-align:left">
+                                    @Html.DisplayFor(model=> bom.BaseUnit)
+                                </td>
+                                <td style="text-align:left">
+                                    @Html.DisplayFor(model=> bom.UOMRate)
+                                </td>
+                                <td style="text-align:left">
+                                    @Html.DisplayFor(model=> bom.Qty)
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                        }
+                        <tr style="font-size: 14px">
+                            <input asp-for="@Model.StockBOM.BOMId" type="hidden"/>
+                            <td>
+                                <input id="IdOrdId" asp-for="@Model.StockBOM.OrdId" class="form-control form-control-sm" />
+                            </td>
+                            <td>
+                                <select id="IdItemId" asp-for="@Model.StockBOM.ItemId" class="form-control form-control-sm" onchange="callSelectItemController('@Model.StockBOM.BOMId',this.value)">
+                                    @foreach (var item in Model.UnionStockBOMs)
+                                    {
+                                        <option value="@item.ItemId">@item.ItemId</option>
+                                    }
+                                </select>
+                            </td>
+                            @if(Model.BaseUnitFlg == true)
+                            {
+                                <td>
+                                    <input asp-for="@Model.StockBOM.BaseUnit" class="form-control form-control-sm" readonly/>
+                                </td>
+                            }
+                            else
+                            {
+                            <td>
+                                <select id="IdBaseUnit" asp-for="@Model.StockBOM.BaseUnit" class="form-control form-control-sm">
+                                    @foreach (var uom in Model.ThisStockUOMs)
+                                    {
+                                        <option value="@uom.UOMCde">@uom.UOMCde</option>
+                                    }
+                                </select>
+                            </td>
+                            }
+                            
+                            <td>
+                                <input id="IdUOMRate" asp-for="@Model.StockBOM.UOMRate" class="form-control form-control-sm" readonly/>
+                            </td>
+                            <td>
+                                <input id="IdQty" asp-for="@Model.StockBOM.Qty" type="number" step="0.01" min="0" class="form-control form-control-sm" onblur="formatDecimal('IdQty')" />
+                            </td>
+                            <td>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+            
+            <button type="button" class="btn btn-default" onclick="callStockBOMController('@Model.StockBOM.BOMId')">Cancel</button>
+            <button type="button" class="btn btn-info" onclick="addStockBOM()">Add</button>
+        </div>
+    </div>
+</form>
+   
+

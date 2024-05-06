@@ -1,0 +1,102 @@
+﻿@model IEnumerable<StockUOM>
+
+@{
+    ViewData["Title"] = "Stock UOM List";
+}
+<style>
+    th, td {
+        overflow: hidden;
+        white-space: nowrap;
+    }
+</style>
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header">
+            <h5>Stock UOMs</h5>
+        </div>
+        <div class="card-body table-responsive">
+            <table id="reportedDataTable" class="table table-bordered table-hover">
+                <thead class="text-md-center">
+                    <tr style="font-size: 14px">
+                        <th style="text-align: left">
+                            @Html.DisplayNameFor(model => model.ItemId)
+                        </th>
+                        <th style="text-align: left">
+                            @Html.DisplayNameFor(model => model.UOMCde)
+                        </th>
+                        <th style="text-align: left">
+                            @Html.DisplayNameFor(model => model.OrdNo)
+                        </th>
+                        <th style="text-align: left">
+                            @Html.DisplayNameFor(model => model.UOMRate)
+                        </th>
+                        <th style="text-align: left">
+                            @Html.DisplayNameFor(model => model.UnitCost)
+                        </th>
+                        <th style="text-align: left">
+                            @Html.DisplayNameFor(model => model.SellingPrice)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="text-md-center">
+                    @foreach (var item in Model)
+                    {
+                        <tr style="font-size: 14px">
+                            <td style="text-align: left">
+                                @Html.DisplayFor(modelItem => item.ItemId)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(modelItem => item.UOMCde)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(modelItem => item.OrdNo)
+                            </td>
+
+                            <td style="text-align: left">
+                                @Html.DisplayFor(modelItem => item.UOMRate)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(modelItem => item.UnitCost)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(modelItem => item.SellingPrice)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- jQuery -->
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- DataTables  & Plugins -->
+<script src="../../plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="../../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="../../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="../../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<!-- Page specific script -->
+<script>
+    $(function () {
+        $('#reportedDataTable').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": false,
+            "ordering": true,
+            "info": false,
+            "autoWidth": false,
+            "responsive": true,
+            "lengthMenu": [20, 50, 100],
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        setTimeout(function () {
+            $("#messageBox1").fadeOut();
+            $("#messageBox2").fadeOut();
+        }, 5000);
+    });
+</script>

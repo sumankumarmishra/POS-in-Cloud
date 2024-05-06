@@ -1,0 +1,116 @@
+﻿@model AutoNumberModelList
+<form asp-action="Edit" asp-controller="AutoNumber">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title" id="popupDialogLabel">Update Auto Number</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead class="text-md-center">
+                        <tr style="font-size: 14px">
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.AutoNumber.AutoNoId)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.AutoNumber.PosId)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.AutoNumber.BizDte)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.AutoNumber.NoOfShift)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.AutoNumber.CurShift)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.AutoNumber.PosDefLoc)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.AutoNumber.PosDefSaleTyp)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.AutoNumber.BillPrefix)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.AutoNumber.RunningNo)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.AutoNumber.LastUsedNo)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.AutoNumber.ZeroLeading)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.AutoNumber.AllowAccessRoom)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-md-center">
+                        <tr style="font-size: 12px">
+                            <input asp-for="AutoNumber.BillTypCde" type="hidden" class="form-control" readonly>
+                            <input asp-for="AutoNumber.LastGenerateDte" type="hidden" class="form-control" readonly>
+                            <input asp-for="AutoNumber.BillNature" type="hidden" class="form-control" readonly>
+                            <input asp-for="AutoNumber.ResetEvery" type="hidden" class="form-control" readonly>
+                            <input asp-for="AutoNumber.CmpyId" type="hidden" class="form-control" readonly>
+                            <td>
+                                <input asp-for="@Model.AutoNumber.AutoNoId" class="form-control form-control-sm" readonly />
+                            </td>
+                            <td>
+                                <input asp-for="@Model.AutoNumber.PosId" class="form-control form-control-sm" readonly/>
+                            </td>
+                            <td>
+                                <input asp-for="@Model.AutoNumber.BizDte" type="date" class="form-control form-control-sm" />
+                            </td>
+                            <td>
+                                <input asp-for="@Model.AutoNumber.NoOfShift" type="number" min="0" step="1" class="form-control form-control-sm" />
+                            </td>
+                            <td>
+                                <input asp-for="@Model.AutoNumber.CurShift" type="number" min="0" step="1" class="form-control form-control-sm" />
+                            </td>
+                            <td>
+                                <select asp-for="@Model.AutoNumber.PosDefLoc" class="form-control form-control-sm">
+                                    @foreach (var loc in Model.Locations)
+                                    {
+                                        <option value="@loc.LocCde">@loc.LocCde</option>
+                                    }
+                                </select>
+                            </td>
+                            <td>
+                                <select asp-for="@Model.AutoNumber.PosDefSaleTyp" class=" form-control form-control-sm">
+                                    <option value="CASH">CASH Sale</option>
+                                    <option value="BANK">BANK Sale</option>
+                                    <option value="INV">INVOICE Sale</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input asp-for="@Model.AutoNumber.BillPrefix" class="form-control form-control-sm" />
+                            </td>
+                            <td>
+                                <input asp-for="@Model.AutoNumber.RunningNo" type="number" min="0" class="form-control form-control-sm" />
+                            </td>
+                            <td>
+                                <input asp-for="@Model.AutoNumber.LastUsedNo" type="number" min="0" class="form-control form-control-sm" />
+                            </td>
+                            <td>
+                                <div class="form-check">
+                                    <input type="checkbox" asp-for="@Model.AutoNumber.ZeroLeading" class="form-check-input" style="width: 20px; height: 20px;">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-check">
+                                    <input type="checkbox" asp-for="@Model.AutoNumber.AllowAccessRoom" class="form-check-input" style="width: 20px; height: 20px;">
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" onclick="cleanDefaultContainer()">Close</button>
+            <button type="submit" class="btn btn-info">Save changes</button>
+        </div>
+    </div>
+</form>

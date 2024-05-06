@@ -1,0 +1,117 @@
+﻿@model Home
+<table id="saleVoucherTable" class="table table-bordered table-hover">
+    <thead class="text-md-center">
+        <tr style="font-size: 14px;text-align: left">
+            <th>
+                BillNo
+            </th>
+            @* <th>
+                Action
+            </th> *@
+            <th>
+                BizDate
+            </th>
+            <th>
+                Location
+            </th>
+            <th>
+                ShiftNo
+            </th>
+            <th>
+                SaleType
+            </th>
+            <th>
+                CustName
+            </th>
+            <th>
+                Amount
+            </th>
+            <th>
+                Discount
+            </th>
+            <th>
+                Status
+            </th>
+            <th>
+                Remark
+            </th>
+            <th>
+                User
+            </th>
+        </tr>
+    </thead>
+    <tbody id="mainBodyId" class="text-md-left">
+        @foreach (var billH in Model.BillHList)
+        {
+            <tr style="font-size: 14px;cursor: pointer" onclick="showBillDs(@billH.BillhId)">
+                <td style="text-align: left">
+                    @Html.DisplayFor(modelItem => billH.BillNo)
+                </td>
+                @* <td style="text-align: left">
+                    @Html.DisplayFor(modelItem => billH.Action)
+                </td> *@
+                <td style="text-align: left">
+                    @Convert.ToDateTime(billH.BizDte).ToString("dd-MM-yyyy")
+                </td>
+                <td style="text-align: left">
+                    @Html.DisplayFor(modelItem => billH.LocCde)
+                </td>
+                <td style="text-align: left">
+                    @Html.DisplayFor(modelItem => billH.ShiftNo)
+                </td>
+                <td style="text-align: left">
+                    @Html.DisplayFor(modelItem => billH.SaleType)
+                </td>
+                <td style="text-align: left">
+                    @Html.DisplayFor(modelItem => billH.GuestNme)
+                </td>
+                <td style="text-align: right">
+                    @Html.DisplayFor(modelItem => billH.TotalAmount)
+                </td>
+                <td style="text-align: right">
+                    @Html.DisplayFor(modelItem => billH.BillDiscount)
+                </td>
+                <td style="text-align: left">
+                    @Html.DisplayFor(modelItem => billH.Status)
+                </td>
+                <td style="text-align: left;max-width: 120px" class="text-truncate">
+                    @Html.DisplayFor(modelItem => billH.Remark)
+                </td>
+                <td style="text-align: left">
+                    @Html.DisplayFor(modelItem => billH.User)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<!-- DataTables  & Plugins -->
+<script src="../../plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="../../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="../../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="../../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="../../plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+<script src="../../plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+<!-- CustomJs for Home -->
+<script src="../customjs/Home/Home.js"></script>
+<!-- Page specific script -->
+<script>
+    $(function () {
+        $('#saleVoucherTable').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": true,
+            "ordering": true,
+            "info": false,
+            "autoWidth": false,
+            "responsive": true,
+            "lengthMenu": [20, 50, 100],
+        });
+    });
+
+    $(function () {
+        setTimeout(() => {
+            $("#messageBox1, #messageBox2").fadeOut();
+        }, 3000);
+    });
+</script>
+

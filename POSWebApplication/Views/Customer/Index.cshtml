@@ -1,0 +1,181 @@
+﻿@model IEnumerable<Customer>
+
+@{
+    ViewData["Title"] = "Customer List";
+}
+<style>
+    th, td {
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    .loading-text {
+        display: none;
+        color: black;
+        font-size: 20px;
+        text-align: center;
+        margin-top: 20px;
+    }
+</style>
+<div class="container-fluid">
+    
+    <div class="col-12">
+        <div id="messageBox1" class="alert alert-info @((ViewBag.InfoMessage != null) ? "" : "d-none")" role="alert">
+            @ViewBag.InfoMessage
+        </div>
+    </div>
+    
+    <div class="col-12">
+        <div id="messageBox2" class="alert alert-danger @((ViewBag.WarningMessage != null) ? "" : "d-none")" role="alert">
+            @ViewBag.WarningMessage
+        </div>
+    </div>
+
+    @if (new[] { "accessLvl2" }.Contains(ViewData["User Role"]?.ToString()))
+    {
+        
+        <div id="defaultContainer">
+        </div>
+        <div id="loadingTextId" class="loading-text">Loading...</div>
+        <button class="btn btn-info m-1" onclick="callAddCustomerController()">
+            New
+        </button>
+    }
+    else
+    {
+        <button class="btn btn-info m-1" disabled>
+            New
+        </button>
+    }
+
+    <div class="card">
+        <div class="card-header">
+            <h5>Customers</h5>
+        </div>
+        <div class="card-body table-responsive">
+            <table id="reportedDataTable" class="table table-bordered table-hover">
+                <thead class="text-md-center">
+                    <tr style="font-size: 14px">
+                        <th style="width: 120px;text-align: left">
+                            @Html.DisplayNameFor(model => model.ArAcCde)
+                        </th>
+                        <th style="text-align: left">
+                            @Html.DisplayNameFor(model => model.ArNme)
+                        </th>
+                        <th style="text-align: left">
+                            @Html.DisplayNameFor(model => model.Phone)
+                        </th>
+                        <th style="width: 60px;text-align: left">
+                            @Html.DisplayNameFor(model => model.BadStatus)
+                        </th>
+                        <th style="width: 60px;text-align: left">
+                            @Html.DisplayNameFor(model => model.ActiveFlg)
+                        </th>
+                        <th style="width: 40px" >
+                            Edit
+                        </th>
+                        <th style="width: 40px">
+                            Delete
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="text-md-center">
+                    @foreach (var customer in Model)
+                    {
+                        <tr style="font-size: 14px">
+                            <td style="text-align: left">
+                                @Html.DisplayFor(modelItem => customer.ArAcCde )
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(modelItem => customer.ArNme)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(modelItem => customer.Phone)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => customer.BadStatus)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => customer.ActiveFlg)
+                            </td>
+                            @if (new[] { "accessLvl2" }.Contains(ViewData["User Role"]?.ToString()))
+                            {
+                                <td>
+                                    <a style="cursor: pointer" onclick="callEditCustomerController('@customer.ArId')">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <i class="fas fa-edit"></i>
+                                </td>
+                            }
+                            @if (new[] { "accessLvl2" }.Contains(ViewData["User Role"]?.ToString()))
+                            {
+                                <td>
+                                    <a style="cursor: pointer" onclick="callDeleteCustomerController('@customer.ArId')">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <i class="fas fa-trash"></i>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- jQuery -->
+<script async src="../../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script async src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- DataTables  & Plugins -->
+<script async src="../../plugins/datatables/jquery.dataTables.min.js"></script>
+<script async src="../../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script async src="../../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script async src="../../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script async src="../../plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+<script async src="../../plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+<script async src="../../plugins/jszip/jszip.min.js"></script>
+<script async src="../../plugins/pdfmake/pdfmake.min.js"></script>
+<script async src="../../plugins/pdfmake/vfs_fonts.js"></script>
+<script async src="../../plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+<script async src="../../plugins/datatables-buttons/js/buttons.print.min.js"></script>
+<script async src="../../plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+<!-- CustomJs for Common-->
+<script src="../customjs/Common/Common.js"></script>
+<!-- CustomJs for Customer -->
+<script src="../customjs/Customer/Customer.js"></script>
+<!-- Page specific script -->
+<script async>
+    $(function () {
+        $('#reportedDataTable').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": true,
+            "ordering": true,
+            "info": false,
+            "autoWidth": false,
+            "responsive": true,
+            "lengthMenu": [20, 50, 100],
+        });
+    });
+</script>
+<script>
+
+    $(document).ready(function () {
+        setTimeout(function () {
+            $("#messageBox1").fadeOut();
+            $("#messageBox2").fadeOut();
+        }, 3000);
+    });
+</script>
+

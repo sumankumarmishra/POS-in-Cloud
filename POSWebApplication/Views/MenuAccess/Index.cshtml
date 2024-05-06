@@ -1,0 +1,152 @@
+﻿@model IEnumerable<MenuAccess>
+
+@{
+    ViewData["Title"] = "Menu Access List";
+}
+<style>
+    th, td {
+        overflow: hidden;
+        white-space: nowrap;
+    }
+</style>
+<div class="container-fluid">
+    @*<div class="col-12">
+        <div id="messageBox1" class="alert alert-danger @((ViewBag.AlertMessage != null) ? "" : "d-none")" role="alert">
+            @ViewBag.AlertMessage
+        </div>
+    </div>
+    <div class="col-12">
+        <div id="messageBox2" class="alert alert-info @((ViewBag.InfoMessage != null) ? "" : "d-none")" role="alert">
+            @ViewBag.InfoMessage
+        </div>
+    </div>*@
+    @if (new[] { "accessLvl2" }.Contains(ViewData["User Role"]?.ToString()))
+    {
+        <a asp-controller="MenuAccess" asp-action="Create">
+            <button class="btn btn-primary m-1">
+                New
+            </button>
+        </a>
+    }
+    else
+    {
+        <button class="btn btn-primary m-1" disabled>
+            New
+        </button>
+    }
+    <div class="card">
+        <div class="card-header">
+            <h5>Menu Access</h5>
+        </div>
+        <div class="card-body table-responsive">
+            <table id="reportedDataTable" class="table table-bordered">
+                <thead class="text-md-center">
+                    <tr style="font-size: 14px">
+                        <th>
+                            @Html.DisplayNameFor(model => model.AccessId)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.MnuGrpId)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.AccLevel)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.RevDtetime)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ByUserID)
+                        </th>
+                        <th style="width: 100px">
+                            Edit
+                        </th>
+                        <th style="width: 100px">
+                            Delete
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="text-md-center">
+                    @foreach (var item in Model)
+                    {
+                        <tr style="font-size: 14px">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AccessId)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(modelItem => item.MnuGrpId)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(modelItem => item.AccLevel)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(modelItem => item.RevDtetime)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(modelItem => item.ByUserID)
+                            </td>
+                            @if (new[] { "accessLvl2" }.Contains(ViewData["User Role"]?.ToString()))
+                            {
+                                <td>
+                                    <a asp-controller="MenuAccess" asp-action="Edit" asp-route-id="@item.AccessId">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <i class="fas fa-edit"></i>
+                                </td>
+                            }
+                            @if (new[] { "accessLvl2" }.Contains(ViewData["User Role"]?.ToString()))
+                            {
+                                <td>
+                                    <a asp-controller="MenuAccess" asp-action="Delete" asp-route-id="@item.AccessId">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <i class="fas fa-trash"></i>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- jQuery -->
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- DataTables  & Plugins -->
+<script src="../../plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="../../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="../../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="../../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<!-- Page specific script -->
+<script>
+    $(function () {
+        $('#reportedDataTable').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": false,
+            "ordering": true,
+            "info": false,
+            "autoWidth": false,
+            "responsive": true,
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        setTimeout(function () {
+            $("#messageBox1").fadeOut();
+            $("#messageBox2").fadeOut();
+        }, 5000);
+    });
+</script>

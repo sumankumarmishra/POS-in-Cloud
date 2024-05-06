@@ -1,0 +1,88 @@
+﻿@model SalesSummaryReport
+
+@{
+    ViewData["Title"] = "Sales Summary Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="col-12">
+    <div id="messageBox" class="alert alert-danger @((ViewBag.AlertMessage != null) ? "" : "d-none")" role="alert">
+        @ViewBag.AlertMessage
+    </div>
+</div>
+<div class="container">
+    <div class="card">
+        <div class="card-header bg-dark">
+            <h3 class="card-title ">Sales Summary Report</h3>
+        </div>
+    <form asp-action="PrintReview" class="form-horizontal">
+        <div class="card-body">
+            <div class="form-group row">
+                <label asp-for="FromDateTime" class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                    <input asp-for="FromDateTime" type="date" class="form-control" id="inputServer">
+                    <span asp-validation-for="FromDateTime" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label asp-for="ToDateTime" class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                        <input asp-for="ToDateTime" type="date" class="form-control" id="inputServer">
+                    <span asp-validation-for="ToDateTime" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label asp-for="Location" class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                        <select asp-for="Location" asp-items="ViewBag.LocationList" class="form-control form-select">
+                            <option value="All">Select One</option>
+                        </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label asp-for="POSId" class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                    <select asp-for="POSId" asp-items="ViewBag.POSIdList" class="form-control form-select">
+                        <option value="All">Select One</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label asp-for="ShiftNo" class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                    <input asp-for="ShiftNo" class="form-control" id="inputDatabase">
+                    <span asp-validation-for="ShiftNo" class="text-danger"></span>
+                </div>
+            </div>
+                <div class="form-group row">
+                    <label asp-for="ReportView" class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-10">
+                        <div class="form-check">
+                            <input asp-for="ReportView" type="radio" class="form-check-input" value="Detail" id="detailRadio" checked>
+                            <label class="form-check-label" for="detailRadio">Detail</label>
+                        </div>
+                        <div class="form-check">
+                            <input asp-for="ReportView" type="radio" class="form-check-input" value="Summary" id="summaryRadio">
+                            <label class="form-check-label" for="summaryRadio">Summary</label>
+                        </div>
+                        <span asp-validation-for="ReportView" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Stock Items & Services</label>
+                    <div class="col-sm-10">
+                        <select asp-for="ItemID" class="form-control form-select" asp-items="ViewBag.ItemList">
+                            <option value="All">All</option>
+                        </select>
+                    </div>
+                </div>
+
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">Preview Report</button>
+        </div>
+    </form>
+    </div>
+</div>
+
+

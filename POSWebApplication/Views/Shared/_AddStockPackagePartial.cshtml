@@ -1,0 +1,52 @@
+﻿@model StockPkgH
+<form asp-action="Create" asp-controller="StockPackage" enctype="multipart/form-data">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title" id="popupDialogLabel">Create Stock Package</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead class="text-md-center">
+                        <tr style="font-size: 14px">
+                            <th style="min-width: 120px;text-align: left">
+                                <span style="color: red">*&nbsp;</span>@Html.DisplayNameFor(model => model.PkgNme)
+                            </th>
+                            <th style="min-width: 120px;text-align: left">
+                                @Html.DisplayNameFor(model => model.SellingPrice)
+                            </th>
+                            <th style="min-width: 100px;text-align: left">
+                                @Html.DisplayNameFor(model => model.Barcode)
+                            </th>
+                            <th style="min-width: 120px;text-align: left">
+                                @Html.DisplayNameFor(model => model.Image)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-md-center">
+                        <tr style="font-size: 12px">
+                            <td>
+                                <input asp-for="@Model.PkgNme" class="form-control form-control-sm" />
+                                <span asp-validation-for="@Model.PkgNme" class="text-danger"></span>
+                            </td>
+                            <td>
+                                <input asp-for="@Model.SellingPrice" class="form-control form-control-sm" />
+                            </td>
+                            <td>
+                                <input asp-for="@Model.Barcode" class="form-control form-control-sm" />
+                            </td>
+                            <td>
+                                <input id="imageFile" type="file" asp-for="@Model.ImageFile" class="form-control form-control-sm" />
+                                <span style="color: red">*&nbsp;</span>Image size needs to be less than 500KB.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" onclick="cleanDefaultContainer()">Close</button>
+            <button type="submit" class="btn btn-info">Add</button>
+        </div>
+    </div>
+</form>

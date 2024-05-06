@@ -1,0 +1,75 @@
+﻿@model MenuAccessModelList
+
+@{
+    ViewData["Title"] = "Delete Menu Access";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="col-12">
+    <div id="messageBox" class="alert alert-danger @((ViewBag.AlertMessage != null) ? "" : "d-none")" role="alert">
+        @ViewBag.AlertMessage
+    </div>
+</div>
+<div class="container">
+    <div class="card-header bg-dark">
+        <h3 class="card-title ">Delete Menu Access</h3>
+    </div>
+    <form asp-action="Delete" class="form-horizontal">
+        <div class="card-body">
+            <div class="form-group row">
+                <label asp-for="MenuAccess.AccessId" class="col-sm-2 col-form-label">Access ID</label>
+                <div class="col-sm-10">
+                    <input asp-for="MenuAccess.AccessId" type="text" class="form-control" id="inputServer" placeholder="Access Id" readonly>
+                    <span asp-validation-for="MenuAccess.AccessId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Menu Group</label>
+                <div class="col-sm-10">
+                    <select asp-for="MenuAccess.MnuGrpId" class="form-control form-select" readonly>
+                        @foreach (var item in Model.UserMenuGroupList)
+                        {
+                            <option value="@item.MnuGrpId">@item.MnuGrpNme</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label asp-for="MenuAccess.AccLevel" class="col-sm-2 col-form-label">Account Level</label>
+                <div class="col-sm-10">
+                    <select asp-for="MenuAccess.AccLevel" class="form-control form-select" readonly>
+                        <option value="0">Disable</option>
+                        <option value="1">Read</option>
+                        <option value="2">Read/Write</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label asp-for="MenuAccess.RevDtetime" class="col-sm-2 col-form-label">Datetime</label>
+                <div class="col-sm-10">
+                    <input asp-for="MenuAccess.RevDtetime" type="text" class="form-control" id="inputServer" placeholder="Access Id" readonly>
+                    <span asp-validation-for="MenuAccess.RevDtetime" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label asp-for="MenuAccess.ByUserID" class="col-sm-2 col-form-label">By User ID</label>
+                <div class="col-sm-10">
+                    <input asp-for="MenuAccess.ByUserID" type="text" class="form-control" id="inputServer" placeholder="User Id" readonly>
+                    <span asp-validation-for="MenuAccess.ByUserID" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </div>
+    </form>
+</div>
+<script>
+    $(document).ready(function () {
+        setTimeout(function () {
+            $("#messageBox").fadeOut();
+        }, 5000);
+    });
+</script>
+
+

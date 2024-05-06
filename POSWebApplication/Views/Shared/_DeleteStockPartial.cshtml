@@ -1,0 +1,87 @@
+﻿@model StockModelList
+<form asp-action="Delete" asp-controller="Stock">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title" id="popupDialogLabel">Delete Stock</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead class="text-md-center">
+                        <tr style="font-size: 14px">
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.Stock.ItemId)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.Stock.ItemDesc)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.Stock.Barcode)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.Stock.CatgCde)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.Stock.GrpCde)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.Stock.BaseUnit)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.Stock.UnitCost)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.Stock.SellingPrice)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.Stock.CreateDtetime)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.Stock.UserCde)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-md-center">
+                        <tr style="font-size: 14px">
+                            <input type="hidden" asp-for="@Model.Stock.ItemId"/>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.Stock.ItemId)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.Stock.ItemDesc)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.Stock.Barcode)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.Stock.CatgCde)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.Stock.GrpCde)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.Stock.BaseUnit)
+                            </td>
+                            <td style="text-align: right">
+                                @Html.DisplayFor(model => model.Stock.UnitCost)
+                            </td>
+                            <td style="text-align: right">
+                                @Html.DisplayFor(model => model.Stock.SellingPrice)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.Stock.CreateDtetime)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.Stock.UserCde)
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" onclick="cleanDefaultContainer()">Close</button>
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </div>
+    </div>
+</form>

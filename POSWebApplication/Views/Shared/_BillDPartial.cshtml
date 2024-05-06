@@ -1,0 +1,108 @@
+﻿@model Home
+<div class="row">
+    <div class="col-md-6 mt-1">
+        <div class="card">
+            <div class="table-responsive" style="height: 400px">
+                <table id="inventoryBillHTable" class="table table-bordered table-hover">
+                    <thead class="text-md-center">
+                        <tr style="font-size: 14px;text-align: left">
+                            <th style="max-width: 20px">
+                                No
+                            </th>
+                            <th>
+                                ItemID
+                            </th>
+                            <th style="width: 30px">
+                                Qty
+                            </th>
+                            <th>
+                                Price
+                            </th>
+                            <th>
+                                Discount
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-md-left">
+                        @foreach (var billd in Model.BillDList)
+                        {
+                            <tr style="font-size: 14px">
+                                <td style="text-align: left">
+                                    @Html.DisplayFor(modelItem => billd.No)
+                                </td>
+                                <td style="text-align: left">
+                                    @Html.DisplayFor(modelItem => billd.ItemID)
+                                </td>
+                                <td style="text-align: left">
+                                    @Html.DisplayFor(modelItem => billd.Qty)
+                                </td>
+                                <td style="text-align: right">
+                                    @Html.DisplayFor(modelItem => billd.Price)
+                                </td>
+                                <td style="text-align: right">
+                                    @Html.DisplayFor(modelItem => billd.DiscAmt)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mt-1">
+        <form asp-action="Edit">
+            <div class="form-group row">
+                <label asp-for="@Model.BillH.BizDte" class="col-sm-4 col-form-label">Bill Date</label>
+                <div class="col-sm-8">
+                    <input value="@Model.BillH.BizDte.ToString("dd-MM-yyyy")" type="text" class="form-control" readonly />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label asp-for="@Model.BillH.BillNo" class="col-sm-4 col-form-label">Bill No.</label>
+                <div class="col-sm-8">
+                    <input asp-for="@Model.BillH.BillNo" type="text" class="form-control" readonly>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label asp-for="@Model.BillH.LocCde" class="col-sm-4 col-form-label">Location</label>
+                <div class="col-sm-8">
+                    <select asp-for="@Model.BillH.LocCde" class="form-control form-select">
+                        @foreach (var item in Model.Locations)
+                        {
+                            <option value="@item.LocCde">@item.LocCde</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            @* <div class="form-group row">
+                <label asp-for="@Model.BillH.SaleType" class="col-sm-4 col-form-label">Sale Type</label>
+                <div class="col-sm-8">
+                    <select asp-for="@Model.BillH.SaleType" class="form-control form-select">
+                        @foreach (var item in Model.SaleTypes)
+                        {
+                            <option value="@item.CurrTyp">@item.CurrTyp</option>
+                        }
+                    </select>
+                </div>
+            </div> *@
+            <div class="form-group row">
+                <label asp-for="@Model.BillH.Remark" class="col-sm-4 col-form-label">Remarks</label>
+                <div class="col-sm-8">
+                    <textarea asp-for="@Model.BillH.Remark" class="form-control">
+                    </textarea>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-4"></div>
+                <div class="col-sm-8">
+                    <input type="checkbox" asp-for="@Model.BillH.VoidFlg" style="width: 20px;height: 20px" onclick="return confirm('Are you sure to void?')"/>
+                    <label asp-for="@Model.BillH.Remark" class="col-sm-4 col-form-label">Void</label>
+                </div>
+            </div>
+            <button class="btn btn-info m-1">Save</button>
+            <button class="btn btn-info m-1" type="button" onclick="printBillSlip('@Model.BillH.BillNo')">Print Preview</button>
+        </form>
+        
+    </div>
+</div>
+

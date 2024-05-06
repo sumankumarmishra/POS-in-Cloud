@@ -1,0 +1,122 @@
+﻿@model StockModelList
+<form asp-action="Edit" asp-controller="Stock" enctype="multipart/form-data">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title" id="popupDialogLabel">Update Stock</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead class="text-md-center">
+                        <tr style="font-size: 14px">
+                            <th style="min-width: 120px;text-align: left">
+                                <span style="color: red">*&nbsp;</span>@Html.DisplayNameFor(model => model.Stock.ItemId)
+                            </th>
+                            <th style="min-width: 120px;text-align: left">
+                                @Html.DisplayNameFor(model => model.Stock.ItemDesc)
+                            </th>
+                            <th style="min-width: 120px;text-align: left">
+                                @Html.DisplayNameFor(model => model.Stock.Barcode)
+                            </th>
+                            <th style="min-width: 100px;text-align: left">
+                                @Html.DisplayNameFor(model => model.Stock.CatgCde)
+                            </th>
+                            <th style="min-width: 100px;text-align: left">
+                                @Html.DisplayNameFor(model => model.Stock.GrpCde)
+                            </th>
+                            <th style="min-width: 100px;text-align: left">
+                                <span style="color: red">*&nbsp;</span>@Html.DisplayNameFor(model => model.Stock.BaseUnit)
+                            </th>
+                            <th style="min-width: 100px;text-align: left">
+                                <span style="color: red">*&nbsp;</span>@Html.DisplayNameFor(model => model.Stock.UnitCost)
+                            </th>
+                            <th style="min-width: 100px;text-align: left">
+                                <span style="color: red">*&nbsp;</span>@Html.DisplayNameFor(model => model.Stock.SellingPrice)
+                            </th>
+                            <th style="min-width: 200px;text-align: left">
+                                @Html.DisplayNameFor(model => model.Stock.Image)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.Stock.FinishGoodFlg)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.Stock.CreateDtetime)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.Stock.UserCde)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-md-center">
+                        <tr style="font-size: 12px">
+                            <td>
+                                <input asp-for="@Model.Stock.ItemId" class="form-control form-control-sm" readonly />
+                            </td>
+                            <td>
+                                <input asp-for="@Model.Stock.ItemDesc" class="form-control form-control-sm" />
+                            </td>
+                            <td>
+                                <input asp-for="@Model.Stock.Barcode" class="form-control form-control-sm" />
+                            </td>
+                            <td>
+                                <select asp-for="@Model.Stock.CatgCde" class="form-control form-control-sm">
+                                    @foreach (var category in Model.StockCategories)
+                                    {
+                                        <option value="@category.CategoryId">@category.CategoryId</option>
+                                    }
+                                </select>
+                            </td>
+                            <td>
+                                <select asp-for="@Model.Stock.GrpCde" class="form-control form-control-sm">
+                                    @foreach (var category in Model.StockGroups)
+                                    {
+                                        <option value="@category.GrpCde">@category.GrpDesc</option>
+                                    }
+                                </select>
+                            </td>
+                            <td>
+                                <select asp-for="@Model.Stock.BaseUnit" class="form-control form-control-sm" onchange="callSelectUOMController('@Model.Stock.ItemId',this.value)">
+                                    @foreach (var item in Model.StockUOMs)
+                                    {
+                                        <option value="@item.UOMCde">@item.UOMCde</option>
+                                    }
+                                </select>
+                            </td>
+                            <td>
+                                <input id="decimalInput01" asp-for="@Model.Stock.UnitCost" type="number" step="0.01" min="0" class="form-control form-control-sm" onblur="formatDecimal('decimalInput01')" />
+                            </td>
+                            <td>
+                                <input id="decimalInput02" asp-for="@Model.Stock.SellingPrice" type="number" step="0.01" min="0" class="form-control form-control-sm" onblur="formatDecimal('decimalInput01')" />
+                            </td>
+                            <td>
+                                    @if(Model.Stock.Image != null)
+                                    {
+                                        <img src="data:image/jpeg;base64,@Model.Stock.Base64Image" alt="Image" width="80" height="80" />
+                                    }
+                                <input id="imageFile" type="file" asp-for="@Model.Stock.ImageFile" class="form-control form-control-sm" />
+                                <span style="color: red">*&nbsp;</span>Image size needs to be less than 500KB.
+                                <input asp-for="@Model.Stock.Image" type="hidden"/>
+                            </td>
+                            <td>
+                                <select asp-for="@Model.Stock.FinishGoodFlg" class="form-control form-control-sm">
+                                    <option value="false">No</option>
+                                    <option value="true">Yes</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input asp-for="@Model.Stock.CreateDtetime" type="text" class="form-control form-control-sm" readonly />
+                            </td>
+                            <td>
+                                <input asp-for="@Model.Stock.UserCde" type="text" class="form-control form-control-sm" readonly />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" onclick="cleanDefaultContainer()">Close</button>
+            <button type="submit" class="btn btn-info">Save changes</button>
+        </div>
+    </div>
+</form>

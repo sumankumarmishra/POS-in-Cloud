@@ -1,0 +1,121 @@
+﻿@model IEnumerable<AutoNumber>
+
+@{
+    ViewData["Title"] = "Auto Number List";
+}
+<style>
+    th, td {
+        overflow: hidden;
+        white-space: nowrap;
+    }
+</style>
+<div class="container-fluid">
+    <div class="col-12">
+        <div id="messageBox1" class="alert alert-info @((ViewBag.InfoMessage != null) ? "" : "d-none")" role="alert">
+            @ViewBag.InfoMessage
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div id="messageBox2" class="alert alert-danger @((ViewBag.WarningMessage != null) ? "" : "d-none")" role="alert">
+            @ViewBag.WarningMessage
+        </div>
+    </div>
+    <div id="defaultContainer"></div>
+    <div class="card">
+        <div class="card-header">
+            <h5>Auto Number</h5>
+        </div>
+        <div class="card-body table-responsive">
+            <table id="reportedDataTable" class="table table-bordered">
+                <thead class="text-md-center">
+                    <tr style="font-size: 14px">
+                        <th style="text-align: left">
+                            @Html.DisplayNameFor(model => model.PosId)
+                        </th>
+                        <th style="text-align: left">
+                            @Html.DisplayNameFor(model => model.PosDefLoc)
+                        </th>
+                        <th style="text-align: left">
+                            @Html.DisplayNameFor(model => model.BizDte)
+                        </th>
+                        <th style="text-align: left">
+                            @Html.DisplayNameFor(model => model.PosDefSaleTyp)
+                        </th>
+                        <th style="width: 40px">
+                            Edit
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="text-md-center">
+                    @foreach (var item in Model)
+                    {
+                        <tr style="font-size: 14px">
+                            <td style="text-align: left">
+                                @Html.DisplayFor(modelItem => item.PosId)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(modelItem => item.PosDefLoc)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(modelItem => item.BizDte)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(modelItem => item.PosDefSaleTyp)
+                            </td>
+                            @if (new[] { "accessLvl2" }.Contains(ViewData["User Role"]?.ToString()))
+                            {
+                                <td>
+                                    <a style="cursor: pointer" onclick="callEditAutoNumberController('@item.AutoNoId')">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <i class="fas fa-edit"></i>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- CustomJs for Common-->
+<script src="../customjs/Common/Common.js"></script>
+<!-- CustomJs for AutoNumber -->
+<script src="../customjs/AutoNumber/AutoNumber.js"></script>
+<!-- jQuery -->
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- DataTables  & Plugins -->
+<script src="../../plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="../../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="../../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="../../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<!-- Page specific script -->
+<script>
+    $(function () {
+        $('#reportedDataTable').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": true,
+            "ordering": true,
+            "info": false,
+            "autoWidth": false,
+            "responsive": true,
+            "lengthMenu": [20, 50, 100],
+        });
+    });
+
+    $(function () {
+        setTimeout(() => {
+            $("#messageBox1, #messageBox2").fadeOut();
+        }, 3000);
+    });
+
+</script>

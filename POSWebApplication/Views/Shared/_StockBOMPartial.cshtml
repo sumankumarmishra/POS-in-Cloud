@@ -1,0 +1,73 @@
+﻿@model StockBOMModelList
+<button class="btn btn-info m-1 add-btn" onclick="callAddStockBOMController('@Model.StockBOM.BOMId')">
+    New
+</button>
+<form id="editForm" asp-action="Edit" asp-controller="StockBOM">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title" id="popupDialogLabel">BOM for @Model.StockBOM.BOMId</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead class="text-md-center">
+                        <tr style="font-size: 14px">
+                            <th style="width: 80px;text-align: left">
+                                @Html.DisplayNameFor(model => model.StockBOM.OrdId)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.StockBOM.ItemId)
+                            </th>
+                            <th style="text-align: left;width: 180px">
+                                @Html.DisplayNameFor(model => model.StockBOM.BaseUnit)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.StockBOM.UOMRate)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.StockBOM.Qty)
+                            </th>
+                            <th style="width: 30px">
+                                -
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-md-center">
+                        @foreach (var bom in Model.ThisStockBOMs)
+                        {
+                            <tr id="@bom.StkBOMId" style="font-size: 14px">
+                                <td style="text-align:left">
+                                    @Html.DisplayFor(model=> bom.OrdId)
+                                </td>
+                                <td style="text-align:left">
+                                    @Html.DisplayFor(model=> bom.ItemId)
+                                </td>
+                                <td style="text-align:left">
+                                    @Html.DisplayFor(model=> bom.BaseUnit)
+                                </td>
+                                <td style="text-align:right">
+                                    @Html.DisplayFor(model=> bom.UOMRate)
+                                </td>
+                                <td style="text-align:right">
+                                    @Html.DisplayFor(model=> bom.Qty)
+                                </td>
+                                <td style="width: 40px">
+                                    <a style="cursor: pointer" onclick="callEditBOMController('@bom.BOMId','@bom.StkBOMId');disableButtons()">
+                                        <i class="fas fa-edit btn-edit"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default close-btn" onclick="cleanDefaultContainer()">Close</button>
+            <button type="button" class="btn btn-default cancel-btn" onclick="callStockBOMController('@Model.StockBOM.BOMId')" hidden>Cancel</button>
+            <button type="button" class="btn btn-info update-btn" onclick="editStockBOM()" disabled>Save Changes</button>
+        </div>
+    </div>
+</form>
+
+

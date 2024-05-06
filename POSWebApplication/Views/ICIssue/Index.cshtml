@@ -1,0 +1,203 @@
+﻿@model ICIssueModelList
+
+@{
+    ViewData["Title"] = "ICIssue";
+}
+
+<!-- Main content -->
+<section class="content" style="overflow: hidden">
+    <div class="container-fluid">
+        <button type="button" class="btn btn-info m-1" onclick="refresh()">
+            New
+        </button>
+        <div class="row mt-1">
+            <div class="col-md-12 col-lg-4">
+                <div class="card">
+                    <div class="card-body table-responsive" style="max-height: 700px">
+                        <table id="inventoryBillHTable" class="table table-bordered table-hover">
+                            <thead class="text-md-center">
+                                <tr style="font-size: 14px">
+                                    <th style="width: 20px;text-align: left">
+                                        No.
+                                    </th>
+                                    <th style="text-align: left">
+                                        @Html.DisplayNameFor(model => model.ICIssue.TranDte)
+                                    </th>
+                                    <th style="text-align: left">
+                                        @Html.DisplayNameFor(model => model.ICIssue.IcRefNo)
+                                    </th>
+                                    <th style="text-align: left">
+                                        FromLoc
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="mainBodyId" class="text-md-left">
+                                @foreach (var billH in Model.ICIssueList)
+                                {
+                                    <tr style="font-size: 12px;cursor: pointer" onclick="editInventoryIssue(@billH.IcMoveId)">
+                                        <td style="text-align: left">
+                                            @Html.DisplayFor(modelItem => billH.No)
+                                        </td>
+                                        <td style="text-align: left">
+                                            @Html.DisplayFor(modelItem => billH.StringTranDate)
+                                        </td>
+                                        <td style="text-align: left">
+                                            @Html.DisplayFor(modelItem => billH.IcRefNo)
+                                        </td>
+                                        <td style="text-align: left">
+                                            @Html.DisplayFor(modelItem => billH.FromLoc)
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Inventory Issue</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body" style="max-height: 700px">
+                        <div class="row col-md-12">
+                            <input id="inputIcMoveId" type="hidden" class="form-control form-control-sm col-md-4 col-7" />
+                            <div class="form-group row col-md-4 col-sm-6">
+                                <label class="form-control-sm col-md-5 col-5 text-truncate">Ref No.</label>
+                                <input id="inputRefNo" type="text" value="@Model.RefNo" class="form-control form-control-sm col-md-7 col-7" readonly />
+                            </div>
+                            <div class="form-check row col-md-4 col-sm-6">
+                                <label class="form-control-sm col-md-5 col-5 text-truncate">Cancel</label>
+                                <input id="checkboxCancelFlg" type="checkbox" class="form-check-input" style="width: 20px; height: 20px;">
+                            </div>
+                            <div class="form-group row col-md-4 col-sm-6">
+                                <label class="form-control-sm col-md-5 col-5 text-truncate">TranDte.</label>
+                                <input id="inputTranDte" type="date" asp-for="@Model.ICIssue.TranDte" class="form-control form-control-sm col-md-7 col-7" />
+                            </div>
+                            <div class="form-group row col-md-4 col-sm-6">
+                                <label class="form-control-sm col-md-5 col-5 text-truncate">Ref No (2).</label>
+                                <input id="inputRefNo2" type="text" name="refNo2" class="form-control form-control-sm col-md-7 col-7" />
+                            </div>
+                            <div class="form-group row col-md-4 col-sm-6">
+                                <label class="form-control-sm col-md-5 col-5 text-truncate">Reason.</label>
+                                <select id="selectReason" class="form-control form-control-sm col-md-7 col-7">
+                                    @foreach (var reason in Model.ICReasonList)
+                                    {
+                                        <option value="@reason.ICReasonId">@reason.ICReasonCde</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group row col-md-4 col-sm-6">
+                                <label class="form-control-sm col-md-3 col-5 text-truncate">Remark.</label>
+                                <textarea id="textareaRemark" class="form-control form-control-sm col-md-9 col-7">
+                            </textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body" style="max-height: 700px">
+                        <button type="button" class="btn btn-info m-1" onclick="addNewDetailsRow()">
+                            Add Row
+                        </button>
+                        <div style="max-height: 400px" class="table-responsive">
+                            <table id="inventoryIssueDetailTable" class="table table-bordered">
+                                <thead class="text-md-center">
+                                    <tr style="font-size: 12px">
+                                        <th style="min-width: 30px;text-align: left">
+                                            No.
+                                        </th>
+                                        <th style="min-width: 120px;text-align: left">
+                                            @Html.DisplayNameFor(model => model.IcIssueDetails.FromLoc)
+                                        </th>
+                                        <th style="min-width: 120px;text-align: left">
+                                            @Html.DisplayNameFor(model => model.IcIssueDetails.ItemId)
+                                        </th>
+                                        <th style="min-width: 140px;text-align: left">
+                                            @Html.DisplayNameFor(model => model.IcIssueDetails.ItemDesc)
+                                        </th>
+                                        <th style="min-width: 80px;text-align: left">
+                                            @Html.DisplayNameFor(model => model.IcIssueDetails.UOM)
+                                        </th>
+                                        <th style="min-width: 50px;text-align: left">
+                                            @Html.DisplayNameFor(model => model.IcIssueDetails.UOMRate)
+                                        </th>
+                                        <th style="min-width: 60px;text-align: left">
+                                            @Html.DisplayNameFor(model => model.IcIssueDetails.Qty)
+                                        </th>
+                                        <th style="min-width: 80px;text-align: left">
+                                            @Html.DisplayNameFor(model => model.IcIssueDetails.UnitCost)
+                                        </th>
+                                        <th style="min-width: 80px;text-align: left">
+                                            @Html.DisplayNameFor(model => model.IcIssueDetails.DiscAmt)
+                                        </th>
+                                        <th style="text-align: left">
+                                            Amount
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="inventoryIssueDetailsBodyId" class="text-md-left" style="font-size: 14px">
+                                    @* Data will be come from ICIssue.js *@
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row col-md-12 mt-2">
+                            <div class="form-group row col-md-3 col-6">
+                                <label class="form-control-sm col-md-6 col-6 text-truncate">Total Amt.</label>
+                                <input id="inputBillAmt" value="0" class="form-control form-control-sm col-md-6 col-6" readonly />
+                            </div>
+                        </div>
+                        <button id="btnDelete" type="button" class="btn btn-danger m-1" style="float: right;display: none" onclick="deleteInventoryIssue()">
+                            Delete
+                        </button>
+                        <button id="btnPrintReview" class="btn btn-info m-1" style="display: none" onclick="printReview()">
+                            Print Review
+                        </button>
+                        <button type="button" class="btn btn-info m-1"   onclick="updateInventoryIssue()">
+                            Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- /.content -->
+<!-- jQuery -->
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- DataTables  & Plugins -->
+<script src="../../plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="../../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="../../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="../../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<!-- CustomJs for Common-->
+<script src="../customjs/Common/Common.js"></script>
+<!-- CustomJs for Inventory Issue -->
+<script src="../customjs/ICIssue/ICIssue.js"></script>
+<!-- Page specific script -->
+<script>
+    $(function () {
+        $('#inventoryBillHTable').DataTable({
+            "paging": false,
+            "lengthChange": false,
+            "searching": true,
+            "ordering": false,
+            "info": false,
+            "lengthMenu": [20, 50, 100],
+        });
+    });
+
+    $(function () {
+        setTimeout(() => {
+            $("#messageBox1, #messageBox2").fadeOut();
+        }, 3000);
+    });
+</script>
+

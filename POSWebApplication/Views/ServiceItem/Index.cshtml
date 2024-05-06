@@ -1,0 +1,185 @@
+﻿@model ServiceItemModelList
+
+@{
+    ViewData["Title"] = "Service Item List";
+}
+<style>
+    th, td {
+        overflow: hidden;
+        white-space: nowrap;
+    }
+</style>
+<div class="container-fluid">
+    
+    <div class="col-12">
+        <div id="messageBox1" class="alert alert-info @((ViewBag.InfoMessage != null) ? "" : "d-none")" role="alert">
+            @ViewBag.InfoMessage
+        </div>
+    </div>
+    
+    <div class="col-12">
+        <div id="messageBox2" class="alert alert-danger @((ViewBag.WarningMessage != null) ? "" : "d-none")" role="alert">
+            @ViewBag.WarningMessage
+        </div>
+    </div>
+
+    @if (new[] { "accessLvl2" }.Contains(ViewData["User Role"]?.ToString()))
+    {
+        <div id="defaultContainer"></div>
+        <button class="btn btn-info m-1" onclick="callAddServiceItemController()">
+            New
+        </button>
+    }
+    else
+    {
+        <button class="btn btn-info m-1" disabled>
+            New
+        </button>
+    }
+
+    <div class="card">
+        <div class="card-header">
+            <h5>Service Items Setup</h5>
+        </div>
+        <div class="card-body table-responsive">
+            <table id="reportedDataTable" class="table table-bordered table-hover">
+                <thead class="text-md-center">
+                    <tr style="font-size: 14px">
+                        <th style="width: 40px;text-align: left">
+                            @Html.DisplayNameFor(model => model.ServiceItem.SrvcId)
+                        </th>
+                        <th style="text-align: left;width: 120px">
+                            @Html.DisplayNameFor(model => model.ServiceItem.SrvcItemId)
+                        </th>
+                        <th style="text-align: left">
+                            @Html.DisplayNameFor(model => model.ServiceItem.SrvcDesc)
+                        </th>
+                        <th style="text-align: left;width: 60px">
+                            @Html.DisplayNameFor(model => model.ServiceItem.CategoryId)
+                        </th>
+                        <th style="text-align: left;width: 60px">
+                            @Html.DisplayNameFor(model => model.ServiceItem.GrpCde)
+                        </th>
+                        <th style="text-align: left;width: 60px">
+                            @Html.DisplayNameFor(model => model.ServiceItem.BaseUnit)
+                        </th>
+                        <th style="text-align: left">
+                            @Html.DisplayNameFor(model => model.ServiceItem.SrvcAmt)
+                        </th>
+                        <th style="text-align: left">
+                            @Html.DisplayNameFor(model => model.ServiceItem.AccCde)
+                        </th>
+                        <th style="width: 40px" >
+                            Edit
+                        </th>
+                        <th style="width: 40px">
+                            Delete
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="text-md-center">
+                    @foreach (var item in Model.ServiceItems)
+                    {
+                        <tr style="font-size: 14px">
+                            <td style="text-align: left">
+                                @Html.DisplayFor(modelItem => item.SrvcId )
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(modelItem => item.SrvcItemId)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(modelItem => item.SrvcDesc)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(modelItem => item.CategoryId )
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(modelItem => item.GrpCde)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(modelItem => item.BaseUnit)
+                            </td>
+                            <td style="text-align: right">
+                                @Html.DisplayFor(modelItem => item.SrvcAmt)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(modelItem => item.AccCde)
+                            </td>
+                            @if (new[] { "accessLvl2" }.Contains(ViewData["User Role"]?.ToString()))
+                            {
+                                <td>
+                                    <a style="cursor: pointer" onclick="callEditServiceItemController('@item.SrvcId')">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <i class="fas fa-edit"></i>
+                                </td>
+                            }
+                            @if (new[] { "accessLvl2" }.Contains(ViewData["User Role"]?.ToString()))
+                            {
+                                <td>
+                                    <a style="cursor: pointer" onclick="callDeleteServiceItemController('@item.SrvcId')">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <i class="fas fa-trash"></i>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- jQuery -->
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- DataTables  & Plugins -->
+<script src="../../plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="../../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="../../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="../../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="../../plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+<script src="../../plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+<script src="../../plugins/jszip/jszip.min.js"></script>
+<script src="../../plugins/pdfmake/pdfmake.min.js"></script>
+<script src="../../plugins/pdfmake/vfs_fonts.js"></script>
+<script src="../../plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+<script src="../../plugins/datatables-buttons/js/buttons.print.min.js"></script>
+<script src="../../plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+<!-- CustomJs for Common-->
+<script src="../customjs/Common/Common.js"></script>
+<!-- CustomJs for ServiceItem -->
+<script src="../customjs/ServiceItem/ServiceItem.js"></script>
+<!-- Page specific script -->
+<script>
+    $(function () {
+        $('#reportedDataTable').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": true,
+            "ordering": true,
+            "info": false,
+            "autoWidth": false,
+            "responsive": true,
+            "lengthMenu": [20, 50, 100],
+        });
+    });
+
+    $(function () {
+        setTimeout(() => {
+            $("#messageBox1, #messageBox2").fadeOut();
+        }, 3000);
+    });
+</script>
+

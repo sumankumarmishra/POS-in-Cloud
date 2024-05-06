@@ -1,0 +1,216 @@
+﻿@model IEnumerable<StockPkgH>
+
+@{
+    ViewData["Title"] = "Stock Package List";
+}
+<style>
+    th, td {
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    .loading-text {
+        display: none;
+        color: black;
+        font-size: 20px;
+        text-align: center;
+        margin-top: 20px;
+    }
+</style>
+
+<!--Package Items Modal -->
+<div class="modal" id="packageItemsModal" tabindex="-1" role="dialog" aria-labelledby="billReprintModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Package Items For <span id="spanId"></span><span id="hiddenId" hidden></span></h5>
+                <button type="button" class="close" onclick="closePackageItemModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body table-responsive" style="max-height: 550px">
+                <button class="btn btn-info m-1" onclick="addPackageItems()">
+                    New
+                </button>
+                <div id="tableLoadingScreen" class="loading-text">Loading...</div>
+                <table id="packageItemsTable" class="table table-bordered table-hover">
+                    <thead class="text-md-center">
+                        <tr style="font-size: 12px">
+                            <th style="width: 140px;text-align: left">
+                                ItemID
+                            </th>
+                            <th style="text-align: left">
+                                Item Desc
+                            </th>
+                            <th style="text-align: left">
+                                BaseUnit
+                            </th>
+                            <th style="width: 70px;text-align: left">
+                                Qty
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="packageItemsListId" class="text-md-left" style="font-size: 14px">
+                        @*Package Items list will be come from StockPackage.js*@
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button id="modelCloseBtnId" class="btn" onclick="savePackageItems()" style="background-color: #31849B;color: white">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    
+    <div class="col-12">
+        <div id="messageBox1" class="alert alert-info @((ViewBag.InfoMessage != null) ? "" : "d-none")" role="alert">
+            @ViewBag.InfoMessage
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div id="messageBox2" class="alert alert-danger @((ViewBag.WarningMessage != null) ? "" : "d-none")" role="alert">
+            @ViewBag.WarningMessage
+        </div>
+    </div>
+
+    @if (new[] { "accessLvl2" }.Contains(ViewData["User Role"]?.ToString()))
+    {
+        <div id="defaultContainer"></div>
+        <div id="loadingTextId" class="loading-text">Loading...</div>
+        <button class="btn btn-info m-1" onclick="callAddStockPackageController()">
+            New
+        </button>
+    }
+    else
+    {
+        <button class="btn btn-info m-1" disabled>
+            New
+        </button>
+    }
+
+    <div class="card">
+        <div class="card-header">
+            <h5>Stock Packages Setup</h5>
+        </div>
+        <div class="card-body table-responsive">
+            <table id="reportedDataTable" class="table table-bordered table-hover">
+                <thead class="text-md-center">
+                    <tr style="font-size: 14px">
+                        <th style="width: 40px;text-align: left">
+                            @Html.DisplayNameFor(model => model.PkgHId)
+                        </th>
+                        <th style="width: 200px;text-align: left">
+                            @Html.DisplayNameFor(model => model.PkgNme)
+                        </th>
+                        <th style="text-align: left">
+                            @Html.DisplayNameFor(model => model.SellingPrice)
+                        </th>
+                        <th>
+                            Items
+                        </th>
+                        <th style="width: 40px" >
+                            Edit
+                        </th>
+                        <th style="width: 40px">
+                            Delete
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="text-md-center">
+                    @foreach (var item in Model)
+                    {
+                        <tr style="font-size: 14px">
+                            <td style="text-align: left">
+                                @Html.DisplayFor(modelItem => item.PkgHId )
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(modelItem => item.PkgNme)
+                            </td>
+                            <td style="text-align: right">
+                                @Html.DisplayFor(modelItem => item.SellingPrice)
+                            </td>
+                            <td>
+                                <a style="cursor:pointer" onclick="editPackageItems(@item.PkgHId,'@item.PkgNme')" class="btn-sm">
+                                    ...
+                                </a>
+                            </td>
+                            @if (new[] { "accessLvl2" }.Contains(ViewData["User Role"]?.ToString()))
+                            {
+                                <td>
+                                    <a style="cursor: pointer" onclick="callEditStockPackageController('@item.PkgHId')">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <i class="fas fa-edit"></i>
+                                </td>
+                            }
+                            @if (new[] { "accessLvl2" }.Contains(ViewData["User Role"]?.ToString()))
+                            {
+                                <td>
+                                    <a style="cursor: pointer" onclick="callDeleteStockPackageController('@item.PkgHId')">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <i class="fas fa-trash"></i>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- jQuery -->
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- DataTables  & Plugins -->
+<script src="../../plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="../../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="../../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="../../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="../../plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+<script src="../../plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+<script src="../../plugins/jszip/jszip.min.js"></script>
+<script src="../../plugins/pdfmake/pdfmake.min.js"></script>
+<script src="../../plugins/pdfmake/vfs_fonts.js"></script>
+<script src="../../plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+<script src="../../plugins/datatables-buttons/js/buttons.print.min.js"></script>
+<script src="../../plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+<!-- CustomJs for Common-->
+<script src="../customjs/Common/Common.js"></script>
+<!-- CustomJs for StockGroup -->
+<script src="../customjs/StockPackage/StockPackage.js"></script>
+<!-- Page specific script -->
+<script>
+    $(function () {
+        $('#reportedDataTable').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": true,
+            "ordering": true,
+            "info": false,
+            "autoWidth": false,
+            "responsive": true,
+            "lengthMenu": [20, 50, 100],
+        });
+    });
+
+    $(function () {
+        setTimeout(() => {
+            $("#messageBox1, #messageBox2").fadeOut();
+        }, 3000);
+    });
+</script>

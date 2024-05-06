@@ -1,0 +1,51 @@
+﻿@model CurrencyModelList
+<form asp-action="Delete" asp-controller="Currency">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title" id="popupDialogLabel">Delete Currency</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead class="text-md-center">
+                        <tr style="font-size: 14px">
+                            <th style="width: 60px;text-align: left">
+                                @Html.DisplayNameFor(model => model.Currency.CurrId)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.Currency.CurrTyp)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.Currency.CurrCde)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.Currency.CurrRate)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-md-center">
+                        <tr style="font-size: 14px">
+                            <input type="hidden" asp-for="@Model.Currency.CurrId"/>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.Currency.CurrId)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.Currency.CurrTyp)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.Currency.CurrCde)
+                            </td>
+                            <td style="text-align: right">
+                                @Html.DisplayFor(model => model.Currency.CurrRate)
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" onclick="cleanDefaultContainer()">Close</button>
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,87 @@
+﻿@model ServiceItemModelList
+<form asp-action="Delete" asp-controller="ServiceItem">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title" id="popupDialogLabel">Delete Service Item</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead class="text-md-center">
+                        <tr style="font-size: 14px">
+                            <th style="text-align: left;width: 40px">
+                                @Html.DisplayNameFor(model => model.ServiceItem.SrvcId)
+                            </th>
+                            <th style="text-align: left;width: 120px">
+                                @Html.DisplayNameFor(model => model.ServiceItem.SrvcItemId)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.ServiceItem.SrvcDesc)
+                            </th>
+                            <th style="text-align: left;width: 60px">
+                                @Html.DisplayNameFor(model => model.ServiceItem.CategoryId)
+                            </th>
+                            <th style="text-align: left;width: 60px">
+                                @Html.DisplayNameFor(model => model.ServiceItem.GrpCde)
+                            </th>
+                            <th style="text-align: left;width: 60px">
+                                @Html.DisplayNameFor(model => model.ServiceItem.BaseUnit)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.ServiceItem.SrvcAmt)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.ServiceItem.AccCde)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.ServiceItem.CreatedDtetime)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.ServiceItem.UserId)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-md-center">
+                        <tr style="font-size: 14px">
+                            <input type="hidden" asp-for="@Model.ServiceItem.SrvcId" />
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.ServiceItem.SrvcId)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.ServiceItem.SrvcItemId)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.ServiceItem.SrvcDesc)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.ServiceItem.CategoryId)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.ServiceItem.GrpCde)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.ServiceItem.BaseUnit)
+                            </td>
+                            <td style="text-align: right">
+                                @Html.DisplayFor(model => model.ServiceItem.SrvcAmt)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.ServiceItem.AccCde)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.ServiceItem.CreatedDtetime)
+                            </td>
+                            <td style="text-align: left">
+                                @Html.DisplayFor(model => model.ServiceItem.UserId)
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" onclick="cleanDefaultContainer()">Close</button>
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </div>
+    </div>
+</form>

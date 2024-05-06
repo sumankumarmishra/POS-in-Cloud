@@ -1,0 +1,132 @@
+﻿@model AutoNumberModelList
+
+@{
+    ViewData["Title"] = "Edit Auto Number";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="col-12">
+    <div id="messageBox" class="alert alert-danger @((ViewBag.AlertMessage != null) ? "" : "d-none")" role="alert">
+        @ViewBag.AlertMessage
+    </div>
+</div>
+<div class="container">
+    <div class="card-header bg-dark">
+        <h3 class="card-title ">Edit Auto Number</h3>
+    </div>
+    <form asp-action="Edit" class="form-horizontal">
+        <div class="card-body">
+            
+            <input asp-for="AutoNumber.BillTypCde" type="hidden" class="form-control" readonly>
+            <input asp-for="AutoNumber.LastGenerateDte" type="hidden" class="form-control" readonly>
+            <input asp-for="AutoNumber.BillNature" type="hidden" class="form-control" readonly>
+            <input asp-for="AutoNumber.ResetEvery" type="hidden" class="form-control" readonly>
+            <input asp-for="AutoNumber.CmpyId" type="hidden" class="form-control" readonly>
+
+            <div class="form-group row">
+                <label asp-for="AutoNumber.AutoNoId" class="col-sm-2 col-form-label">System ID.</label>
+                <div class="col-sm-10">
+                    <input asp-for="AutoNumber.AutoNoId" type="text" class="form-control" readonly>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label asp-for="AutoNumber.PosId" class="col-sm-2 col-form-label">POS ID.</label>
+                <div class="col-sm-10">
+                    <input asp-for="AutoNumber.PosId" type="text" class="form-control" readonly>
+                    <span asp-validation-for="AutoNumber.PosId" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label asp-for="AutoNumber.BizDte" class="col-sm-2 col-form-label">Business Date</label>
+                <div class="col-sm-10">
+                    <input asp-for="AutoNumber.BizDte" type="date" class="form-control">
+                    <span asp-validation-for="AutoNumber.BizDte" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label asp-for="AutoNumber.NoOfShift" class="col-sm-2 col-form-label">Number of Shift</label>
+                <div class="col-sm-10">
+                    <input asp-for="AutoNumber.NoOfShift" type="number" class="form-control">
+                    <span asp-validation-for="AutoNumber.NoOfShift" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label asp-for="AutoNumber.CurShift" class="col-sm-2 col-form-label">Current Shift</label>
+                <div class="col-sm-10">
+                    <input asp-for="AutoNumber.CurShift" type="number" class="form-control">
+                    <span asp-validation-for="AutoNumber.CurShift" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label asp-for="AutoNumber.PosDefLoc" class="col-sm-2 col-form-label">Default Location</label>
+                <div class="col-sm-10">
+                    <select asp-for="AutoNumber.PosDefLoc" class="form-control form-select">
+                        @foreach (var item in Model.Locations)
+                        {
+                            <option value="@item.LocCde">@item.LocCde</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label asp-for="AutoNumber.PosDefSaleTyp" class="col-sm-2 col-form-label">Default Sale Type.</label>
+                <div class="col-sm-10">
+                    <select asp-for="AutoNumber.PosDefSaleTyp" class=" form-control form-select">
+                        <option value="CASH">CASH Sale</option>
+                        <option value="BANK">BANK Sale</option>
+                        <option value="INV">INVOICE Sale</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label asp-for="AutoNumber.BillPrefix" class="col-sm-2 col-form-label">Bill Prefix</label>
+                <div class="col-sm-10">
+                    <input asp-for="AutoNumber.BillPrefix" type="text" placeholder="Bill Prefix" class="form-control">
+                    <span asp-validation-for="AutoNumber.BillPrefix" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label asp-for="AutoNumber.RunningNo" class="col-sm-2 col-form-label">Running No.</label>
+                <div class="col-sm-10">
+                    <input asp-for="AutoNumber.RunningNo" type="number" placeholder="Running Number" class="form-control">
+                    <span asp-validation-for="AutoNumber.RunningNo" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label asp-for="AutoNumber.LastUsedNo" class="col-sm-2 col-form-label">Last Used No.</label>
+                <div class="col-sm-10">
+                    <input asp-for="AutoNumber.LastUsedNo" type="number" placeholder="Last Used Number" class="form-control">
+                    <span asp-validation-for="AutoNumber.LastUsedNo" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="offset-sm-2 col-sm-10">
+                    <div class="form-check">
+                        <input type="checkbox" asp-for="AutoNumber.ZeroLeading" class="form-check-input">
+                        <label class="form-check-label" asp-for="AutoNumber.ZeroLeading">Zero Leading</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="offset-sm-2 col-sm-10">
+                    <div class="form-check">
+                        <input type="checkbox" asp-for="AutoNumber.AllowAccessRoom" class="form-check-input">
+                        <label class="form-check-label" asp-for="AutoNumber.AllowAccessRoom">Allow Access Room</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">Update</button>
+        </div>
+    </form>
+</div>
+<script>
+    $(document).ready(function () {
+        setTimeout(function () {
+            $("#messageBox").fadeOut();
+        }, 5000);
+    });
+</script>
+
+

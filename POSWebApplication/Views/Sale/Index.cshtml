@@ -1,0 +1,620 @@
+﻿@model SaleModelList
+
+@{
+    ViewData["Title"] = "Home";
+}
+<style>
+    th, td {
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    .custom-box {
+        margin: 5px auto; /* Center the box */
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+    }
+
+    .highlight {
+        background-color: silver;
+    }
+
+    .bordered-image {
+        width: 100px;
+        height: 100px;
+        border: 2px solid #333;
+        border-radius: 5px;
+    }
+
+    .loading-text {
+        display: none;
+        color: black;
+        font-size: 20px;
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .price-tag {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        background-color: #31849B;
+        color: white;
+        padding: 5px 5px;
+        font-size: 12px;
+        border-radius: 5px;
+    }
+
+    .number-pad {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: grid;
+        grid-template-columns: repeat(3, 70px);
+        grid-gap: 10px;
+        max-width: 250px;
+        margin: 0 auto;
+        background-color: whitesmoke;
+        border: 2px solid black;
+        border-radius: 5px;
+        padding: 10px;
+        z-index: 9999;
+    }
+
+    .uom-table-pad {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        max-width: 400px;
+        margin: 0 auto;
+        background: whitesmoke;
+        border: 2px solid black;
+        border-radius: 5px;
+        padding: 10px;
+        z-index: 1;
+    }
+
+    .number-pad-button {
+        font-size: 20px;
+        padding: 10px;
+        cursor: pointer;
+    }
+
+        .number-pad-button:first-child {
+            grid-column: 3;
+        }
+
+    .number-pad-input {
+        grid-column: 1 / span 2;
+        padding: 10px;
+        font-size: 20px;
+        text-align: right;
+    }
+
+</style>
+
+<!--Bill LookUp Modal -->
+<div class="modal" id="billLookUpModal" tabindex="-1" role="dialog" aria-labelledby="billLookUpModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Saved Bills</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body table-responsive" style="max-height: 550px">
+                <div id="tableLoadingScreen" class="loading-text">Loading...</div>
+                <table id="billTable" class="table table-bordered table-hover">
+                    <thead class="text-md-center">
+                        <tr style="font-size: 12px">
+                            <th style="width: 120px;text-align: left">
+                                @Html.DisplayNameFor(model => model.BillH.BillNo)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.BillH.BizDte)
+                            </th>
+                            <th style="width: 50px;text-align: left">
+                                @Html.DisplayNameFor(model => model.BillH.ShiftNo)
+                            </th>
+                            <th style="width: 50px;text-align: left">
+                                Bill Amount
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="billHListId" class="text-md-left" style="font-size: 14px">
+                        @*Bill LookUp Table Data will be come from Sale.js*@
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button id="modelCloseBtnId" type="button" class="btn" data-dismiss="modal" style="background-color: #31849B;color: white">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Bill Reprint Modal -->
+<div class="modal" id="billReprintModal" tabindex="-1" role="dialog" aria-labelledby="billReprintModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Reprint Bills</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body table-responsive" style="max-height: 550px">
+                <div id="tableLoadingScreen" class="loading-text">Loading...</div>
+                <table id="billReprintTable" class="table table-bordered table-hover">
+                    <thead class="text-md-center">
+                        <tr style="font-size: 12px">
+                            <th style="width: 120px;text-align: left">
+                                @Html.DisplayNameFor(model => model.BillH.BillNo)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.BillH.BizDte)
+                            </th>
+                            <th style="width: 50px;text-align: left">
+                                @Html.DisplayNameFor(model => model.BillH.ShiftNo)
+                            </th>
+                            <th style="width: 50px;text-align: left">
+                                Bill Amount
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="billReprintListId" class="text-md-left" style="font-size: 14px">
+                        @*Bill Reprint list will be come from Sale.js*@
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button id="modelCloseBtnId" class="btn" data-dismiss="modal" style="background-color: #31849B;color: white">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Bill Void Modal -->
+<div class="modal" id="billVoidModal" tabindex="-1" role="dialog" aria-labelledby="billVoidModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Void Bills</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="showConfirmation()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body table-responsive" style="max-height: 550px">
+                <div id="tableLoadingScreen" class="loading-text">Loading...</div>
+                <input type="hidden" id="hiddenChosenBillHId" />
+                <table id="billReprintTable" class="table table-bordered table-hover">
+                    <thead class="text-md-center">
+                        <tr style="font-size: 12px">
+                            <th style="width: 120px;text-align: left">
+                                @Html.DisplayNameFor(model => model.BillH.BillNo)
+                            </th>
+                            <th style="text-align: left">
+                                @Html.DisplayNameFor(model => model.BillH.BizDte)
+                            </th>
+                            <th style="width: 50px;text-align: left">
+                                @Html.DisplayNameFor(model => model.BillH.ShiftNo)
+                            </th>
+                            <th style="width: 50px;text-align: left">
+                                Bill Amount
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="billVoidableListId" class="text-md-left" style="font-size: 14px">
+                        @*Bill Voidable list will be come from Sale.js*@
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button id="modelCloseBtnId" type="button" class="btn" data-dismiss="modal" style="background-color: #31849B;color: white" onclick="showConfirmation()">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--Customer Modal -->
+<div class="modal" id="customerModal" tabindex="-1" role="dialog" aria-labelledby="billVoidModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Customers</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeCustomerModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body table-responsive" style="max-height: 550px">
+                <div id="tableLoadingScreen" class="loading-text">Loading...</div>
+                <input type="hidden" id="hiddenChosenBillHId" />
+                <table id="customerTable" class="table table-bordered table-hover">
+                    <thead class="text-md-center">
+                        <tr style="font-size: 12px">
+                            <th style="text-align: left">
+                                Code
+                            </th>
+                            <th style="text-align: left">
+                                Name
+                            </th>
+                            <th style="text-align: left">
+                                Address
+                            </th>
+                            <th style="text-align: left">
+                                Phone
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="customerListId" class="text-md-left" style="font-size: 14px">
+                        @*Customer list will be come from Sale.js*@
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button id="modelCloseBtnId" type="button" class="btn" data-dismiss="modal" style="background-color: #31849B;color: white" onclick="closeCustomerModal()">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--Payment Modal -->
+<div class="modal" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Payment</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <label class="col-4 col-form-label text-truncate" style="font-size: 14px">Net Amount</label>
+                    <input class="form-control col-4" id="paymentNetAmountDisplayId" value="0" style="background-color: #31849B;color: white" readonly>
+                </div>
+                <div class="row mt-1">
+                    <label class="col-4 col-form-label text-truncate" style="font-size: 14px">Change Amount</label>
+                    <input class="form-control col-4" id="changeAmountDisplayId" value="0" style="background-color: #31849B;color: white" readonly>
+                </div>
+                <div class="row mt-1">
+                    <div class="col-md-3">
+                        <table id="paymentTypeTable" class="table table-bordered table-hover">
+                            <thead class="text-md-center">
+                                <tr style="font-size: 12px">
+                                    <th style="text-align: left">
+                                        @Html.DisplayNameFor(model => model.BillP.CurrTyp)
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="paymentTypeBodyId" class="text-md-left" style="font-size: 12px">
+                                @*Payment Type Data will be come from Sale.js*@
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-9">
+                        <table id="paymentTable" class="table table-bordered table-hover">
+                            <thead class="text-md-center">
+                                <tr style="font-size: 12px">
+                                    <th style="width: 250px;text-align: left">
+                                        @Html.DisplayNameFor(model => model.BillP.CurrTyp)
+                                    </th>
+                                    <th style="width: 200px;text-align: left">
+                                        @Html.DisplayNameFor(model => model.BillP.PaidAmt)
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="paymentTableBodyId" class="text-md-left" style="font-size: 12px">
+                                @*Payment Table Data will be come from Sale.js*@
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="justify-content: flex-start">
+                <input id="inputPaymentCustomer" class="form-control col-md-5" style="text-align: center;background-color: #31849B;color: white;cursor: pointer"
+                       onclick="chooseCustomer()" value="Customer" readonly />
+                <div class="col-md-3"></div>
+                <button id="modelCloseBtnId" type="button" class="btn col-md-3" data-dismiss="modal" onclick="addAllDataToTables()" style="background-color: #31849B; color: white;">Print</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!--Return Modal -->
+<div class="modal" id="returnModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Return</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <label class="col-4 col-form-label text-truncate" style="font-size: 14px">Return Amount</label>
+                    <input class="form-control col-4" id="returnAmountDisplayId" value="0" style="background-color: #31849B;color: white" readonly>
+                </div>
+                <div class="row mt-1">
+                    <div class="col-md-12">
+                        <table id="returnTable" class="table table-bordered table-hover">
+                            <thead class="text-md-center">
+                                <tr style="font-size: 12px">
+                                    <th style="width: 250px;text-align: left">
+                                        @Html.DisplayNameFor(model => model.BillP.CurrTyp)
+                                    </th>
+                                    <th style="width: 200px;text-align: left">
+                                        Return Amount
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="returnTableBodyId" class="text-md-left" style="font-size: 12px">
+                                @*Return Table Data will be come from Sale.js*@
+                            </tbody>
+                        </table>
+                        <label class="col-form-label text-truncate" style="font-size: 14px">Remark:</label>
+                        <input id="returnRemarkID" type="text" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="modelCloseBtnId" type="button" class="btn" data-dismiss="modal" onclick="addAllReturnDataToTables()" style="background-color: #31849B; color: white">Return</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main content -->
+<section class="content" style="overflow: hidden">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-6 col-sm-6 col-lg-3">
+                <div class="custom-box">
+                    <div class="info-box-content text-center text-truncate">
+                        <h6 class="info-box-text">Shift - <b style="color: blue">@Model.AutoNumber.CurShift</b></h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-sm-6 col-lg-3">
+                <div class="custom-box">
+                    <div class="info-box-content text-center text-truncate">
+                        <h6 class="info-box-text">Business Date - <b style="color: blue">@Model.AutoNumber.BizDteString</b></h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-sm-6 col-lg-3">
+                <div class="custom-box">
+                    <div class="info-box-content text-center text-truncate">
+                        <h6 class="info-box-text">Location - <b style="color: blue">@Model.AutoNumber.PosDefLoc</b></h6>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-6 col-sm-6 col-lg-3">
+                <div class="custom-box">
+                    <div class="info-box-content text-center text-truncate">
+                        <h6 class="info-box-text">POS Counter - <b style="color: blue">@Model.AutoNumber.PosId</b></h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-lg-6">
+                <div class="card">
+                    @*<div class="card-header">
+                    <h3 class="card-title">Sale</h3>
+                    <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                    <i class="fas fa-minus"></i>
+                    </button>
+                    </div>
+                    </div>*@
+                    <div class="card-body" style="max-height: 700px">
+                        <div class="row col-12">
+                            <input id="billNoId" class="form-control m-1 custom-color text-truncate" style="font-size: 12px;width: auto;min-width: 60px;background-color: #31849B;color: white" type="text" value="@Model.BillNo" readonly />
+                            <button class="form-control m-1 text-truncate" style="font-size: 12px;width: auto;min-width: 60px;background-color: #31849B;color: white" onclick="clearAll()">Clear</button>
+                            <button id="billSaveId" class="form-control m-1 text-truncate" style="font-size: 12px;width: auto;min-width: 60px;background-color: #31849B;color: white" onclick="addDataToTable()">Save</button>
+                            <button id="billLookUpId" class="form-control m-1 text-truncate" style="font-size: 12px;width: auto;min-width: 60px;background-color: #31849B;color: white" onclick="chooseBillLookUp()" data-toggle="modal" data-target="#billLookUpModal">Lookup</button>
+                            <button id="billReprintId" class="form-control m-1 text-truncate" style="font-size: 12px;width: auto;min-width: 60px;background-color: #31849B;color: white" onclick="chooseBillReprint()" data-toggle="modal" data-target="#billReprintModal">Reprint</button>
+                            <button id="billVoidId" class="form-control m-1 text-truncate" style="font-size: 12px;width: auto;min-width: 60px;background-color: #31849B;color: white" onclick="chooseBillVoidable()" data-toggle="modal" data-target="#billVoidModal">Void</button>
+                        </div>
+                        <div style="max-height: 400px" class="table-responsive">
+                            <table id="saleTable" class="table table-bordered">
+                                <thead class="text-md-center">
+                                    <tr style="font-size: 12px">
+                                        <th style="width: 70px;text-align: left">
+                                            No.
+                                        </th>
+                                        <th style="width: 220px;text-align: left">
+                                            @Html.DisplayNameFor(model => model.Stock.ItemDesc)
+                                        </th>
+                                        <th style="width: 120px;text-align: left">
+                                            @Html.DisplayNameFor(model => model.Stock.BaseUnit)
+                                        </th>
+                                        <th style="width: 70px;text-align: left">
+                                            @Html.DisplayNameFor(model => model.Stock.Quantity)
+                                        </th>
+                                        <th style="width: 120px;text-align: left">
+                                            @Html.DisplayNameFor(model => model.Stock.SellingPrice)
+                                        </th>
+                                        <th style="width: 120px;text-align: left">
+                                            Disc
+                                        </th>
+                                        <th style="width: 150px;text-align: left">
+                                            Amount
+                                        </th>
+                                        <th>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="mainBodyId" class="text-md-left" style="font-size: 12px">
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row col-12">
+                            <div class="mt-2 mb-1 col-md-6">
+                                <div class="row">
+                                    <input id="inputCustomer" class="form-control col-md-8" style="text-align: center;background-color: #31849B;color: white;cursor: pointer"
+                                           onclick="chooseCustomer()" data-toggle="modal" data-target="#customerModal" value="Customer" readonly />
+                                    <input id="hiddenCustId" value="" type="hidden" />
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-4 col-6">
+                                        <button class="form-control text-truncate col-12" style="font-size: 12px;background-color: #31849B;color: white" data-toggle="modal" data-target="#paymentModal" onclick="choosePayment()">Payment</button>
+                                    </div>
+                                    <div class="col-md-4 col-6">
+                                        <button class="form-control text-truncate col-12" style="font-size: 12px;background-color: #31849B;color: white" data-toggle="modal" data-target="#returnModal" onclick="openReturnModal()">Return</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-2 col-md-6 justify-content-end">
+                                <div class="row justify-content-end">
+                                    <label class="col-5 col-form-label text-truncate" style="font-size: 14px">Bill Total</label>
+                                    <input class="form-control col-4" id="billTotal" style="background-color: #31849B;color: white;text-align: right" value="0" readonly>
+                                </div>
+                                <div class="row justify-content-end mt-1">
+                                    <label class="col-5 col-form-label text-truncate" style="font-size: 14px">Bill Discount</label>
+                                    <input class="form-control col-4 custom-color" id="billDiscount" onclick="clickFunction(this.id)" style="cursor: pointer;background-color: #31849B;color: white;text-align: right" value="0" readonly>
+                                </div>
+                                <div class="row justify-content-end mt-1">
+                                    <label class="col-5 col-form-label text-truncate" style="font-size: 14px">Net Amount</label>
+                                    <input class="form-control col-4 custom-color" id="netAmount" style="background-color: #31849B;color: white;text-align: right" value="0" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="numberPad" class="number-pad" style="display: none">
+                            <button class="number-pad-button">X</button>
+                            <input class="number-pad-input" type="text" id="display" readonly>
+                            <button class="clear number-pad-button">C</button>
+                            <button class="number-pad-button">1</button>
+                            <button class="number-pad-button">2</button>
+                            <button class="number-pad-button">3</button>
+                            <button class="number-pad-button">4</button>
+                            <button class="number-pad-button">5</button>
+                            <button class="number-pad-button">6</button>
+                            <button class="number-pad-button">7</button>
+                            <button class="number-pad-button">8</button>
+                            <button class="number-pad-button">9</button>
+                            <button class="number-pad-button">0</button>
+                            <button id="percentButton" class="number-pad-button" disabled>%</button>
+                            <button class="number-pad-button">Enter</button>
+                        </div>
+                        <div id="uomList" class="uom-table-pad" style="display: none">
+                            <table id="uomList" class="table table-bordered table-hover">
+                                <thead class="text-md-center">
+                                    <tr style="font-size: 12px">
+                                        <th style="width: 120px;text-align: left">
+                                            UOM
+                                        </th>
+                                        <th style="width: 80px;text-align: left">
+                                            Price
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="UOMListId" class="text-md-left" style="font-size: 12px">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 col-lg-6">
+                <div class="card">
+
+                    <div class="card-body" style="max-height: 700px">
+                        <div class="form-inline mb-2">
+                            <div class="col-6">
+                                <input id="barcodeID" class="form-control col-8" type="text" placeholder="Barcode" aria-label="Barcode" oninput="addStockByBarcode()">
+                            </div>
+                            <div class="col-6 row">
+                                <input id="searchID" class="form-control col-10" type="search" placeholder="Search" aria-label="Search" oninput="searchStock(this.value)">
+                                <button class="btn btn-sidebar col-2">
+                                    <i class="fas fa-search fa-fw"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row mb-2" style="display: flex; flex-wrap: nowrap; overflow-x: auto">
+                            <button class="text-truncate form-control" style="font-size: 12px;width: auto;min-width: 60px;background-color: #31849B;color: white" onclick="allStocks()">ALL</button>
+                            <button class="text-truncate form-control" style="font-size: 12px;width: auto;min-width: 60px;background-color: #31849B;color: white" onclick="packageStocks()">Package</button>
+                            @foreach (var item in Model.StockCategories)
+                            {
+                                <button class="btn btn-default form-control text-truncate" style="font-size: 12px;width: auto;min-width: 60px;background-color: #31849B;color: white" onclick="changeStocks('@item.CategoryId')">@item.CategoryId</button>
+                            }
+                        </div>
+
+                        <div style="max-height: 470px" class="table-responsive">
+                            <div id="loadingScreen" class="loading-text">Loading...</div>
+                            <div id="tableContainer" class="container">
+                                <div class="row">
+                                    @foreach (var item in Model.Stocks)
+                                    {
+                                        <div class="col-lg-2 col-md-2 col-sm-3 col-4 mb-2" style="font-size: 12px">
+                                            <div onclick="addStock('@item.ItemId',1)" style="cursor: pointer">
+                                                <img src="data:image/jpeg;base64,@item.Base64Image" class="bordered-image" alt="Image">
+                                                <div>
+                                                    <h5 class="price-tag">
+                                                        @string.Format("{0:N0}", item.SellingPrice)
+                                                    </h5>
+                                                    <span class="text-truncate" style="float: left">@Html.DisplayFor(modelItem => item.ItemDesc)</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+    </div>
+
+</section>
+<!-- /.content -->
+<!-- jQuery -->
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- DataTables  & Plugins -->
+<script src="../../plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="../../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="../../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="../../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<!-- CustomJs for Common-->
+<script src="../customjs/Common/Common.js"></script>
+<!-- CustomJs for Sale -->
+<script src="../customjs/Sale/Sale.js"></script>
+<!-- Page specific script -->
+<script>
+    $(function () {
+        $('#reportedDataTable').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": true,
+            "ordering": true,
+            "info": false,
+            "autoWidth": false,
+            "responsive": true,
+            "lengthMenu": [20, 50, 100],
+        });
+    });
+
+    $(function () {
+        setTimeout(() => {
+            $("#messageBox1, #messageBox2").fadeOut();
+        }, 3000);
+    });
+</script>
+

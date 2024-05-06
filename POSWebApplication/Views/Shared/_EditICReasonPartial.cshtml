@@ -1,0 +1,38 @@
+﻿@model ICReason
+<form asp-action="Edit" asp-controller="ICReason">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title" id="popupDialogLabel">Update Inventory Issue Reason</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead class="text-md-center">
+                        <tr style="font-size: 14px">
+                            <th style="text-align: left;width: 80px">
+                                @Html.DisplayNameFor(model => model.ICReasonId)
+                            </th>
+                            <th style="text-align: left;width: 200px">
+                                <span style="color: red">*&nbsp;</span>@Html.DisplayNameFor(model => model.ICReasonCde)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-md-center">
+                        <tr style="font-size: 12px">
+                            <td>
+                                <input asp-for="@Model.ICReasonId" class="form-control form-control-sm" readonly />
+                            </td>
+                            <td>
+                                <input asp-for="@Model.ICReasonCde" class="form-control form-control-sm" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" onclick="cleanDefaultContainer()">Close</button>
+            <button type="submit" class="btn btn-info">Save changes</button>
+        </div>
+    </div>
+</form>

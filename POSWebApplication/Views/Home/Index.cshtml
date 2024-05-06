@@ -1,0 +1,275 @@
+﻿@model Home
+
+@{
+    ViewData["Title"] = "Home";
+}
+<style>
+    th, td {
+        overflow: hidden;
+        white-space: nowrap;
+    }
+</style>
+
+<div class="modal" id="billHModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="overflow: auto">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content table-responsive">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Bill Edit</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeBillHEditModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="billEditBodyId" class="modal-body" style="">
+            </div>
+            <div class="modal-footer">
+                <button id="modelCloseBtnId" type="button" class="btn btn-default" onclick="closeBillHEditModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="info-box">
+                @if (Model.AutoNumber.CurShift >= Model.AutoNumber.NoOfShift)
+                {
+                    <a asp-controller="Home" asp-action="DayEnd" asp-route-posID="@Model.AutoNumber.PosId">
+                        <button class="btn btn-primary" onclick="return confirm('Are you sure to end day?')"><i class="fas fa-moon fa-2x"></i><br />End of Day</button>
+                    </a>
+                }
+                else
+                {
+                    <a asp-controller="Home" asp-action="ShiftEnd" asp-route-posID="@Model.AutoNumber.PosId">
+                        <button class="btn btn-info" onclick="return confirm('Are you sure to end shift?')"><i class="fas fa-clock fa-2x"></i><br />End of Shift</button>
+                    </a>
+                }
+
+                <div class="info-box-content text-center">
+                    <h3 class="info-box-text" style="color: red"><b>@Model.AutoNumber.CurShift</b></h3>
+                    <span class="info-box-number text-truncate">
+                        Shift No.
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="info-box">
+                <div class="info-box-content text-center">
+                    <h3 class="info-box-text" style="color: blue"><b>@Model.AutoNumber.BizDteString</b></h3>
+                    <span class="info-box-number">
+                        Business Date
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="info-box">
+                <div class="info-box-content text-center">
+                    <h3 class="info-box-text" style="color: blue"><b>@Model.AutoNumber.PosDefLoc</b></h3>
+                    <span class="info-box-number">
+                        Location
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="info-box">
+                <div class="info-box-content text-center">
+                    <h3 class="info-box-text" style="color: blue"><b>@Model.AutoNumber.PosId</b></h3>
+                    <span class="info-box-number">
+                        POS Counter
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-1">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-title row m-1">
+                    <div class="col-sm-6 col-lg-4 row">
+                        <label class="col-6 col-form-label">From Date</label>
+                        <div class="col-6">
+                            <input id="filterFromDate" type="date" class="form-control" oninput="search()" />
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-4 row">
+                        <label class="col-6 col-form-label">To Date</label>
+                        <div class="col-6">
+                            <input id="filterToDate" type="date" class="form-control" oninput="search()" />
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3 row">
+                        <label class="col-6 col-form-label">Shift No</label>
+                        <div class="col-4">
+                            <input id="filterShiftNo" type="number" class="form-control" oninput="search()" />
+                        </div>
+                    </div>
+                </div>
+                <div id="mainTable" class="card-body table-responsive" style="max-height: 700px">
+                    <table id="saleVoucherTable" class="table table-bordered table-hover">
+                        <thead class="text-md-center">
+                            <tr style="font-size: 14px;text-align: left">
+                                <th>
+                                    BillNo
+                                </th>
+                                @* <th>
+                                Action
+                                </th> *@
+                                <th>
+                                    BizDate
+                                </th>
+                                <th>
+                                    Location
+                                </th>
+                                <th>
+                                    ShiftNo
+                                </th>
+                                <th>
+                                    SaleType
+                                </th>
+                                <th>
+                                    CustName
+                                </th>
+                                <th>
+                                    Amount
+                                </th>
+                                <th>
+                                    Discount
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                                <th>
+                                    Remark
+                                </th>
+                                <th>
+                                    User
+                                </th>
+                                <th>
+                                    RevDateTime
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="mainBodyId" class="text-md-left">
+                            @foreach (var billH in Model.BillHList)
+                            {
+                                <tr style="font-size: 14px;cursor: pointer" onclick="showBillDs(@billH.BillhId)">
+                                    <td style="text-align: left">
+                                        @Html.DisplayFor(modelItem => billH.BillNo)
+                                    </td>
+                                    @* <td style="text-align: left">
+                                @Html.DisplayFor(modelItem => billH.Action)
+                                </td> *@
+                                    <td style="text-align: left">
+                                        @Convert.ToDateTime(billH.BizDte).ToString("dd-MM-yyyy")
+                                    </td>
+                                    <td style="text-align: left">
+                                        @Html.DisplayFor(modelItem => billH.LocCde)
+                                    </td>
+                                    <td style="text-align: left">
+                                        @Html.DisplayFor(modelItem => billH.ShiftNo)
+                                    </td>
+                                    <td style="text-align: left">
+                                        @Html.DisplayFor(modelItem => billH.SaleType)
+                                    </td>
+                                    <td style="text-align: left">
+                                        @Html.DisplayFor(modelItem => billH.GuestNme)
+                                    </td>
+                                    <td style="text-align: right">
+                                        @Html.DisplayFor(modelItem => billH.TotalAmount)
+                                    </td>
+                                    <td style="text-align: right">
+                                        @Html.DisplayFor(modelItem => billH.BillDiscount)
+                                    </td>
+                                    <td style="text-align: left">
+                                        @Html.DisplayFor(modelItem => billH.Status)
+                                    </td>
+                                    <td style="text-align: left;max-width: 120px" class="text-truncate">
+                                        @Html.DisplayFor(modelItem => billH.Remark)
+                                    </td>
+                                    <td style="text-align: left">
+                                        @Html.DisplayFor(modelItem => billH.User)
+                                    </td>
+                                    <td style="text-align: left" class="text-truncate">
+                                        @Convert.ToDateTime(billH.RevDteTime).ToString("dd-MM-yyyy hh:mm tt ")
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row mt-1">
+        <div class="col-6 col-md-4 col-lg-3 row">
+            <div class="col-6">
+                Sale Total
+            </div>
+            <div class="card col-6 text-success text-right">
+                @Model.SalesTotal.ToString("N0")
+            </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-3 row">
+            <div class="col-6">
+                Return Total
+            </div>
+            <div class="card col-6 text-danger text-right">
+                @Model.ReturnTotal.ToString("N0")
+            </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-3 row">
+            <div class="col-6">
+                Void Total
+            </div>
+            <div class="card col-6 text-warning text-right">
+                @Model.VoidTotal.ToString("N0")
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery -->
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- DataTables  & Plugins -->
+<script src="../../plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="../../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="../../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="../../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="../../plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+<script src="../../plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+<script src="../../plugins/jszip/jszip.min.js"></script>
+<script src="../../plugins/pdfmake/pdfmake.min.js"></script>
+<script src="../../plugins/pdfmake/vfs_fonts.js"></script>
+<script src="../../plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+<script src="../../plugins/datatables-buttons/js/buttons.print.min.js"></script>
+<script src="../../plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+<!-- CustomJs for Home -->
+<script src="../customjs/Home/Home.js"></script>
+<!-- Page specific script -->
+<script>
+    $(function () {
+        $('#saleVoucherTable').DataTable({
+            "paging": true,
+            "lengthChange": false,
+            "searching": true,
+            "ordering": true,
+            "info": false,
+            "autoWidth": false,
+            "responsive": true,
+            "lengthMenu": [20, 50, 100],
+        });
+    });
+
+    $(function () {
+        setTimeout(() => {
+            $("#messageBox1, #messageBox2").fadeOut();
+        }, 3000);
+    });
+</script>
