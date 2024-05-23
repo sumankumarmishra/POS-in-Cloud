@@ -14,15 +14,21 @@ namespace POSWebApplication.Controllers
     public class SaleController : Controller
     {
         private readonly POSWebAppDbContext _dbContext;
+        private readonly DatabaseSettings _databaseSettings;
         private readonly IMemoryCache _cache;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public SaleController(POSWebAppDbContext dbContext, IWebHostEnvironment webHostEnvironment, IMemoryCache cache)
+        public SaleController(DatabaseSettings databaseSettings, IWebHostEnvironment webHostEnvironment, IMemoryCache cache)
         {
-            _dbContext = dbContext;
+            _databaseSettings = databaseSettings;
+            var optionsBuilder = new DbContextOptionsBuilder<POSWebAppDbContext>().UseSqlServer(_databaseSettings.ConnectionString);
+            _dbContext = new POSWebAppDbContext(optionsBuilder.Options);
             _webHostEnvironment = webHostEnvironment;
             _cache = cache;
         }
+
+
+        #region // Sale methods //
 
         public async Task<IActionResult> Index()
         {
@@ -66,9 +72,6 @@ namespace POSWebApplication.Controllers
 
             return View(saleList);
         }
-
-
-        #region // Sale methods //
 
         public string GenerateAutoBillNo()
         {
@@ -1078,7 +1081,8 @@ namespace POSWebApplication.Controllers
                     .Select(auto => auto.BizDte)
                     .FirstOrDefault();
 
-                ViewData["Business Date"] = bizDte.ToString("dd MMM yyyy");
+                ViewData["Business Date"] = bizDte.ToString("dd-MM-yyyy");
+                ViewData["Database"] = _databaseSettings.DbName;
             }
         }
 

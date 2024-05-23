@@ -10,14 +10,18 @@ namespace POSWebApplication.Controllers.PublicControllers
 {
     public class LogInController : Controller
     {
+        private readonly DatabaseSettings _databaseSettings;
         private readonly POSWebAppDbContext _dbContext;
 
-        public LogInController(POSWebAppDbContext dbContext)
+        public LogInController(DatabaseSettings databaseSettings)
         {
-            _dbContext = dbContext;
+            _databaseSettings = databaseSettings;
+            var optionsBuilder = new DbContextOptionsBuilder<POSWebAppDbContext>().UseSqlServer(_databaseSettings.ConnectionString);
+            _dbContext = new POSWebAppDbContext(optionsBuilder.Options);
         }
 
-        // GET: User
+        #region // Main methods //
+
         public IActionResult Index()
         {
             ClaimsPrincipal claimUser = HttpContext.User;
@@ -25,9 +29,9 @@ namespace POSWebApplication.Controllers.PublicControllers
             {
                 return RedirectToAction("Index", "Home");
             }
-            if (TempData["alert message"] != null)
+            if (TempData["InfoMessage"] != null)
             {
-                ViewBag.AlertMessage = TempData["alert message"];
+                ViewBag.AlertMessage = TempData["InfoMessage"];
             }
             return View();
         }
@@ -38,6 +42,7 @@ namespace POSWebApplication.Controllers.PublicControllers
         {
             try
             {
+
                 var userList = await _dbContext.ms_user.ToListAsync();
 
                 if (ModelState.IsValid)
@@ -76,6 +81,9 @@ namespace POSWebApplication.Controllers.PublicControllers
             }
             return View(user);
         }
+
+
+        #endregion
 
     }
 }

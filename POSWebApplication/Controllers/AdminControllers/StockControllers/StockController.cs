@@ -10,14 +10,19 @@ namespace POSWebApplication.Controllers.AdminControllers.StockControllers
     [Authorize]
     public class StockController : Controller
     {
+        private readonly DatabaseSettings _databaseSettings;
         private readonly POSWebAppDbContext _dbContext;
         private readonly IWebHostEnvironment _hostingEnvironment;
 
-        public StockController(POSWebAppDbContext dbContext, IWebHostEnvironment hostingEnvironment)
+        public StockController(DatabaseSettings databaseSettings, IWebHostEnvironment hostingEnvironment)
         {
-            _dbContext = dbContext;
+            _databaseSettings = databaseSettings;
+            var optionsBuilder = new DbContextOptionsBuilder<POSWebAppDbContext>().UseSqlServer(_databaseSettings.ConnectionString);
+            _dbContext = new POSWebAppDbContext(optionsBuilder.Options);
             _hostingEnvironment = hostingEnvironment;
         }
+
+        #region // Main methods //
 
         public async Task<IActionResult> Index()
         {
@@ -214,6 +219,10 @@ namespace POSWebApplication.Controllers.AdminControllers.StockControllers
             return RedirectToAction(nameof(Index));
         }
 
+        #endregion
+
+
+        #region // Common methods //
         protected void SetLayOutData()
         {
             var userCde = HttpContext.User.Claims.FirstOrDefault()?.Value;
@@ -233,10 +242,14 @@ namespace POSWebApplication.Controllers.AdminControllers.StockControllers
                     .Select(auto => auto.BizDte)
                     .FirstOrDefault();
 
-                ViewData["Business Date"] = bizDte.ToString("dd MMM yyyy");
+                ViewData["Business Date"] = bizDte.ToString("dd-MM-yyyy");
+                ViewData["Database"] = _databaseSettings.DbName;
             }
         }
+        #endregion
 
+
+        #region // Main methods //
         public async Task<IActionResult> AddStockPartial()
         {
             var stockList = await _dbContext.ms_stock.ToListAsync();
@@ -300,6 +313,8 @@ namespace POSWebApplication.Controllers.AdminControllers.StockControllers
 
             return PartialView("_DeleteStockPartial", stockModelList);
         }
+
+        #endregion
 
     }
 }

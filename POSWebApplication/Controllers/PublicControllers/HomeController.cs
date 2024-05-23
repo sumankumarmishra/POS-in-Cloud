@@ -15,14 +15,19 @@ namespace POSWebApplication.Controllers
     [Authorize]
     public class HomeController : Controller
     {
+        private readonly DatabaseSettings _databaseSettings;
         private readonly POSWebAppDbContext _dbContext;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public HomeController(POSWebAppDbContext dbContext, IWebHostEnvironment webHostEnvironment)
+        public HomeController(DatabaseSettings databaseSettings, IWebHostEnvironment webHostEnvironment)
         {
-            _dbContext = dbContext;
+            _databaseSettings = databaseSettings;
+            var optionsBuilder = new DbContextOptionsBuilder<POSWebAppDbContext>().UseSqlServer(_databaseSettings.ConnectionString);
+            _dbContext = new POSWebAppDbContext(optionsBuilder.Options);
             _webHostEnvironment = webHostEnvironment;
         }
+
+        #region // Main methods //
 
         public async Task<IActionResult> Index()
         {
@@ -104,8 +109,10 @@ namespace POSWebApplication.Controllers
             return View(home);
         }
 
+        #endregion
 
-        #region Search method
+
+        #region // Search methods //
 
         [HttpPost]
         public async Task<IActionResult> Search(string fromDate, string toDate, string shiftNo)
@@ -193,7 +200,7 @@ namespace POSWebApplication.Controllers
         #endregion
 
 
-        #region Edit methods
+        #region // Edit methods //
 
         [HttpPost]
         public IActionResult Edit(Home home)
@@ -280,7 +287,7 @@ namespace POSWebApplication.Controllers
         #endregion
 
 
-        #region Other spin-off methods
+        #region // Other spin-off methods //
 
         public async Task<IActionResult> ShiftEnd(string posID)
         {
@@ -323,7 +330,7 @@ namespace POSWebApplication.Controllers
         #endregion
 
 
-        #region Print Preview
+        #region // Print methods //
 
         public async Task<IActionResult> BillPrint(string billNo)
         {
@@ -393,7 +400,7 @@ namespace POSWebApplication.Controllers
         #endregion
 
 
-        #region Common Methods
+        #region // Common methods //
 
         protected void SetLayOutData()
         {
@@ -414,7 +421,8 @@ namespace POSWebApplication.Controllers
                     .Select(auto => auto.BizDte)
                     .FirstOrDefault();
 
-                ViewData["Business Date"] = bizDte.ToString("dd MMM yyyy");
+                ViewData["Business Date"] = bizDte.ToString("dd-MM-yyyy");
+                ViewData["Database"] = _databaseSettings.DbName;
             }
         }
 
@@ -451,7 +459,7 @@ namespace POSWebApplication.Controllers
         #endregion
 
 
-        #region Unnecessary Methods
+        #region // Unnecessary methods //
 
         public IActionResult Privacy()
         {

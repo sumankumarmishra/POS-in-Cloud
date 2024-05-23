@@ -9,12 +9,17 @@ namespace POSWebApplication.Controllers.AdminControllers.StockControllers
     [Authorize]
     public class StockBOMController : Controller
     {
+        private readonly DatabaseSettings _databaseSettings;
         private readonly POSWebAppDbContext _dbContext;
 
-        public StockBOMController(POSWebAppDbContext dbContext)
+        public StockBOMController(DatabaseSettings databaseSettings)
         {
-            _dbContext = dbContext;
+            _databaseSettings = databaseSettings;
+            var optionsBuilder = new DbContextOptionsBuilder<POSWebAppDbContext>().UseSqlServer(_databaseSettings.ConnectionString);
+            _dbContext = new POSWebAppDbContext(optionsBuilder.Options);
         }
+
+        #region // Main methods //
 
         public async Task<IActionResult> Index()
         {
@@ -104,28 +109,56 @@ namespace POSWebApplication.Controllers.AdminControllers.StockControllers
             return PartialView("_StockBOMPartial", bOMModelList);
         }
 
-        protected void SetLayOutData()
+        #endregion
+
+
+        #region // Stock BOM Items methods //
+
+        public async Task<IEnumerable<StockBOM>> GetStockBOMList(string bomId)
         {
-            var userCde = HttpContext.User.Claims.FirstOrDefault()?.Value;
-            var user = _dbContext.ms_user.FirstOrDefault(u => u.UserCde == userCde);
+            var thisStockBOMs = await _dbContext.ms_stockbom.Where(u => u.BOMId == bomId).OrderBy(u => u.OrdId).ToListAsync();
 
-            if (user != null)
-            {
-                ViewData["Username"] = user.UserNme;
-
-                var accLevel = _dbContext.ms_usermenuaccess.FirstOrDefault(u => u.MnuGrpId == user.MnuGrpId)?.AccLevel;
-                ViewData["User Role"] = accLevel.HasValue ? $"accessLvl{accLevel}" : null;
-
-                var POS = _dbContext.ms_userpos.FirstOrDefault(pos => pos.UserId == user.UserId);
-
-                var bizDte = _dbContext.ms_autonumber
-                    .Where(auto => auto.PosId == POS.POSid)
-                    .Select(auto => auto.BizDte)
-                    .FirstOrDefault();
-
-                ViewData["Business Date"] = bizDte.ToString("dd MMM yyyy");
-            }
+            return thisStockBOMs;
         }
+
+        public IEnumerable<StockBOM> GetStocks()
+        {
+            var stocks = _dbContext.ms_stock
+                .Select(stock => new StockBOM
+                {
+                    ItemId = stock.ItemId,
+                    BaseUnit = stock.BaseUnit,
+                    UOMRate = 1,
+                    StockFlg = 'I'
+                })
+                .ToList();
+
+            var serviceItems = _dbContext.ms_serviceitem
+                .Select(serviceItem => new StockBOM
+                {
+                    ItemId = serviceItem.SrvcItemId,
+                    BaseUnit = serviceItem.BaseUnit,
+                    UOMRate = 1,
+                    StockFlg = 'S'
+                })
+                .ToList();
+
+            var unionStocks = stocks.Union(serviceItems).Select(sItem => new StockBOM
+            {
+                ItemId = sItem.ItemId,
+                BaseUnit = sItem.BaseUnit,
+                UOMRate = 1,
+                StockFlg = sItem.StockFlg
+            });
+
+
+            return unionStocks;
+        }
+
+        #endregion
+
+
+        #region // JS methods //
 
         public async Task<IActionResult> StockBOMPartial(string bomId)
         {
@@ -354,47 +387,33 @@ namespace POSWebApplication.Controllers.AdminControllers.StockControllers
             return PartialView("_AddStockBOMPartial", bOMModelList);
         }
 
-        #region Stock BOM Items methods
+        #endregion
 
-        public async Task<IEnumerable<StockBOM>> GetStockBOMList(string bomId)
+
+        #region // Common methods //
+
+        protected void SetLayOutData()
         {
-            var thisStockBOMs = await _dbContext.ms_stockbom.Where(u => u.BOMId == bomId).OrderBy(u => u.OrdId).ToListAsync();
+            var userCde = HttpContext.User.Claims.FirstOrDefault()?.Value;
+            var user = _dbContext.ms_user.FirstOrDefault(u => u.UserCde == userCde);
 
-            return thisStockBOMs;
-        }
-
-        public IEnumerable<StockBOM> GetStocks()
-        {
-            var stocks = _dbContext.ms_stock
-                .Select(stock => new StockBOM
-                {
-                    ItemId = stock.ItemId,
-                    BaseUnit = stock.BaseUnit,
-                    UOMRate = 1,
-                    StockFlg = 'I'
-                })
-                .ToList();
-
-            var serviceItems = _dbContext.ms_serviceitem
-                .Select(serviceItem => new StockBOM
-                {
-                    ItemId = serviceItem.SrvcItemId,
-                    BaseUnit = serviceItem.BaseUnit,
-                    UOMRate = 1,
-                    StockFlg = 'S'
-                })
-                .ToList();
-
-            var unionStocks = stocks.Union(serviceItems).Select(sItem => new StockBOM
+            if (user != null)
             {
-                ItemId = sItem.ItemId,
-                BaseUnit = sItem.BaseUnit,
-                UOMRate = 1,
-                StockFlg = sItem.StockFlg
-            });
+                ViewData["Username"] = user.UserNme;
 
+                var accLevel = _dbContext.ms_usermenuaccess.FirstOrDefault(u => u.MnuGrpId == user.MnuGrpId)?.AccLevel;
+                ViewData["User Role"] = accLevel.HasValue ? $"accessLvl{accLevel}" : null;
 
-            return unionStocks;
+                var POS = _dbContext.ms_userpos.FirstOrDefault(pos => pos.UserId == user.UserId);
+
+                var bizDte = _dbContext.ms_autonumber
+                    .Where(auto => auto.PosId == POS.POSid)
+                    .Select(auto => auto.BizDte)
+                    .FirstOrDefault();
+
+                ViewData["Business Date"] = bizDte.ToString("dd-MM-yyyy");
+                ViewData["Database"] = _databaseSettings.DbName;
+            }
         }
 
         #endregion

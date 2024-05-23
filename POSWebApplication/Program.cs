@@ -1,19 +1,26 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using POSWebApplication.Data;
+using POSWebApplication.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddDbContext<POSWebAppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+//builder.Services.AddDbContext<POSWebAppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+var databaseSettings = builder.Configuration.GetSection("DatabaseSettings").Get<DatabaseSettings>();
+
+// Add to handle user defined database settings
+builder.Services.AddSingleton<DatabaseSettings>();
+
 
 // Add authentication dependency injection to authenticate log in user
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.LoginPath = "/LogIn/Index";
+        options.LoginPath = "/SystemSettings/Index";
         options.ExpireTimeSpan = TimeSpan.FromMinutes(240);
     });
 
@@ -39,6 +46,8 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=LogIn}/{action=Index}/{id?}");
+    pattern: "{controller=SystemSettings}/{action=Index}/{id?}");
+
+//app.UseSession();
 
 app.Run();
