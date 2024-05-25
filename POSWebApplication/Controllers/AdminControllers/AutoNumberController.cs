@@ -14,12 +14,18 @@ namespace POSWebApplication.Controllers.AdminControllers
     [Authorize]
     public class AutoNumberController : Controller
     {
+        private readonly DatabaseSettings _databaseSettings;
         private readonly POSWebAppDbContext _dbContext;
 
-        public AutoNumberController(POSWebAppDbContext dbContext)
+        public AutoNumberController(DatabaseSettings databaseSettings)
         {
-            _dbContext = dbContext;
+            _databaseSettings = databaseSettings;
+            var optionsBuilder = new DbContextOptionsBuilder<POSWebAppDbContext>().UseSqlServer(_databaseSettings.ConnectionString);
+            _dbContext = new POSWebAppDbContext(optionsBuilder.Options);
         }
+
+
+        #region // Main methods //
 
         public async Task<IActionResult> Index()
         {
@@ -84,6 +90,31 @@ namespace POSWebApplication.Controllers.AdminControllers
             return (_dbContext.ms_autonumber?.Any(e => e.AutoNoId == id)).GetValueOrDefault();
         }
 
+        #endregion
+
+
+        #region // JS methods //
+
+        public async Task<IActionResult> EditAutoNumberPartial(short autoNoId)
+        {
+            var autoNumberList = await _dbContext.ms_autonumber.ToListAsync();
+            var autoNumber = await _dbContext.ms_autonumber.FindAsync(autoNoId);
+            var locations = await _dbContext.ms_location.ToListAsync();
+
+            var autoNumberModelList = new AutoNumberModelList
+            {
+                AutoNumbers = autoNumberList,
+                AutoNumber = autoNumber,
+                Locations = locations
+            };
+
+            return PartialView("_EditAutoNumberPartial", autoNumberModelList);
+        }
+
+        #endregion
+
+
+        #region // Common methods //
         protected void SetLayOutData()
         {
             var userCde = HttpContext.User.Claims.FirstOrDefault()?.Value;
@@ -107,20 +138,7 @@ namespace POSWebApplication.Controllers.AdminControllers
             }
         }
 
-        public async Task<IActionResult> EditAutoNumberPartial(short autoNoId)
-        {
-            var autoNumberList = await _dbContext.ms_autonumber.ToListAsync();
-            var autoNumber = await _dbContext.ms_autonumber.FindAsync(autoNoId);
-            var locations = await _dbContext.ms_location.ToListAsync();
+        #endregion
 
-            var autoNumberModelList = new AutoNumberModelList
-            {
-                AutoNumbers = autoNumberList,
-                AutoNumber = autoNumber,
-                Locations = locations
-            };
-
-            return PartialView("_EditAutoNumberPartial", autoNumberModelList);
-        }
     }
 }

@@ -10,16 +10,20 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
     [Authorize]
     public class GoodReturnController : Controller
     {
+        private readonly DatabaseSettings _databaseSettings;
         private readonly POSWebAppDbContext _dbContext;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        public GoodReturnController(POSWebAppDbContext dbContext, IWebHostEnvironment webHostEnvironment)
+
+        public GoodReturnController(DatabaseSettings databaseSettings, IWebHostEnvironment webHostEnvironment)
         {
-            _dbContext = dbContext;
+            _databaseSettings = databaseSettings;
+            var optionsBuilder = new DbContextOptionsBuilder<POSWebAppDbContext>().UseSqlServer(_databaseSettings.ConnectionString);
+            _dbContext = new POSWebAppDbContext(optionsBuilder.Options);
             _webHostEnvironment = webHostEnvironment;
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
         }
 
-        // Common functions
+        #region // Main methods //
 
         public async Task<IActionResult> Index()
         {
@@ -67,6 +71,10 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
             return View(GoodReturnModelList);
         }
 
+        #endregion
+
+
+        #region // Common methods //
         private static string ChangeDateFormat(DateTime date)
         {
             var dateOnly = DateOnly.FromDateTime(date);
@@ -92,7 +100,8 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
                     .Select(auto => auto.BizDte)
                     .FirstOrDefault();
 
-                ViewData["Business Date"] = bizDte.ToString("dd MMM yyyy");
+                ViewData["Business Date"] = bizDte.ToString("dd-MM-yyyy");
+                ViewData["Database"] = _databaseSettings.DbName;
             }
         }
 
@@ -128,7 +137,10 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
             }
         }
 
-        /*Add and update Good Return*/
+        #endregion
+
+
+        #region // Good Return methods //
 
         [HttpPost]
         public async Task<String> AddGoodReturnDetails([FromBody] InventoryJSView jsView)
@@ -300,8 +312,6 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
             };
         }
 
-        /*Edit Good Return*/
-
         public async Task<List<InventoryBillD>> FindGoodReturnDetails(int arapId)
         {
             var goodReturnDetailsList = await _dbContext.icarapdetail.Where(detail => detail.ArapId == arapId).ToListAsync();
@@ -314,7 +324,6 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
             return goodReturnH;
         }
 
-        /*Delete Good Return*/
         [HttpPost]
         public async Task DeleteGoodReturnDetails(int arapId)
         {
@@ -323,7 +332,10 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
             _dbContext.SaveChanges();
         }
 
-        /*Print Report*/
+        #endregion
+
+
+        #region // Print methods //
 
         public async Task<IActionResult> PrintReview(string refNo)
         {
@@ -371,7 +383,11 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
 
         }
 
-        /* Utility methods for parsing */
+        #endregion
+
+
+        #region // Parsing methods //
+
         static Boolean ParseBool(string value)
         {
             if (Boolean.TryParse(value, out Boolean result))
@@ -408,7 +424,10 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
             return default;
         }
 
-        /* For JSView Input */
+        #endregion
+
+
+        #region // JS methods //
 
         public async Task<IEnumerable<Location>> GetLocations()
         {
@@ -457,7 +476,7 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
         public async Task<Stock> GetStocksByItemId(string itemId)
         {
             var stock = await _dbContext.ms_stock.FirstOrDefaultAsync(stock => stock.ItemId == itemId);
-            return stock;
+            return stock ?? new Stock();
         }
 
         public async Task<List<StockUOM>> GetStockUOMs(string itemId)
@@ -469,8 +488,10 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
         public async Task<StockUOM> GetStockUOMsByUOMCde(string itemId, string uomCde)
         {
             var stockUOM = await _dbContext.ms_stockuom.FirstOrDefaultAsync(uom => uom.ItemId == itemId && uom.UOMCde == uomCde);
-            return stockUOM;
+            return stockUOM ?? new StockUOM();
         }
+
+        #endregion
     }
 }
 

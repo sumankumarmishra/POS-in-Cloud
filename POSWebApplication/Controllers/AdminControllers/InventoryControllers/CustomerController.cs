@@ -9,12 +9,17 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
     [Authorize]
     public class CustomerController : Controller
     {
+        private readonly DatabaseSettings _databaseSettings;
         private readonly POSWebAppDbContext _dbContext;
 
-        public CustomerController(POSWebAppDbContext dbContext)
+        public CustomerController(DatabaseSettings databaseSettings)
         {
-            _dbContext = dbContext;
+            _databaseSettings = databaseSettings;
+            var optionsBuilder = new DbContextOptionsBuilder<POSWebAppDbContext>().UseSqlServer(_databaseSettings.ConnectionString);
+            _dbContext = new POSWebAppDbContext(optionsBuilder.Options);
         }
+
+        #region // Main methods //
 
         public async Task<IActionResult> Index()
         {
@@ -114,28 +119,10 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
             return RedirectToAction(nameof(Index));
         }
 
-        protected void SetLayOutData()
-        {
-            var userCde = HttpContext.User.Claims.FirstOrDefault()?.Value;
-            var user = _dbContext.ms_user.FirstOrDefault(u => u.UserCde == userCde);
+        #endregion
 
-            if (user != null)
-            {
-                ViewData["Username"] = user.UserNme;
 
-                var accLevel = _dbContext.ms_usermenuaccess.FirstOrDefault(u => u.MnuGrpId == user.MnuGrpId)?.AccLevel;
-                ViewData["User Role"] = accLevel.HasValue ? $"accessLvl{accLevel}" : null;
-
-                var POS = _dbContext.ms_userpos.FirstOrDefault(pos => pos.UserId == user.UserId);
-
-                var bizDte = _dbContext.ms_autonumber
-                    .Where(auto => auto.PosId == POS.POSid)
-                    .Select(auto => auto.BizDte)
-                    .FirstOrDefault();
-
-                ViewData["Business Date"] = bizDte.ToString("dd MMM yyyy");
-            }
-        }
+        #region // JS methods //
 
         public IActionResult AddCustomerPartial()
         {
@@ -155,5 +142,36 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
 
             return PartialView("_DeleteCustomerPartial", Customer);
         }
+
+        #endregion  
+
+
+        #region // Common methods //
+
+        protected void SetLayOutData()
+        {
+            var userCde = HttpContext.User.Claims.FirstOrDefault()?.Value;
+            var user = _dbContext.ms_user.FirstOrDefault(u => u.UserCde == userCde);
+
+            if (user != null)
+            {
+                ViewData["Username"] = user.UserNme;
+
+                var accLevel = _dbContext.ms_usermenuaccess.FirstOrDefault(u => u.MnuGrpId == user.MnuGrpId)?.AccLevel;
+                ViewData["User Role"] = accLevel.HasValue ? $"accessLvl{accLevel}" : null;
+
+                var POS = _dbContext.ms_userpos.FirstOrDefault(pos => pos.UserId == user.UserId);
+
+                var bizDte = _dbContext.ms_autonumber
+                    .Where(auto => auto.PosId == POS.POSid)
+                    .Select(auto => auto.BizDte)
+                    .FirstOrDefault();
+
+                ViewData["Business Date"] = bizDte.ToString("dd-MM-yyyy");
+                ViewData["Database"] = _databaseSettings.DbName;
+            }
+        }
+
+        #endregion
     }
 }

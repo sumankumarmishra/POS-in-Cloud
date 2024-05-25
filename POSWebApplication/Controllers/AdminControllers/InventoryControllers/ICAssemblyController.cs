@@ -10,17 +10,20 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
     [Authorize]
     public class ICAssemblyController : Controller
     {
+        private readonly DatabaseSettings _databaseSettings;
         private readonly POSWebAppDbContext _dbContext;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ICAssemblyController(POSWebAppDbContext dbContext, IWebHostEnvironment webHostEnvironment)
+        public ICAssemblyController(DatabaseSettings databaseSettings, IWebHostEnvironment webHostEnvironment)
         {
-            _dbContext = dbContext;
+            _databaseSettings = databaseSettings;
+            var optionsBuilder = new DbContextOptionsBuilder<POSWebAppDbContext>().UseSqlServer(_databaseSettings.ConnectionString);
+            _dbContext = new POSWebAppDbContext(optionsBuilder.Options);
             _webHostEnvironment = webHostEnvironment;
         }
 
 
-        #region Common Methods
+        #region // Main methods //
 
         public async Task<IActionResult> Index()
         {
@@ -69,6 +72,11 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
             return View(ICAssemblyModelList);
         }
 
+        #endregion
+
+
+        #region // Common methods //
+
         private static string ChangeDateFormat(DateTime date)
         {
             var dateOnly = DateOnly.FromDateTime(date);
@@ -94,7 +102,8 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
                     .Select(auto => auto.BizDte)
                     .FirstOrDefault();
 
-                ViewData["Business Date"] = bizDte.ToString("dd MMM yyyy");
+                ViewData["Business Date"] = bizDte.ToString("dd-MM-yyyy");
+                ViewData["Database"] = _databaseSettings.DbName;
             }
         }
 
@@ -133,10 +142,10 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
         #endregion
 
 
-        #region Add and update Inventory Assembly
+        #region // Inventory Assembly methods //
 
         [HttpPost]
-        public async Task<String> AddInventoryAssemblyDetails([FromBody] InventoryJSView jsView)
+        public async Task<string> AddInventoryAssemblyDetails([FromBody] InventoryJSView jsView)
         {
             try
             {
@@ -250,7 +259,7 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
             }
         }
 
-        public async Task<String> UpdateInventoryAssemblyDetails([FromBody] InventoryJSView jsView)
+        public async Task<string> UpdateInventoryAssemblyDetails([FromBody] InventoryJSView jsView)
         {
             try
             {
@@ -452,16 +461,10 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
             };
         }
 
-        #endregion
-
-
-        #region Edit Inventory Assembly
-
-
         public async Task<InventoryMoveBillH> FindICAssemblyH(int icMoveId)
         {
             var inventoryAssemblyH = await _dbContext.icmove.FirstOrDefaultAsync(head => head.IcMoveId == icMoveId);
-            return inventoryAssemblyH;
+            return inventoryAssemblyH ?? new InventoryMoveBillH();
         }
 
         public async Task<List<InventoryBillD>> FindICAssemblyDetails(int icMoveId)
@@ -476,14 +479,15 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
         #endregion
 
 
-        #region Print Report
+        #region // Print methods //
+
         public async Task<IActionResult> PrintReview(string refNo)
         {
             var icMove = await _dbContext.icmove.Where(head => head.IcRefNo2 == refNo)
                 .Select(head => new InventoryReport
                 {
                     icrefno = head.IcRefNo,
-                    reasonid = _dbContext.icreason.Where(r => r.ICReasonId == head.ReasonId).Select(r => r.ICReasonCde).FirstOrDefault(),
+                    reasonid = _dbContext.icreason.Where(r => r.ICReasonId == head.ReasonId).Select(r => r.ICReasonCde).FirstOrDefault() ?? "",
                     revuserid = head.RevUserId,
                     remark = head.Remark,
                     trandte = head.TranDte.ToString("dd-MM-yyyy")
@@ -534,7 +538,7 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
         #endregion
 
 
-        #region Utility methods for parsing
+        #region // Parsing methods //
 
         static Boolean ParseBool(string value)
         {
@@ -566,7 +570,7 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
         #endregion
 
 
-        #region For JSView Input
+        #region // JS methods //
 
         public async Task<IEnumerable<Location>> GetLocations()
         {

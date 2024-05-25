@@ -9,12 +9,17 @@ namespace POSWebApplication.Controllers.AdminControllers.UsersControllers
     [Authorize]
     public class MenuAccessController : Controller
     {
+        private readonly DatabaseSettings _databaseSettings;
         private readonly POSWebAppDbContext _dbContext;
 
-        public MenuAccessController(POSWebAppDbContext dbContext)
+        public MenuAccessController(DatabaseSettings databaseSettings)
         {
-            _dbContext = dbContext;
+            _databaseSettings = databaseSettings;
+            var optionsBuilder = new DbContextOptionsBuilder<POSWebAppDbContext>().UseSqlServer(_databaseSettings.ConnectionString);
+            _dbContext = new POSWebAppDbContext(optionsBuilder.Options);
         }
+
+        #region // Main methods //
 
         public async Task<IActionResult> Index()
         {
@@ -208,6 +213,11 @@ namespace POSWebApplication.Controllers.AdminControllers.UsersControllers
             return (_dbContext.ms_usermenuaccess?.Any(e => e.AccessId == id)).GetValueOrDefault();
         }
 
+        #endregion
+
+
+        #region // Common methods //
+
         protected void SetLayOutData()
         {
             var userCde = HttpContext.User.Claims.FirstOrDefault()?.Value;
@@ -227,8 +237,11 @@ namespace POSWebApplication.Controllers.AdminControllers.UsersControllers
                     .Select(auto => auto.BizDte)
                     .FirstOrDefault();
 
-                ViewData["Business Date"] = bizDte.ToString("dd MMM yyyy");
+                ViewData["Business Date"] = bizDte.ToString("dd-MM-yyyy");
+                ViewData["Database"] = _databaseSettings.DbName;
             }
         }
+
+        #endregion
     }
 }

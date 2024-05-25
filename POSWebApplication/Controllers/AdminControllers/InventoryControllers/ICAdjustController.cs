@@ -10,16 +10,20 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
     [Authorize]
     public class ICAdjustController : Controller
     {
+        private readonly DatabaseSettings _databaseSettings;
         private readonly POSWebAppDbContext _dbContext;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ICAdjustController(POSWebAppDbContext dbContext, IWebHostEnvironment webHostEnvironment)
+        public ICAdjustController(DatabaseSettings databaseSettings, IWebHostEnvironment webHostEnvironment)
         {
-            _dbContext = dbContext;
+            _databaseSettings = databaseSettings;
+            var optionsBuilder = new DbContextOptionsBuilder<POSWebAppDbContext>().UseSqlServer(_databaseSettings.ConnectionString);
+            _dbContext = new POSWebAppDbContext(optionsBuilder.Options);
             _webHostEnvironment = webHostEnvironment;
         }
 
-        // Common functions
+
+        #region // Main methods //
 
         public async Task<IActionResult> Index()
         {
@@ -68,6 +72,10 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
             return View(ICAdjustModelList);
         }
 
+        #endregion
+
+
+        #region // Common methods //
         private static string ChangeDateFormat(DateTime date)
         {
             var dateOnly = DateOnly.FromDateTime(date);
@@ -93,7 +101,8 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
                     .Select(auto => auto.BizDte)
                     .FirstOrDefault();
 
-                ViewData["Business Date"] = bizDte.ToString("dd MMM yyyy");
+                ViewData["Business Date"] = bizDte.ToString("dd-MM-yyyy");
+                ViewData["Database"] = _databaseSettings.DbName;
             }
         }
 
@@ -129,10 +138,13 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
             }
         }
 
-        /*Add and update Inventory Adjust*/
+        #endregion
+
+
+        #region // Inventory Adjust methods //
 
         [HttpPost]
-        public async Task<String> AddInventoryAdjustDetails([FromBody] InventoryJSView jsView)
+        public async Task<string> AddInventoryAdjustDetails([FromBody] InventoryJSView jsView)
         {
             try
             {
@@ -185,7 +197,7 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
             }
         }
 
-        public async Task<String> UpdateInventoryAdjustDetails([FromBody] InventoryJSView jsView)
+        public async Task<string> UpdateInventoryAdjustDetails([FromBody] InventoryJSView jsView)
         {
             try
             {
@@ -296,8 +308,6 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
             return inventoryBillD;
         }
 
-        /*Edit Inventory Adjust*/
-
         public async Task<List<InventoryBillD>> FindICAdjustDetails(int icMoveId)
         {
             var inventoryAdjustDetailsList = await _dbContext.icarapdetail.Where(detail => detail.IcMoveId == icMoveId).ToListAsync();
@@ -307,10 +317,9 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
         public async Task<InventoryMoveBillH> FindICAdjustH(int icMoveId)
         {
             var inventoryAdjustH = await _dbContext.icmove.FirstOrDefaultAsync(head => head.IcMoveId == icMoveId);
-            return inventoryAdjustH;
+            return inventoryAdjustH ?? new InventoryMoveBillH();
         }
 
-        /*Delete Inventory Adjust*/
         [HttpPost]
         public async Task DeleteICAdjustDetails(int icmoveId)
         {
@@ -319,7 +328,10 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
             _dbContext.SaveChanges();
         }
 
-        /*Print Report*/
+        #endregion
+
+
+        #region // Print methods //
 
         public async Task<IActionResult> PrintReview(string refNo)
         {
@@ -327,7 +339,7 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
                 .Select(head => new InventoryReport
                 {
                     icrefno = head.IcRefNo,
-                    reasonid = _dbContext.icreason.Where(r => r.ICReasonId == head.ReasonId).Select(r => r.ICReasonCde).FirstOrDefault(),
+                    reasonid = _dbContext.icreason.Where(r => r.ICReasonId == head.ReasonId).Select(r => r.ICReasonCde).FirstOrDefault() ?? "",
                     revuserid = head.RevUserId,
                     remark = head.Remark,
                     trandte = head.TranDte.ToString("dd-MM-yyyy")
@@ -385,7 +397,10 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
             }
         }
 
-        /* Utility methods for parsing */
+        #endregion
+
+
+        #region // Parsing methods //
 
         static Boolean ParseBool(string value)
         {
@@ -414,7 +429,10 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
             return default;
         }
 
-        /* For JSView Input */
+        #endregion
+
+
+        #region // JS methods //
 
         public async Task<IEnumerable<Location>> GetLocations()
         {
@@ -431,7 +449,7 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
         public async Task<Stock> GetStocksByItemId(string itemId)
         {
             var stock = await _dbContext.ms_stock.FirstOrDefaultAsync(stock => stock.ItemId == itemId);
-            return stock;
+            return stock ?? new Stock();
         }
 
         public async Task<List<StockUOM>> GetStockUOMs(string itemId)
@@ -443,8 +461,10 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
         public async Task<StockUOM> GetStockUOMsByUOMCde(string itemId, string uomCde)
         {
             var stockUOM = await _dbContext.ms_stockuom.FirstOrDefaultAsync(uom => uom.ItemId == itemId && uom.UOMCde == uomCde);
-            return stockUOM;
+            return stockUOM ?? new StockUOM();
         }
+
+        #endregion
     }
 }
 

@@ -11,15 +11,19 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
     public class GoodReceiveController : Controller
     {
         private readonly POSWebAppDbContext _dbContext;
+        private readonly DatabaseSettings _databaseSettings;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        public GoodReceiveController(POSWebAppDbContext dbContext, IWebHostEnvironment webHostEnvironment)
+        public GoodReceiveController(DatabaseSettings databaseSettings, IWebHostEnvironment webHostEnvironment)
         {
-            _dbContext = dbContext;
+            _databaseSettings = databaseSettings;
+            var optionsBuilder = new DbContextOptionsBuilder<POSWebAppDbContext>().UseSqlServer(_databaseSettings.ConnectionString);
+            _dbContext = new POSWebAppDbContext(optionsBuilder.Options);
             _webHostEnvironment = webHostEnvironment;
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
         }
 
-        // Common functions
+
+        #region // Main methods //
 
         public async Task<IActionResult> Index()
         {
@@ -67,6 +71,11 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
             return View(GoodReceiveModelList);
         }
 
+        #endregion
+
+
+        #region // Common methods //
+
         private static string ChangeDateFormat(DateTime date)
         {
             var dateOnly = DateOnly.FromDateTime(date);
@@ -92,7 +101,8 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
                     .Select(auto => auto.BizDte)
                     .FirstOrDefault();
 
-                ViewData["Business Date"] = bizDte.ToString("dd MMM yyyy");
+                ViewData["Business Date"] = bizDte.ToString("dd-MM-yyyy");
+                ViewData["Database"] = _databaseSettings.DbName;
             }
         }
 
@@ -128,7 +138,10 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
             }
         }
 
-        /*Add and update Good Receive*/
+        #endregion
+
+
+        #region // Good Receive methods //
 
         [HttpPost]
         public async Task<String> AddGoodReceiveDetails([FromBody] InventoryJSView jsView)
@@ -324,8 +337,6 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
             };
         }
 
-        /*Edit Good Receive*/
-
         public async Task<List<InventoryBillD>> FindGoodReceiveDetails(int arapId)
         {
             var goodReceiveDetailsList = await _dbContext.icarapdetail.Where(detail => detail.ArapId == arapId).ToListAsync();
@@ -338,7 +349,6 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
             return goodReceiveH;
         }
 
-        /*Delete Good Receive*/
         [HttpPost]
         public async Task DeleteGoodReceiveDetails(int arapId)
         {
@@ -348,7 +358,10 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
         }
 
 
-        /*Print Report*/
+        #endregion
+
+
+        #region // Print methods //
 
         public async Task<IActionResult> PrintReview(string refNo)
         {
@@ -402,7 +415,10 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
             }
         }
 
-        /* Utility methods for parsing */
+        #endregion
+
+
+        #region // Parsing methods //
 
         static Boolean ParseBool(string value)
         {
@@ -449,7 +465,10 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
             return default;
         }
 
-        /* For JSView Input */
+        #endregion
+
+
+        #region // JS methods //
 
         public async Task<IEnumerable<Location>> GetLocations()
         {
@@ -512,6 +531,10 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
             var stockUOM = await _dbContext.ms_stockuom.FirstOrDefaultAsync(uom => uom.ItemId == itemId && uom.UOMCde == uomCde);
             return stockUOM;
         }
+
+        #endregion
+
+
     }
 }
 

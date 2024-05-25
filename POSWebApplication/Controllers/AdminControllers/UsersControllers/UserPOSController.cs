@@ -3,20 +3,23 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using POSWebApplication.Data;
 using POSWebApplication.Models;
-using System.Collections.Generic;
-using System.Drawing.Drawing2D;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace POSWebApplication.Controllers.AdminControllers.UsersControllers
 {
     [Authorize]
     public class UserPOSController : Controller
     {
+        private readonly DatabaseSettings _databaseSettings;
         private readonly POSWebAppDbContext _dbContext;
-        public UserPOSController(POSWebAppDbContext dbContext)
+        public UserPOSController(DatabaseSettings databaseSettings)
         {
-            _dbContext = dbContext;
+            _databaseSettings = databaseSettings;
+            var optionsBuilder = new DbContextOptionsBuilder<POSWebAppDbContext>().UseSqlServer(_databaseSettings.ConnectionString);
+            _dbContext = new POSWebAppDbContext(optionsBuilder.Options);
         }
+
+
+        #region // Main methods //
 
         public IActionResult Index()
         {
@@ -24,16 +27,7 @@ namespace POSWebApplication.Controllers.AdminControllers.UsersControllers
 
             try
             {
-                /*IEnumerable<UserPOS> resultList = from t1 in _dbContext.ms_userpos
-                             join t2 in _dbContext.ms_user on t1.UserId equals t2.UserId
-                             select new UserPOS
-                             {
-                                 POSid = t1.POSid,
-                                 UserCode = t2.UserCde,
-                                 UserPOSid = t1.UserPOSid
-                             };*/
-
-                IEnumerable<UserPOS> resultList = _dbContext.ms_userpos
+                var resultList = _dbContext.ms_userpos
                             .Join(_dbContext.ms_user,
                                 t1 => t1.UserId,
                                 t2 => t2.UserId,
@@ -52,6 +46,11 @@ namespace POSWebApplication.Controllers.AdminControllers.UsersControllers
                 return RedirectToAction("Index", "Home");
             }
         }
+
+        #endregion
+
+
+        #region // Common methods //
 
         protected void SetLayOutData()
         {
@@ -72,8 +71,11 @@ namespace POSWebApplication.Controllers.AdminControllers.UsersControllers
                     .Select(auto => auto.BizDte)
                     .FirstOrDefault();
 
-                ViewData["Business Date"] = bizDte.ToString("dd MMM yyyy");
+                ViewData["Business Date"] = bizDte.ToString("dd-MM-yyyy");
+                ViewData["Database"] = _databaseSettings.DbName;
             }
         }
+
+        #endregion
     }
 }
