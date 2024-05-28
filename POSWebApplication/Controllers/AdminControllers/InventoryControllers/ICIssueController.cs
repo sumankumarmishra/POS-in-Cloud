@@ -10,16 +10,19 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
     [Authorize]
     public class ICIssueController : Controller
     {
+        private readonly DatabaseSettings _databaseSettings;
         private readonly POSWebAppDbContext _dbContext;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ICIssueController(POSWebAppDbContext dbContext, IWebHostEnvironment webHostEnvironment)
+        public ICIssueController(DatabaseSettings databaseSettings, IWebHostEnvironment webHostEnvironment)
         {
-            _dbContext = dbContext;
+            _databaseSettings = databaseSettings;
+            var optionsBuilder = new DbContextOptionsBuilder<POSWebAppDbContext>().UseSqlServer(_databaseSettings.ConnectionString);
+            _dbContext = new POSWebAppDbContext(optionsBuilder.Options);
             _webHostEnvironment = webHostEnvironment;
         }
 
-        // Common functions
+        #region // Main methods //
 
         public async Task<IActionResult> Index()
         {
@@ -69,6 +72,10 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
             return View(ICIssueModelList);
         }
 
+        #endregion
+
+
+        #region // Common methods //
         private static string ChangeDateFormat(DateTime date)
         {
             var dateOnly = DateOnly.FromDateTime(date);
@@ -87,14 +94,21 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
                 var accLevel = _dbContext.ms_usermenuaccess.FirstOrDefault(u => u.MnuGrpId == user.MnuGrpId)?.AccLevel;
                 ViewData["User Role"] = accLevel.HasValue ? $"accessLvl{accLevel}" : null;
 
-                var POS = _dbContext.ms_userpos.FirstOrDefault(pos => pos.UserId == user.UserId);
-
-                var bizDte = _dbContext.ms_autonumber
-                    .Where(auto => auto.PosId == POS.POSid)
-                    .Select(auto => auto.BizDte)
+                var posId = _dbContext.ms_userpos
+                    .Where(pos => pos.UserId == user.UserId)
+                    .Select(pos => pos.POSid)
                     .FirstOrDefault();
 
-                ViewData["Business Date"] = bizDte.ToString("dd MMM yyyy");
+                var company = _dbContext.ms_autonumber
+                    .Where(auto => auto.PosId == posId)
+                    .FirstOrDefault();
+
+                if (company != null)
+                {
+                    ViewData["Business Date"] = company.BizDte.ToString("dd-MM-yyyy");
+                    ViewData["Database"] = $"{_databaseSettings.DbName}({company.POSPkgNme})";
+                }
+
             }
         }
 
@@ -130,10 +144,13 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
             }
         }
 
-        /*Add and update Inventory Issue*/
+        #endregion
+
+
+        #region // Inventory Issue methods //
 
         [HttpPost]
-        public async Task<String> AddInventoryIssueDetails([FromBody] InventoryJSView jsView)
+        public async Task<string> AddInventoryIssueDetails([FromBody] InventoryJSView jsView)
         {
             try
             {
@@ -186,7 +203,7 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
             }
         }
 
-        public async Task<String> UpdateInventoryIssueDetails([FromBody] InventoryJSView jsView)
+        public async Task<string> UpdateInventoryIssueDetails([FromBody] InventoryJSView jsView)
         {
             try
             {
@@ -292,8 +309,6 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
             };
         }
 
-        /*Edit Inventory Issue*/
-
         public async Task<List<InventoryBillD>> FindICIssueDetails(int icMoveId)
         {
             var inventoryIssueDetailsList = await _dbContext.icarapdetail.Where(detail => detail.IcMoveId == icMoveId).ToListAsync();
@@ -303,10 +318,9 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
         public async Task<InventoryMoveBillH> FindICIssueH(int icMoveId)
         {
             var inventoryIssueH = await _dbContext.icmove.FirstOrDefaultAsync(head => head.IcMoveId == icMoveId);
-            return inventoryIssueH;
+            return inventoryIssueH ?? new InventoryMoveBillH();
         }
 
-        /*Delete Inventory Issue*/
         [HttpPost]
         public async Task DeleteICIssueDetails(int icmoveId)
         {
@@ -315,7 +329,10 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
             _dbContext.SaveChanges();
         }
 
-        /*Print Report*/
+        #endregion
+
+
+        #region // Print methods //
 
         public async Task<IActionResult> PrintReview(string refNo)
         {
@@ -323,7 +340,7 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
                 .Select(head => new InventoryReport
                 {
                     icrefno = head.IcRefNo,
-                    reasonid = _dbContext.icreason.Where(r => r.ICReasonId == head.ReasonId).Select(r => r.ICReasonCde).FirstOrDefault(),
+                    reasonid = _dbContext.icreason.Where(r => r.ICReasonId == head.ReasonId).Select(r => r.ICReasonCde).FirstOrDefault() ?? "",
                     revuserid = head.RevUserId,
                     remark = head.Remark,
                     trandte = head.TranDte.ToString("dd-MM-yyyy")
@@ -368,8 +385,10 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
             }
         }
 
-        /* Utility methods for parsing */
+        #endregion
 
+
+        #region // Parsing methods //
         static Boolean ParseBool(string value)
         {
             if (Boolean.TryParse(value, out Boolean result))
@@ -397,7 +416,10 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
             return default;
         }
 
-        /* For JSView Input */
+        #endregion
+
+
+        #region // JS methods //
 
         public async Task<IEnumerable<Location>> GetLocations()
         {
@@ -414,7 +436,7 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
         public async Task<Stock> GetStocksByItemId(string itemId)
         {
             var stock = await _dbContext.ms_stock.FirstOrDefaultAsync(stock => stock.ItemId == itemId);
-            return stock;
+            return stock ?? new Stock();
         }
 
         public async Task<List<StockUOM>> GetStockUOMs(string itemId)
@@ -426,8 +448,10 @@ namespace POSWebApplication.Controllers.AdminControllers.InventoryControllers
         public async Task<StockUOM> GetStockUOMsByUOMCde(string itemId, string uomCde)
         {
             var stockUOM = await _dbContext.ms_stockuom.FirstOrDefaultAsync(uom => uom.ItemId == itemId && uom.UOMCde == uomCde);
-            return stockUOM;
+            return stockUOM ?? new StockUOM();
         }
+
+        #endregion
     }
 }
 

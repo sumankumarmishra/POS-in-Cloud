@@ -42,5 +42,9 @@ namespace POSWebApplication.Data
         public DbSet<Currency> ms_currency { get; set; }
         public DbSet<AutoNumber> ms_autonumber { get; set; }
         public DbSet<Location> ms_location { get; set; }
+
+        /*Setting*/
+        public DbSet<Company> ms_company { get; set; }
+        public DbSet<POSPackage> ms_pospkg { get; set; }
     }
 }

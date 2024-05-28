@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using POSWebApplication.Models;
+using Microsoft.EntityFrameworkCore;
+using POSWebApplication.Data;
 
 namespace POSWebApplication.Controllers.PublicControllers
 {

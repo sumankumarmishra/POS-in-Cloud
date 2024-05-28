@@ -9,21 +9,27 @@ using System.Drawing;
 using System.Text;
 using Rectangle = System.Drawing.Rectangle;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 
 namespace POSWebApplication.Controllers.AdminControllers.ReportControllers
 {
     [Authorize]
     public class CategorySaleReportController : Controller
     {
+        private readonly DatabaseSettings _databaseSettings;
         private readonly POSWebAppDbContext _dbContext;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private static List<Stream> m_streams;
         private static int m_currentPageIndex = 0;
-        public CategorySaleReportController(POSWebAppDbContext dbContext, IWebHostEnvironment webHostEnvironment)
+        public CategorySaleReportController(DatabaseSettings databaseSettings, IWebHostEnvironment webHostEnvironment)
         {
-            _dbContext = dbContext;
+            _databaseSettings = databaseSettings;
+            var optionsBuilder = new DbContextOptionsBuilder<POSWebAppDbContext>().UseSqlServer(_databaseSettings.ConnectionString);
+            _dbContext = new POSWebAppDbContext(optionsBuilder.Options);
             _webHostEnvironment = webHostEnvironment;
         }
+
+        #region // Main methods //
         public IActionResult Index()
         {
             SetLayOutData();
@@ -163,6 +169,11 @@ namespace POSWebApplication.Controllers.AdminControllers.ReportControllers
             }
         }
 
+        #endregion
+
+
+        #region // Common methods //
+
         protected DateTime GetBizDte()
         {
             var userCde = HttpContext.User.Claims.FirstOrDefault()?.Value;
@@ -189,19 +200,28 @@ namespace POSWebApplication.Controllers.AdminControllers.ReportControllers
                 var accLevel = _dbContext.ms_usermenuaccess.FirstOrDefault(u => u.MnuGrpId == user.MnuGrpId)?.AccLevel;
                 ViewData["User Role"] = accLevel.HasValue ? $"accessLvl{accLevel}" : null;
 
-                var POS = _dbContext.ms_userpos.FirstOrDefault(pos => pos.UserId == user.UserId);
-
-                var bizDte = _dbContext.ms_autonumber
-                    .Where(auto => auto.PosId == POS.POSid)
-                    .Select(auto => auto.BizDte)
+                var posId = _dbContext.ms_userpos
+                    .Where(pos => pos.UserId == user.UserId)
+                    .Select(pos => pos.POSid)
                     .FirstOrDefault();
 
-                ViewData["Business Date"] = bizDte.ToString("dd MMM yyyy");
+                var company = _dbContext.ms_autonumber
+                    .Where(auto => auto.PosId == posId)
+                    .FirstOrDefault();
+
+                if (company != null)
+                {
+                    ViewData["Business Date"] = company.BizDte.ToString("dd-MM-yyyy");
+                    ViewData["Database"] = $"{_databaseSettings.DbName}({company.POSPkgNme})";
+                }
+
             }
         }
 
+        #endregion
 
-        #region Direct Print Methods
+
+        #region // Direct Print Methods //
 
         public static void PrintToPrinter(LocalReport report)
         {

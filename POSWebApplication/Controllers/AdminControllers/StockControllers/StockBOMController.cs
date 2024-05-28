@@ -404,15 +404,21 @@ namespace POSWebApplication.Controllers.AdminControllers.StockControllers
                 var accLevel = _dbContext.ms_usermenuaccess.FirstOrDefault(u => u.MnuGrpId == user.MnuGrpId)?.AccLevel;
                 ViewData["User Role"] = accLevel.HasValue ? $"accessLvl{accLevel}" : null;
 
-                var POS = _dbContext.ms_userpos.FirstOrDefault(pos => pos.UserId == user.UserId);
-
-                var bizDte = _dbContext.ms_autonumber
-                    .Where(auto => auto.PosId == POS.POSid)
-                    .Select(auto => auto.BizDte)
+                var posId = _dbContext.ms_userpos
+                    .Where(pos => pos.UserId == user.UserId)
+                    .Select(pos => pos.POSid)
                     .FirstOrDefault();
 
-                ViewData["Business Date"] = bizDte.ToString("dd-MM-yyyy");
-                ViewData["Database"] = _databaseSettings.DbName;
+                var company = _dbContext.ms_autonumber
+                    .Where(auto => auto.PosId == posId)
+                    .FirstOrDefault();
+
+                if (company != null)
+                {
+                    ViewData["Business Date"] = company.BizDte.ToString("dd-MM-yyyy");
+                    ViewData["Database"] = $"{_databaseSettings.DbName}({company.POSPkgNme})";
+                }
+
             }
         }
 

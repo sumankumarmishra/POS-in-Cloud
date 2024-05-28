@@ -31,10 +31,10 @@
                             <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                         </li>
                         <li class="nav-item">
-                            <b class="nav-link">Database-@ViewData["Database"]</b>
+                            <b class="nav-link">@ViewData["Database"]</b>
                         </li>
-                        <li class="nav-item">
-                            <b class="nav-link">Date-@ViewData["Business Date"]</b>
+                        <li class="nav-item d-none d-sm-block">
+                            <b class="nav-link">@ViewData["Business Date"]</b>
                         </li>
                     </ul>
                 </div>
@@ -211,12 +211,12 @@
                                             <p>Sales Summary</p>
                                         </a>
                                     </li>
-                                    <li class="nav-item">
+                                    @* <li class="nav-item">
                                         <a asp-controller="SupplierSalesReport" asp-action="Index" class="nav-link">
                                             <i class="nav-icon fas fa-file-invoice"></i>
                                             <p>Supplier Sales Report</p>
                                         </a>
-                                    </li>
+                                    </li> *@
                                 </ul>
                             </li>
                             <li class="nav-item">
@@ -247,7 +247,7 @@
                                     </li>
                                 </ul>
                             </li>
-                            <li class="nav-item">
+                            @* <li class="nav-item">
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fas fa-cogs"></i>
                                     <p>
@@ -262,7 +262,7 @@
                                         </a>
                                     </li>
                                 </ul>
-                            </li>
+                            </li> *@
 
                         }
                         <li class="nav-item">
@@ -279,13 +279,12 @@
         <main role="main" class="pb-2 main-header" style="min-height: 85vh">
             @RenderBody()
         </main>
-
-        <footer class="border-top footer text-muted main-header">
-            <div class="container">
-                &copy; 2023 - POS Web Application - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        <footer class="main-footer">
+            <div class="float-right d-none d-sm-block">
+                <b>Version</b> 1.1.0
             </div>
+            <strong>&copy; 2024 - POS in Cloud - <a href="https://fortifiedcitymyanmar.com/">Fortified City</a>
         </footer>
-
         <!-- jQuery -->
         <script src="~/plugins/jquery/jquery.min.js"></script>
         <!-- jQuery UI 1.11.4 -->

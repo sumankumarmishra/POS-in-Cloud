@@ -50,7 +50,7 @@ namespace POSWebApplication.Controllers
                     })
                 .FirstOrDefault(u => u.UserCde == userCde);
 
-            var stocks = RestartStocks();
+            var stocks = RestartStocks() ?? new List<Stock>();
 
             var autoNumber = _dbContext.ms_autonumber.FirstOrDefault(pos => pos.PosId == UPOS.POSId);
 
@@ -66,9 +66,11 @@ namespace POSWebApplication.Controllers
                 Stocks = stocks,
                 StockCategories = stockCategories,
                 BillNo = billNo,
-                AutoNumber = autoNumber,
+                AutoNumber = autoNumber ?? new AutoNumber(),
                 CurrencyList = currencyList
             };
+
+            ViewBag.TotalSaleAmtPrDay =  GetSaleLimitPrDay() - GetTotalSaleAmount(); // Calculate to control Print method
 
             return View(saleList);
         }
@@ -683,7 +685,7 @@ namespace POSWebApplication.Controllers
         public async Task<Currency> FindCurrencyById(int currId)
         {
             var currency = await _dbContext.ms_currency.FirstOrDefaultAsync(curr => curr.CurrId == currId);
-            return currency;
+            return currency ?? new Currency();
         }
 
         public async Task<string> PaidBillToBillH(string billNo, decimal discAmt, decimal changeAmt, int custId, string custNme, string[][] saleTableData, string[][] paymentTableData)
@@ -1074,15 +1076,21 @@ namespace POSWebApplication.Controllers
                 var accLevel = _dbContext.ms_usermenuaccess.FirstOrDefault(u => u.MnuGrpId == user.MnuGrpId)?.AccLevel;
                 ViewData["User Role"] = accLevel.HasValue ? $"accessLvl{accLevel}" : null;
 
-                var POS = _dbContext.ms_userpos.FirstOrDefault(pos => pos.UserId == user.UserId);
-
-                var bizDte = _dbContext.ms_autonumber
-                    .Where(auto => auto.PosId == POS.POSid)
-                    .Select(auto => auto.BizDte)
+                var posId = _dbContext.ms_userpos
+                    .Where(pos => pos.UserId == user.UserId)
+                    .Select(pos => pos.POSid)
                     .FirstOrDefault();
 
-                ViewData["Business Date"] = bizDte.ToString("dd-MM-yyyy");
-                ViewData["Database"] = _databaseSettings.DbName;
+                var company = _dbContext.ms_autonumber
+                    .Where(auto => auto.PosId == posId)
+                    .FirstOrDefault();
+
+                if (company != null)
+                {
+                    ViewData["Business Date"] = company.BizDte.ToString("dd-MM-yyyy");
+                    ViewData["Database"] = $"{_databaseSettings.DbName}({company.POSPkgNme})";
+                }
+
             }
         }
 
@@ -1097,7 +1105,77 @@ namespace POSWebApplication.Controllers
 
         }
 
+        protected decimal GetSaleLimitPrDay()
+        {
+            decimal saleLimitPrDay = 0;
+
+            var userCde = HttpContext.User.Claims.FirstOrDefault()?.Value;
+            var user = _dbContext.ms_user.FirstOrDefault(u => u.UserCde == userCde);
+            if (user != null)
+            {
+                var posId = _dbContext.ms_userpos
+                    .Where(pos => pos.UserId == user.UserId)
+                    .Select(pos => pos.POSid)
+                    .FirstOrDefault();
+
+                var company = _dbContext.ms_autonumber
+                    .Where(auto => auto.PosId == posId)
+                    .FirstOrDefault();
+
+                if (company != null)
+                {
+                    saleLimitPrDay = _dbContext.ms_pospkg
+                    .Where(pkg => pkg.Package == company.POSPkgNme)
+                    .Select(pkg => pkg.SaleLimit)
+                    .FirstOrDefault();
+                }
+            }
+
+            return saleLimitPrDay;
+
+
+
+        }
+
+        protected decimal GetTotalSaleAmount()
+        {
+            decimal totalSaleAmt = 0;
+            var userCde = HttpContext.User.Claims.FirstOrDefault()?.Value;
+            var user = _dbContext.ms_user.FirstOrDefault(u => u.UserCde == userCde);
+
+            if (user != null)
+            {
+                var posId = _dbContext.ms_userpos
+                    .Where(pos => pos.UserId == user.UserId)
+                    .Select(pos => pos.POSid)
+                    .FirstOrDefault();
+
+                var pos = _dbContext.ms_autonumber
+                    .Where(auto => auto.PosId == posId)
+                    .FirstOrDefault();
+
+                if (pos != null)
+                {
+                    totalSaleAmt = GetTotal('P', pos.BizDte, pos.PosId);
+                }
+            }
+
+            return totalSaleAmt;
+        }
+
+        public decimal GetTotal(char status, DateTime bizDte, string posId)
+        {
+            var total = _dbContext.billh
+                .Where(h => h.Status == status && h.BizDte.Date == bizDte.Date && h.POSId == posId)
+                .SelectMany(h => _dbContext.billp.Where(p => p.BillhID == h.BillhId))
+                .Sum(p => p.LocalAmt - p.ChangeAmt);
+
+            return total;
+        }
+
         #endregion
+
+
 
 
     }

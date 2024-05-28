@@ -54,14 +54,15 @@
                         <th style="text-align: left">
                             @Html.DisplayNameFor(model => model.UserNme)
                         </th>
-                        <th style="width: 100px;text-align: left">
-                            @Html.DisplayNameFor(model => model.MnuGrpId)
+                        <th style="text-align: left">
+                            @Html.DisplayNameFor(model => model.MnuGrp)
+                        </th>
+                        
+                        <th style="width: 40px">
                         </th>
                         <th style="width: 40px">
-                            Edit
                         </th>
                         <th style="width: 40px">
-                            Delete
                         </th>
                     </tr>
                 </thead>
@@ -79,24 +80,20 @@
                                 @Html.DisplayFor(modelItem => item.UserNme)
                             </td>
                             <td style="text-align: left">
-                                @Html.DisplayFor(modelItem => item.MnuGrpId)
+                                @Html.DisplayFor(modelItem => item.MnuGrp)
                             </td>
                             @if (new[] { "accessLvl2" }.Contains(ViewData["User Role"]?.ToString()))
                             {
+                                <td>
+                                    <a asp-controller="User" asp-action="ChangePassword" asp-route-id="@item.UserId">
+                                        <i class="fas fa-lock"></i>
+                                    </a>
+                                </td>
                                 <td>
                                     <a asp-controller="User" asp-action="Edit" asp-route-id="@item.UserId">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                 </td>
-                            }
-                            else
-                            {
-                                <td>
-                                   <i class="fas fa-edit"></i>
-                                </td>
-                            }
-                            @if (new[] { "accessLvl2" }.Contains(ViewData["User Role"]?.ToString()))
-                            {
                                 <td>
                                     <a asp-controller="User" asp-action="Delete" asp-route-id="@item.UserId">
                                         <i class="fas fa-trash"></i>
@@ -106,8 +103,15 @@
                             else
                             {
                                 <td>
+                                    <i class="fas fa-lock"></i>
+                                </td>
+                                <td>
+                                   <i class="fas fa-edit"></i>
+                                </td>
+                                <td>
                                     <i class="fas fa-trash"></i>
                                 </td>
+                                
                             }
                         </tr>
                     }

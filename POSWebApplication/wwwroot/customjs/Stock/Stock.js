@@ -1,5 +1,6 @@
 // js functions for Stock
 function callAddStockController() {
+
   var loadingScreen = document.getElementById('loadingTextId');
   loadingScreen.style.display = "block";
 

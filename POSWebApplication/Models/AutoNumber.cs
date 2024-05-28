@@ -14,15 +14,16 @@ namespace POSWebApplication.Models
         [DisplayName("Last Used Number")] public long LastUsedNo { get; set; }
         [DisplayName("Last Generated Date")] public DateTime LastGenerateDte { get; set; }
         [DisplayName("Bill Nature")][StringLength(5)] public string BillNature { get; set; } = string.Empty;
-        [DisplayName("Reset Every")][StringLength(1)] public string ResetEvery { get; set; }
+        [DisplayName("Reset Every")][StringLength(1)] public string? ResetEvery { get; set; }
         [DisplayName("Company ID")] public short CmpyId { get; set; }
         [DisplayName("POS ID")] public string PosId { get; set; } = string.Empty;
         [DisplayName("Def-Location")][StringLength(24)] public string PosDefLoc { get; set; } = string.Empty;
         [DisplayName("Biz Date")] public DateTime BizDte { get; set; }
-        [NotMapped] public string BizDteString { get; set; } = string.Empty;
         [DisplayName("No. of Shift")] public byte NoOfShift { get; set; }
         [DisplayName("Current Shift")] public byte CurShift { get; set; }
         [DisplayName("Def-Sale Type")][StringLength(5)] public string PosDefSaleTyp { get; set; } = string.Empty;
         [DisplayName("Allow Access Room")] public bool AllowAccessRoom { get; set; }
+        [DisplayName("Package Name")] public string? POSPkgNme { get; set; }
+        [NotMapped] public string BizDteString { get; set; } = string.Empty;
     }
 }

@@ -5,6 +5,22 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<!-- jQuery -->
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../../dist/js/adminlte.min.js"></script>
+<!-- Message fade in and out for 5 seconds -->
+<script>
+    $(document).ready(function () {
+        setTimeout(function () {
+            $("#messageBox").fadeOut();
+        }, 5000);
+    });
+</script>
+
+
 <div class="col-12">
     <div id="messageBox" class="alert alert-danger @((ViewBag.AlertMessage != null) ? "" : "d-none")" role="alert">
         @ViewBag.AlertMessage
@@ -37,20 +53,6 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label asp-for="User.Pwd" class="col-sm-2 col-form-label">Password</label>
-                <div class="col-sm-10">
-                    <input asp-for="User.Pwd" type="password" class="form-control" placeholder="Password">
-                    <span asp-validation-for="User.Pwd" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label asp-for="User.ConfirmPwd" class="col-sm-2 col-form-label">Confirm Password</label>
-                <div class="col-sm-10">
-                    <input asp-for="User.ConfirmPwd" type="password" class="form-control" placeholder="Confirm Password">
-                    <span asp-validation-for="User.ConfirmPwd" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="form-group row">
                 <label asp-for="User.POSid" class="col-sm-2 col-form-label">POS ID</label>
                 <div class="col-sm-10">
                     <select asp-for="User.POSid" class="form-control form-select">
@@ -78,12 +80,6 @@
         </div>
     </form>
 </div>
-<script>
-    $(document).ready(function () {
-        setTimeout(function () {
-            $("#messageBox").fadeOut();
-        }, 5000);
-    });
-</script>
+
 
 

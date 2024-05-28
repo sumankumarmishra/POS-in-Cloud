@@ -31,8 +31,10 @@ namespace POSWebApplication.Controllers.PublicControllers
             }
             if (TempData["InfoMessage"] != null)
             {
-                ViewBag.AlertMessage = TempData["InfoMessage"];
+                ViewBag.SuccessMessage = TempData["InfoMessage"];
             }
+
+            ViewBag.DatabaseName = _databaseSettings.DbName;
             return View();
         }
 
@@ -77,7 +79,7 @@ namespace POSWebApplication.Controllers.PublicControllers
             }
             catch (Exception ex)
             {
-                ViewBag.AlertMessage = ex.Message;
+                ViewBag.AlertMessage = "The wrong database is connected.";
             }
             return View(user);
         }

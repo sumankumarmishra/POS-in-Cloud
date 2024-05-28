@@ -15,6 +15,9 @@ namespace POSWebApplication.Controllers.PublicControllers
             _databaseSettings = databaseSettings;
         }
 
+
+        #region // Main methods //
+
         public async Task<IActionResult> Index()
         {
             if (HttpContext.User.Claims.Count() <= 0 || _databaseSettings == null)
@@ -44,18 +47,20 @@ namespace POSWebApplication.Controllers.PublicControllers
             return View();
         }
 
-
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(DatabaseSettings dbSettings)
         {
+            //var defaultServer = "WIN-A56617PG2SR";
             var defaultServer = "DESKTOP-PS2SRRC";
 
             if (ModelState.IsValid)
             {
-                String connectionString = $"Server={defaultServer};DataBase={dbSettings.DbName};" +
-                 $"User Id=n0isy;Password=luvie;Encrypt=False;MultipleActiveResultSets=True";
+                //string connectionString = $"Server={defaultServer};DataBase={dbSettings.DbName};" +
+                // $"User Id=sa;Password=sa;Encrypt=False;MultipleActiveResultSets=True";
+                string connectionString = $"Server={defaultServer};DataBase={dbSettings.DbName};" +
+                $"User Id=n0isy;Password=luvie;Encrypt=False;MultipleActiveResultSets=True";
+
 
                 var optionsBuilder = new DbContextOptionsBuilder<POSWebAppDbContext>().UseSqlServer(connectionString);
 
@@ -80,5 +85,7 @@ namespace POSWebApplication.Controllers.PublicControllers
             }
             return View(dbSettings);
         }
+
+        #endregion
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using POSWebApplication.Data;
 using POSWebApplication.Models;
 using SixLabors.ImageSharp;
+using System.Linq;
 
 namespace POSWebApplication.Controllers.AdminControllers.StockControllers
 {
@@ -36,6 +37,8 @@ namespace POSWebApplication.Controllers.AdminControllers.StockControllers
             {
                 ViewBag.WarningMessage = TempData["warning message"];
             }
+            @ViewBag.POSPackage = GetPackageName();
+            ViewBag.StockItems = GetTotalStockItemsLeft();
 
             try
             {
@@ -235,21 +238,96 @@ namespace POSWebApplication.Controllers.AdminControllers.StockControllers
                 var accLevel = _dbContext.ms_usermenuaccess.FirstOrDefault(u => u.MnuGrpId == user.MnuGrpId)?.AccLevel;
                 ViewData["User Role"] = accLevel.HasValue ? $"accessLvl{accLevel}" : null;
 
-                var POS = _dbContext.ms_userpos.FirstOrDefault(pos => pos.UserId == user.UserId);
-
-                var bizDte = _dbContext.ms_autonumber
-                    .Where(auto => auto.PosId == POS.POSid)
-                    .Select(auto => auto.BizDte)
+                var posId = _dbContext.ms_userpos
+                    .Where(pos => pos.UserId == user.UserId)
+                    .Select(pos => pos.POSid)
                     .FirstOrDefault();
 
-                ViewData["Business Date"] = bizDte.ToString("dd-MM-yyyy");
-                ViewData["Database"] = _databaseSettings.DbName;
+                var company = _dbContext.ms_autonumber
+                    .Where(auto => auto.PosId == posId)
+                    .FirstOrDefault();
+
+                if (company != null)
+                {
+                    ViewData["Business Date"] = company.BizDte.ToString("dd-MM-yyyy");
+                    ViewData["Database"] = $"{_databaseSettings.DbName}({company.POSPkgNme})";
+                }
+
             }
         }
+
+        protected int GetTotalStockItemsLeft()
+        {
+            int totalStocksLeft = 0;
+
+            var totalStocks = _dbContext.ms_stock.Count();
+
+            var userCde = HttpContext.User.Claims.FirstOrDefault()?.Value;
+            var user = _dbContext.ms_user.FirstOrDefault(u => u.UserCde == userCde);
+            if (user != null)
+            {
+                var posId = _dbContext.ms_userpos
+                    .Where(pos => pos.UserId == user.UserId)
+                    .Select(pos => pos.POSid)
+                    .FirstOrDefault();
+
+                var company = _dbContext.ms_autonumber
+                    .Where(auto => auto.PosId == posId)
+                    .FirstOrDefault();
+
+                if (company != null)
+                {
+                    var packageStockLimit = _dbContext.ms_pospkg
+                    .Where(pkg => pkg.Package == company.POSPkgNme)
+                    .Select(pkg => pkg.ItemLimit)
+                    .FirstOrDefault();
+
+                    totalStocksLeft = packageStockLimit - totalStocks;
+                }
+            }
+
+            return totalStocksLeft < 0 ? 0 : totalStocksLeft;
+
+
+
+        }
+
+        protected string GetPackageName()
+        {
+            string packageName = "";
+
+            var userCde = HttpContext.User.Claims.FirstOrDefault()?.Value;
+            var user = _dbContext.ms_user.FirstOrDefault(u => u.UserCde == userCde);
+            if (user != null)
+            {
+                var posId = _dbContext.ms_userpos
+                    .Where(pos => pos.UserId == user.UserId)
+                    .Select(pos => pos.POSid)
+                    .FirstOrDefault();
+
+                var company = _dbContext.ms_autonumber
+                    .Where(auto => auto.PosId == posId)
+                    .FirstOrDefault();
+
+                if (company != null)
+                {
+                    packageName = _dbContext.ms_pospkg
+                    .Where(pkg => pkg.Package == company.POSPkgNme)
+                    .Select(pkg => pkg.Package)
+                    .FirstOrDefault() ?? "";
+                }
+            }
+
+            return packageName;
+
+
+
+        }
+
         #endregion
 
 
-        #region // Main methods //
+        #region // JS methods //
         public async Task<IActionResult> AddStockPartial()
         {
             var stockList = await _dbContext.ms_stock.ToListAsync();

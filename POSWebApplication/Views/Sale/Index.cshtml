@@ -321,7 +321,20 @@
                 <input id="inputPaymentCustomer" class="form-control col-md-5" style="text-align: center;background-color: #31849B;color: white;cursor: pointer"
                        onclick="chooseCustomer()" value="Customer" readonly />
                 <div class="col-md-3"></div>
-                <button id="modelCloseBtnId" type="button" class="btn col-md-3" data-dismiss="modal" onclick="addAllDataToTables()" style="background-color: #31849B; color: white;">Print</button>
+                @if(ViewBag.TotalSaleAmtPrDay > 0)
+                {
+                    <button id="modelCloseBtnId" type="button" class="btn col-md-3" data-dismiss="modal" onclick="addAllDataToTables()" style="background-color: #31849B; color: white;">Print</button>
+                    if (ViewBag.TotalSaleAmtPrDay < 100000)
+                    {
+                        <p style="color: red">* Sale amount per day will reach limit after @ViewBag.TotalSaleAmtPrDay ks. Upgrade your package to get more sale amount per day . </p>
+                    }
+                }
+                else
+                {
+                    <button id="modelDiableBtnId" type="button" class="btn col-md-3" style="background-color: #31849B; color: white;" disabled>Print</button><br/>
+                    <p style="color: red">* Sale amount per day reached limit for the package. Upgrade your package to get more sale amount per day . </p>
+                }
+                
             </div>
 
         </div>

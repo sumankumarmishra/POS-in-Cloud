@@ -5,6 +5,21 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<!-- jQuery -->
+<script src="../../plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="../../dist/js/adminlte.min.js"></script>
+<!-- Message fade in and out for 5 seconds -->
+<script>
+    $(document).ready(function () {
+        setTimeout(function () {
+            $("#messageBox").fadeOut();
+        }, 5000);
+    });
+</script>
+
 <div class="col-12">
     <div id="messageBox" class="alert alert-danger @((ViewBag.AlertMessage != null) ? "" : "d-none")" role="alert">
         @ViewBag.AlertMessage
@@ -16,6 +31,7 @@
     </div>
     <form asp-action="Create" class="form-horizontal">
         <div class="card-body">
+            <p>Please take note that the user will be created with default password 'User@123' if there is no password was provided.</p>
             <div class="form-group row">
                 <label asp-for="User.UserCde" class="col-sm-2 col-form-label">User Code</label>
                 <div class="col-sm-10">
@@ -72,12 +88,6 @@
         </div>
     </form>
 </div>
-<script>
-    $(document).ready(function () {
-        setTimeout(function () {
-            $("#messageBox").fadeOut();
-        }, 5000);
-    });
-</script>
+
 
 

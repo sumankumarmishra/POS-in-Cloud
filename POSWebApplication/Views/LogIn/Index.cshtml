@@ -24,13 +24,16 @@
         <div class="login-logo">
             <b>POS in Cloud</b> <br /> <h5>powered by Fortified City</h5>
         </div>
-        <div id="messageBox" class="alert alert-success @((ViewBag.AlertMessage != null) ? "" : "d-none")" role="alert">
+        <div id="messageBox" class="alert alert-success @((ViewBag.SuccessMessage != null) ? "" : "d-none")" role="alert">
+            @ViewBag.SuccessMessage
+        </div>
+        <div id="messageBox02" class="alert alert-danger @((ViewBag.AlertMessage != null) ? "" : "d-none")" role="alert">
             @ViewBag.AlertMessage
         </div>
         <!-- /.login-logo -->
         <div class="card">
             <div class="card-body login-card-body">
-                <p class="login-box-msg">Please Log In</p>
+                <p class="login-box-msg">Please Log In to @ViewBag.DatabaseName</p>
                 <form asp-action="Index">
                     <div class="input-group mb-3">
                         <input asp-for="UserCde" type="text" class="form-control" placeholder="User Code" autofocus>
@@ -69,7 +72,7 @@
     <script>
         $(document).ready(function () {
             setTimeout(function () {
-                $("#messageBox").fadeOut();
+                $("#messageBox #messageBox02").fadeOut();
             }, 10000);
         });
     </script>

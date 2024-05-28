@@ -64,22 +64,22 @@
 
 
 <div class="container-fluid">
-    
+
     <div class="col-12">
         <div id="messageBox1" class="alert alert-info @((ViewBag.InfoMessage != null) ? "" : "d-none")" role="alert">
             @ViewBag.InfoMessage
         </div>
     </div>
-    
+
     <div class="col-12">
         <div id="messageBox2" class="alert alert-danger @((ViewBag.WarningMessage != null) ? "" : "d-none")" role="alert">
             @ViewBag.WarningMessage
         </div>
     </div>
 
-    @if (new[] { "accessLvl2" }.Contains(ViewData["User Role"]?.ToString()))
+    @if (new[] { "accessLvl2" }.Contains(ViewData["User Role"]?.ToString()) && ViewBag.StockItems > 0)
     {
-        
+
         <div id="defaultContainer">
         </div>
         <div id="loadingTextId" class="loading-text">Loading...</div>
@@ -93,7 +93,13 @@
             New
         </button>
     }
-
+    <div style="display: flex">
+        <p>* <strong>@ViewBag.StockItems</strong> items remaining in your POS @ViewBag.POSPackage plan.</p>
+        @if (@ViewBag.POSPackage != "enterprise")
+        {
+            <p> Upgrade your plan for more items.</p>
+        }
+    </div>
     <div class="card">
         <div class="card-header">
             <h5>Stock Items</h5>
@@ -124,9 +130,9 @@
                             @Html.DisplayNameFor(model => model.Stock.SellingPrice)
                         </th>
                         @*<th style="width: 100px">
-                            @Html.DisplayNameFor(model => model.Stock.FinishGoodFlg)
+                        @Html.DisplayNameFor(model => model.Stock.FinishGoodFlg)
                         </th>*@
-                        <th style="width: 40px" >
+                        <th style="width: 40px">
                             Edit
                         </th>
                         <th style="width: 40px">
@@ -139,7 +145,7 @@
                     {
                         <tr style="font-size: 14px">
                             <td style="text-align: left">
-                                @Html.DisplayFor(modelItem => item.ItemId )
+                                @Html.DisplayFor(modelItem => item.ItemId)
                             </td>
                             <td style="text-align: left">
                                 @Html.DisplayFor(modelItem => item.ItemDesc)
