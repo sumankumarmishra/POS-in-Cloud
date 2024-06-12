@@ -4,63 +4,44 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using POSWebApplication.Data;
 using POSWebApplication.Models;
+using Microsoft.IdentityModel.Tokens;
 
 namespace POSWebApplication.Controllers.PublicControllers
 {
     public class SystemSettingsController : Controller
     {
-        private readonly DatabaseSettings _databaseSettings;
-        public SystemSettingsController(DatabaseSettings databaseSettings)
-        {
-            _databaseSettings = databaseSettings;
-        }
+        private readonly IConfiguration _configuration;
 
+        public SystemSettingsController(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
 
         #region // Main methods //
 
         public async Task<IActionResult> Index()
         {
-            if (HttpContext.User.Claims.Count() <= 0 || _databaseSettings == null)
+            if (HttpContext.User.Claims.Count() <= 0 || HttpContext.Session.GetString("Connection").IsNullOrEmpty())
             {
                 await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
                 TempData["alert message"] = "Session Expired!";
                 return View();
             }
-
-            try
-            {
-                var userName = HttpContext.User.Claims.First().Value;
-
-                if (_databaseSettings.ConnectionString != null)
-                {
-                    var optionsBuilder = new DbContextOptionsBuilder<POSWebAppDbContext>().UseSqlServer(_databaseSettings.ConnectionString);
-
-                    using var dbContext = new POSWebAppDbContext(optionsBuilder.Options);
-                    return RedirectToAction("Index", "Home");
-                }
-            }
-            catch (Exception ex)
-            {
-                ViewBag.AlertMessage = ex.Message;
-                return View();
-            }
-            return View();
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(DatabaseSettings dbSettings)
         {
-            //var defaultServer = "WIN-A56617PG2SR";
-            var defaultServer = "DESKTOP-PS2SRRC";
+            var defaultServer = _configuration["Connections:Server"];
+            var defaultUserID = _configuration["Connections:UserID"];
+            var defaultPassword = _configuration["Connections:Password"];
 
             if (ModelState.IsValid)
             {
-                //string connectionString = $"Server={defaultServer};DataBase={dbSettings.DbName};" +
-                // $"User Id=sa;Password=sa;Encrypt=False;MultipleActiveResultSets=True";
                 string connectionString = $"Server={defaultServer};DataBase={dbSettings.DbName};" +
-                $"User Id=n0isy;Password=luvie;Encrypt=False;MultipleActiveResultSets=True";
-
+                $"User Id={defaultUserID};Password={defaultPassword};Encrypt=False;MultipleActiveResultSets=True";
 
                 var optionsBuilder = new DbContextOptionsBuilder<POSWebAppDbContext>().UseSqlServer(connectionString);
 
@@ -72,14 +53,8 @@ namespace POSWebApplication.Controllers.PublicControllers
                     return View(dbSettings);
                 }
 
-                var databaseSettings = HttpContext.RequestServices.GetService<DatabaseSettings>();
-
-                if (databaseSettings != null)
-                {
-                    databaseSettings.DbName = dbSettings.DbName;
-                    databaseSettings.ConnectionString = connectionString; // Assign connection string
-                }
-
+                HttpContext.Session.SetString("Connection", connectionString);
+                HttpContext.Session.SetString("Database", dbSettings.DbName);
                 TempData["InfoMessage"] = "Database Connection is successfully established.";
                 return RedirectToAction("Index", "LogIn");
             }

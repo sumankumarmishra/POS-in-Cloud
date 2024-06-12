@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.EntityFrameworkCore;
-using POSWebApplication.Data;
+using POSinCloud.Services;
 using POSWebApplication.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,16 +12,22 @@ builder.Services.AddControllersWithViews();
 var databaseSettings = builder.Configuration.GetSection("DatabaseSettings").Get<DatabaseSettings>();
 
 // Add to handle user defined database settings
-builder.Services.AddSingleton<DatabaseSettings>();
-
+builder.Services.AddSingleton<DatabaseServices>();
+builder.Services.AddHttpContextAccessor();
 
 // Add authentication dependency injection to authenticate log in user
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
         options.LoginPath = "/SystemSettings/Index";
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(240);
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
     });
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(60);
+    options.Cookie.HttpOnly = true;
+});
 
 
 var app = builder.Build();
@@ -48,6 +53,6 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=SystemSettings}/{action=Index}/{id?}");
 
-//app.UseSession();
+app.UseSession();
 
 app.Run();

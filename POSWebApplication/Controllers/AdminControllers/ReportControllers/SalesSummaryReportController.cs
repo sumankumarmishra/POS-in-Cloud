@@ -10,23 +10,31 @@ using System.Text;
 using Rectangle = System.Drawing.Rectangle;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using POSinCloud.Services;
 
 namespace POSWebApplication.Controllers.AdminControllers.ReportControllers
 {
     [Authorize]
     public class SalesSummaryReportController : Controller
     {
-        private readonly DatabaseSettings _databaseSettings;
         private readonly POSWebAppDbContext _dbContext;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private static List<Stream> m_streams;
         private static int m_currentPageIndex = 0;
-        public SalesSummaryReportController(DatabaseSettings databaseSettings, IWebHostEnvironment webHostEnvironment)
+        public SalesSummaryReportController(DatabaseServices dbServices, IHttpContextAccessor accessor, IWebHostEnvironment webHostEnvironment)
         {
-            _databaseSettings = databaseSettings;
-            var optionsBuilder = new DbContextOptionsBuilder<POSWebAppDbContext>().UseSqlServer(_databaseSettings.ConnectionString);
-            _dbContext = new POSWebAppDbContext(optionsBuilder.Options);
-            _webHostEnvironment = webHostEnvironment;
+            var connection = accessor.HttpContext?.Session.GetString("Connection") ?? "";
+            if (connection.IsNullOrEmpty())
+            {
+                accessor.HttpContext?.Response.Redirect("../SystemSettings/Index");
+            }
+            else
+            {
+                _dbContext = new POSWebAppDbContext(dbServices.ConnectDatabase(connection));
+                _webHostEnvironment = webHostEnvironment;
+            }
+
         }
 
         #region // Main methods //
@@ -308,7 +316,9 @@ namespace POSWebApplication.Controllers.AdminControllers.ReportControllers
                 if (company != null)
                 {
                     ViewData["Business Date"] = company.BizDte.ToString("dd-MM-yyyy");
-                    ViewData["Database"] = $"{_databaseSettings.DbName}({company.POSPkgNme})";
+
+                    var dbName = HttpContext.Session.GetString("Database");
+                    ViewData["Database"] = $"{dbName}({company.POSPkgNme})";
                 }
 
             }

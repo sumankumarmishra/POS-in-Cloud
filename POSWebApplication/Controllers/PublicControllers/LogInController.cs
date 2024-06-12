@@ -5,25 +5,30 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using POSWebApplication.Data;
 using POSWebApplication.Models;
+using POSinCloud.Services;
+using Microsoft.IdentityModel.Tokens;
 
 namespace POSWebApplication.Controllers.PublicControllers
 {
     public class LogInController : Controller
     {
-        private readonly DatabaseSettings _databaseSettings;
         private readonly POSWebAppDbContext _dbContext;
 
-        public LogInController(DatabaseSettings databaseSettings)
+        public LogInController(DatabaseServices dbServices, IHttpContextAccessor accessor)
         {
-            _databaseSettings = databaseSettings;
-            var optionsBuilder = new DbContextOptionsBuilder<POSWebAppDbContext>().UseSqlServer(_databaseSettings.ConnectionString);
-            _dbContext = new POSWebAppDbContext(optionsBuilder.Options);
+            var connection = accessor.HttpContext?.Session.GetString("Connection") ?? "";
+            if (connection.IsNullOrEmpty())
+            {
+                accessor.HttpContext?.Response.Redirect("../SystemSettings/Index");
+            }
+            _dbContext = new POSWebAppDbContext(dbServices.ConnectDatabase(connection));
         }
 
         #region // Main methods //
 
         public IActionResult Index()
         {
+
             ClaimsPrincipal claimUser = HttpContext.User;
             if (claimUser.Identity != null && claimUser.Identity.IsAuthenticated)
             {
@@ -34,7 +39,7 @@ namespace POSWebApplication.Controllers.PublicControllers
                 ViewBag.SuccessMessage = TempData["InfoMessage"];
             }
 
-            ViewBag.DatabaseName = _databaseSettings.DbName;
+            ViewBag.DatabaseName = HttpContext.Session.GetString("Database");
             return View();
         }
 

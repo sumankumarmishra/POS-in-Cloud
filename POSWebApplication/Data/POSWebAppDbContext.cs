@@ -46,5 +46,12 @@ namespace POSWebApplication.Data
         /*Setting*/
         public DbSet<Company> ms_company { get; set; }
         public DbSet<POSPackage> ms_pospkg { get; set; }
+
+        /*Store Procedure*/
+        public DbSet<SaleDashboardListModel> spSaleDashboard00DbSet { get; set; }
+        public DbSet<SaleDashboardCurrListModel> spSaleDashboard0102DbSet { get; set; }
+        public DbSet<DateWiseSaleListModel> spSaleDashboard03DbSet { get; set; }
+
+        public DbSet<ItemWiseSaleListModel> spSaleDashboard04DbSet { get; set; }
     }
 }

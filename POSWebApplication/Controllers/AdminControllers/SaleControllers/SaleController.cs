@@ -7,6 +7,7 @@ using Microsoft.Reporting.NETCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Caching.Memory;
+using POSinCloud.Services;
 
 namespace POSWebApplication.Controllers
 {
@@ -14,17 +15,22 @@ namespace POSWebApplication.Controllers
     public class SaleController : Controller
     {
         private readonly POSWebAppDbContext _dbContext;
-        private readonly DatabaseSettings _databaseSettings;
         private readonly IMemoryCache _cache;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public SaleController(DatabaseSettings databaseSettings, IWebHostEnvironment webHostEnvironment, IMemoryCache cache)
+        public SaleController(DatabaseServices dbServices, IHttpContextAccessor accessor, IWebHostEnvironment webHostEnvironment, IMemoryCache cache)
         {
-            _databaseSettings = databaseSettings;
-            var optionsBuilder = new DbContextOptionsBuilder<POSWebAppDbContext>().UseSqlServer(_databaseSettings.ConnectionString);
-            _dbContext = new POSWebAppDbContext(optionsBuilder.Options);
-            _webHostEnvironment = webHostEnvironment;
-            _cache = cache;
+            var connection = accessor.HttpContext?.Session.GetString("Connection") ?? "";
+            if (connection.IsNullOrEmpty())
+            {
+                accessor.HttpContext?.Response.Redirect("../SystemSettings/Index");
+            }
+            else
+            {
+                _dbContext = new POSWebAppDbContext(dbServices.ConnectDatabase(connection));
+                _webHostEnvironment = webHostEnvironment;
+                _cache = cache;
+            }
         }
 
 
@@ -70,7 +76,7 @@ namespace POSWebApplication.Controllers
                 CurrencyList = currencyList
             };
 
-            ViewBag.TotalSaleAmtPrDay =  GetSaleLimitPrDay() - GetTotalSaleAmount(); // Calculate to control Print method
+            ViewBag.TotalSaleAmtPrDay = GetSaleLimitPrDay() - GetTotalSaleAmount(); // Calculate to control Print method
 
             return View(saleList);
         }
@@ -1088,7 +1094,9 @@ namespace POSWebApplication.Controllers
                 if (company != null)
                 {
                     ViewData["Business Date"] = company.BizDte.ToString("dd-MM-yyyy");
-                    ViewData["Database"] = $"{_databaseSettings.DbName}({company.POSPkgNme})";
+
+                    var dbName = HttpContext.Session.GetString("Database");
+                    ViewData["Database"] = $"{dbName}({company.POSPkgNme})";
                 }
 
             }

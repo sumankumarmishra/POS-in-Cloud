@@ -7,24 +7,31 @@ using POSWebApplication.Models;
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using NuGet.Versioning;
 using Microsoft.Reporting.NETCore;
+using POSinCloud.Services;
+
 
 namespace POSWebApplication.Controllers
 {
     [Authorize]
     public class HomeController : Controller
     {
-        private readonly DatabaseSettings _databaseSettings;
         private readonly POSWebAppDbContext _dbContext;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public HomeController(DatabaseSettings databaseSettings, IWebHostEnvironment webHostEnvironment)
+        public HomeController(DatabaseServices dbServices, IHttpContextAccessor accessor, IWebHostEnvironment webHostEnvironment)
         {
-            _databaseSettings = databaseSettings;
-            var optionsBuilder = new DbContextOptionsBuilder<POSWebAppDbContext>().UseSqlServer(_databaseSettings.ConnectionString);
-            _dbContext = new POSWebAppDbContext(optionsBuilder.Options);
-            _webHostEnvironment = webHostEnvironment;
+            var connection = accessor.HttpContext?.Session.GetString("Connection") ?? "";
+            if (connection.IsNullOrEmpty())
+            {
+                accessor.HttpContext?.Response.Redirect("../SystemSettings/Index");
+            }
+            else
+            {
+                _dbContext = new POSWebAppDbContext(dbServices.ConnectDatabase(connection));
+                _webHostEnvironment = webHostEnvironment;
+            }
+
         }
 
         #region // Main methods //
@@ -426,7 +433,10 @@ namespace POSWebApplication.Controllers
                 if (company != null)
                 {
                     ViewData["Business Date"] = company.BizDte.ToString("dd-MM-yyyy");
-                    ViewData["Database"] = $"{_databaseSettings.DbName}({company.POSPkgNme})";
+
+                    var dbName = HttpContext.Session.GetString("Database");
+
+                    ViewData["Database"] = $"{dbName}({company.POSPkgNme})";
                 }
 
             }

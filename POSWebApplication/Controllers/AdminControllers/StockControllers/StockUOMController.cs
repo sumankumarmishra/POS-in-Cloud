@@ -1,23 +1,29 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using POSinCloud.Services;
 using POSWebApplication.Data;
 using POSWebApplication.Models;
-using System.Reflection.Metadata;
 
 namespace POSWebApplication.Controllers.AdminControllers.StockControllers
 {
     [Authorize]
     public class StockUOMController : Controller
     {
-        private readonly DatabaseSettings _databaseSettings;
         private readonly POSWebAppDbContext _dbContext;
 
-        public StockUOMController(DatabaseSettings databaseSettings)
+        public StockUOMController(DatabaseServices dbServices, IHttpContextAccessor accessor)
         {
-            _databaseSettings = databaseSettings;
-            var optionsBuilder = new DbContextOptionsBuilder<POSWebAppDbContext>().UseSqlServer(_databaseSettings.ConnectionString);
-            _dbContext = new POSWebAppDbContext(optionsBuilder.Options);
+            var connection = accessor.HttpContext?.Session.GetString("Connection") ?? "";
+            if (connection.IsNullOrEmpty())
+            {
+                accessor.HttpContext?.Response.Redirect("../SystemSettings/Index");
+            }
+            else
+            {
+                _dbContext = new POSWebAppDbContext(dbServices.ConnectDatabase(connection));
+            }
         }
 
 
@@ -223,7 +229,9 @@ namespace POSWebApplication.Controllers.AdminControllers.StockControllers
                 if (company != null)
                 {
                     ViewData["Business Date"] = company.BizDte.ToString("dd-MM-yyyy");
-                    ViewData["Database"] = $"{_databaseSettings.DbName}({company.POSPkgNme})";
+
+                    var dbName = HttpContext.Session.GetString("Database");
+                    ViewData["Database"] = $"{dbName}({company.POSPkgNme})";
                 }
 
             }

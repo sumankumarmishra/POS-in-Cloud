@@ -1,0 +1,92 @@
+﻿@model SaleDashboardDataModel
+
+<div class="row mt-3">
+    <div class="col-md-12 table-responsive" style="max-height: 500px">
+        <table id="example1" class="table table-bordered dataTable dtr-inline" aria-describedby="example1_info">
+            <thead>
+                <tr style="font-size: 16px">
+                    <th>
+                        No.
+                    </th>
+                    <th>
+                        Branch
+                    </th>
+                    <th>
+                        Sale Amount
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var data in Model.SaleDashboardList)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => data.No)</td>
+                        <td>@Html.DisplayFor(modelItem => data.CompanyName)</td>
+                        <td style="text-align: right">@Html.DisplayFor(modelItem => data.SaleAmount)</td>
+                        <td style="text-align: center">
+                            <a asp-action="DateWiseSales" asp-controller="SaleDashboard"
+                                asp-route-cmpyid="@data.CmpyId"
+                               asp-route-name="@data.CompanyName" asp-route-fromDate="@Model.SaleDashboardSearch.FromDate"
+                               asp-route-toDate="@Model.SaleDashboardSearch.ToDate" style="color : #31849B">...</a>
+                        </td>
+                    </tr>
+                }
+                <tr>
+                    <td></td>
+                    <td><b>Total</b></td>
+                    <td style="text-align: right"><b>@Html.DisplayFor(modelItem => @Model.TotalAmt)</b></td>
+                    <td>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="card collapsed-card mt-3">
+    <div class="card-header">
+        <h3 class="card-title">Currencies</h3>
+
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-plus"></i>
+            </button>
+            <button type="button" class="btn btn-tool" data-card-widget="remove">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row mt-3">
+            <div class="col-md-12 table-responsive" style="max-height: 500px">
+                <table id="example2" class="table table-bordered dataTable dtr-inline" aria-describedby="example2_info">
+                    <thead>
+                        <tr style="font-size: 16px">
+                            <th>
+                                No.
+                            </th>
+                            <th>
+                                Currency
+                            </th>
+                            <th>
+                                Sale Amount
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var data in Model.SaleCurrList)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => data.No)</td>
+                                <td>@Html.DisplayFor(modelItem => data.CurrCode)</td>
+                                <td style="text-align: right">@Html.DisplayFor(modelItem => data.SaleAmount)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- /.card-body -->
+</div>
+<!-- /.card -->

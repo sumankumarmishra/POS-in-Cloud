@@ -14,8 +14,8 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="~/dist/css/adminlte.min.css">
      <!-- Select2 -->
-    @*<link rel="stylesheet" href="~/lib/adminlte3/plugins/select2/css/select2.min.css">
-    <link rel="stylesheet" href="~/lib/adminlte3/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css"> *@
+    @* <link rel="stylesheet" href="~/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="~/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css"> *@
     <!-- overlayScrollbars -->
     <link rel="stylesheet" href="~/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
     <!-- DataTables -->
@@ -65,6 +65,30 @@
                                 <a asp-controller="Sale" asp-action="Index" class="nav-link">
                                     <i class="nav-icon fas fa-tags"></i>
                                     <p>Sale</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a asp-controller="SaleDashboard" asp-action="Index" class="nav-link">
+                                    <i class="far fa-clipboard nav-icon"></i>
+                                    <p>Sale Dashboard</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a asp-controller="MonthlySales" asp-action="Index" class="nav-link">
+                                    <i class="fas fa-chart-pie nav-icon"></i>
+                                    <p>Monthly Sales</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a asp-controller="YearlySales" asp-action="Index" class="nav-link">
+                                    <i class="fas fa-chart-bar nav-icon"></i>
+                                    <p>Yearly Sales</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a asp-controller="SalesAnalysis" asp-action="Index" class="nav-link">
+                                    <i class="fas fa-chart-line nav-icon"></i>
+                                    <p>Sales Analysis</p>
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -298,7 +322,7 @@
         <!-- overlayScrollbars -->
         <script src="~/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
          <!-- Select2 -->
-        @*<script src="~/lib/adminlte3/plugins/select2/js/select2.full.min.js"></script> *@
+        @* <script src="~/plugins/select2/js/select2.full.min.js"></script> *@
         <!-- AdminLTE App -->
         <script src="~/dist/js/adminlte.js"></script>
         <!-- DataTables  & Plugins -->
