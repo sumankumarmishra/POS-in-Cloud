@@ -1,0 +1,100 @@
+﻿@model IEnumerable<YearlySalesDataModel>
+
+<div class="col-12">
+    <div class="card">
+        <div class="card-header" style="background-color: #31849B;color: white">
+            <h3 class="card-title">Yearly Sales</h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            @foreach (var data in Model)
+            {
+                <div class="container-fluid mt-3">
+                    <h4><b>@Html.DisplayFor(modelItem => data.Branch)</b></h4>
+                    <div class="row">
+                        <div class="col-md-12 table-responsive">
+                            <table id="example1" class="table dataTable dtr-inline" aria-describedby="example1_info">
+                                <tbody>
+                                    @foreach (var item in data.YearlySales)
+                                    {
+                                        <tr>
+                                            <td style="width: 40%">@Html.DisplayFor(modelItem => item.YearNo)</td>
+                                            <td>
+                                                <div class="progress progress-xl" style="height: 30px">
+                                                    <div class="progress-bar" style="width: @item.ProgressBar%;background-color: rgba(60,141,188,0.9);margin-right: -100%"></div>
+                                                    <div style="margin-left: auto;padding: 15px">@Html.DisplayFor(modelItem => item.Amount)</div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                    <tr>
+                                        <td style="width: 40%"><b>Total</b></td>
+                                        <td style="text-align: right">
+                                            <b>@Html.DisplayFor(modelItem => data.TotalAmount)</b>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+
+    <div class="card">
+        <div class="card-header" style="background-color: #31849B;color: white">
+            <h3 class="card-title">Sale Revenue</h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <canvas id="donutChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header" style="background-color: #31849B;color: white">
+            <h3 class="card-title">Categories-wise Sales</h3>
+
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="chart">
+                <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+            </div>
+        </div>
+        <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+</div>
+
+<!-- jQuery -->
+<script src="~/plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- ChartJS -->
+<script src="~/plugins/chart.js/Chart.min.js"></script>
+<!-- Custom Js for this form -->
+<script src="~/customjs/YearlySales/YearlySales.js"></script>

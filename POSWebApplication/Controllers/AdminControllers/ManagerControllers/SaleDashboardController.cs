@@ -61,7 +61,7 @@ namespace POSWebApplication.Controllers.AdminControllers.ManagerControllers
                         .AsEnumerable()
                         .ToList();
 
-            if (cmpyId != 0) // if company is selected
+            if (cmpyId != 0) // if branch name is selected
             {
                 saleDashboardList = saleDashboardList.Where(list => list.CmpyId == cmpyId).ToList();
                 currDashboardAction = 2;

@@ -1,7 +1,7 @@
-﻿@model SaleDashboardDataModel
+﻿@model YearlySalesSearch
 
 @{
-    ViewData["Title"] = "Sale Dashboard";
+    ViewData["Title"] = "Yearly Sales Comparison";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -46,23 +46,19 @@
         }
     }
 </style>
-
 <!-- Custom Js for this form -->
-<script src="~/customjs/SaleDashboard/SaleDashboard.js"></script>
-
+<script src="~/customjs/YearlySales/YearlySales.js"></script>
 <div class="container-fluid">
     <section class="content">
-        <div class="card mt-1">
-            <div class="card-header"><h5>@ViewData["Title"]</h5>
-                
-            </div>
+        <div class="card">
+            <div class="card-header"><h5>@ViewData["Title"]</h5></div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6 col-lg-4">
                         <div class="form-group row">
                             <label class="col-6 col-form-label">Branch Name</label>
                             <div class="col-6">
-                                <select id="filterCmpyId" asp-for="@Model.SaleDashboardSearch.CmpyId" class="form-control select2bs4 form-select" asp-items="ViewBag.BranchNames" style="width: 100%;">
+                                <select id="filterCmpyId" asp-for="@Model.CmpyId" class="form-control form-select" asp-items="ViewBag.BranchNames" style="width: 100%;">
                                     <option value="0">- Select All -</option>
                                 </select>
                             </div>
@@ -70,27 +66,27 @@
                     </div>
                     <div class="col-md-6 col-lg-4">
                         <div class="form-group row">
-                            <label class="col-6 col-form-label">From Date</label>
+                            <label class="col-6 col-form-label">Year</label>
                             <div class="col-6">
-                                <input id="filterFromDte" asp-for="@Model.SaleDashboardSearch.FromDate" type="date" class="form-control" />
+                                <input id="filterYear" asp-for="@Model.Year" type="number" min="1900" max="2222" class="form-control" />
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6 col-lg-4">
                         <div class="form-group row">
-                            <label class="col-6 col-form-label">To Date</label>
+                            <label class="col-6 col-form-label">For Next In-Year</label>
                             <div class="col-6">
-                                <input id="filterToDte" asp-for="@Model.SaleDashboardSearch.ToDate" type="date" class="form-control" />
+                                <input id="filterExYear" asp-for="@Model.NextYear" type="number" min="1" class="form-control" />
                             </div>
                         </div>
                     </div>
                 </div>
-                <input class="btn btn-info" type="button" value="Search"  onclick="searchSales()" />
+                <input class="btn" type="submit" value="View" style="background-color: #31849B;color: white" onclick="viewYearlySales()" />
             </div>
             <div id="loader-wrapper" style="display: none">
                 <div id="loader"></div>
             </div>
-            <div id="mainBody" class="card-body p-1">
+            <div id="yearlySaleBody" class="card-body p-1">
             </div>
         </div>
     </section>
