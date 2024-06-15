@@ -56,5 +56,6 @@ namespace POSWebApplication.Data
         public DbSet<CategorySalesModel> spMonthlySales02DbSet { get; set; }
         public DbSet<YearlySalesModel> spYearlySales01DbSet { get; set; }
         public DbSet<CategorySalesModel> spYearlySales02DbSet { get; set; }
+        public DbSet<SalesAnalysisModel> spSalesAnalysisDbSet { get; set; }
     }
 }
