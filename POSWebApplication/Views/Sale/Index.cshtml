@@ -94,6 +94,12 @@
         text-align: right;
     }
 
+    @@media (min-width: 1200px) {
+        .my-custom-class {
+            width: 50%;
+        }
+    }
+
 </style>
 
 <!--Bill LookUp Modal -->
@@ -321,7 +327,7 @@
                 <input id="inputPaymentCustomer" class="form-control col-md-5" style="text-align: center;background-color: #31849B;color: white;cursor: pointer"
                        onclick="chooseCustomer()" value="Customer" readonly />
                 <div class="col-md-3"></div>
-                @if(ViewBag.TotalSaleAmtPrDay > 0)
+                @if (ViewBag.TotalSaleAmtPrDay > 0)
                 {
                     <button id="modelCloseBtnId" type="button" class="btn col-md-3" data-dismiss="modal" onclick="addAllDataToTables()" style="background-color: #31849B; color: white;">Print</button>
                     if (ViewBag.TotalSaleAmtPrDay < 100000)
@@ -331,10 +337,12 @@
                 }
                 else
                 {
-                    <button id="modelDiableBtnId" type="button" class="btn col-md-3" style="background-color: #31849B; color: white;" disabled>Print</button><br/>
+                    <button id="modelDiableBtnId" type="button" class="btn col-md-3" style="background-color: #31849B; color: white;" disabled>Print</button>
+
+                    <br />
                     <p style="color: red">* Sale amount per day reached limit for the package. Upgrade your package to get more sale amount per day . </p>
                 }
-                
+
             </div>
 
         </div>
@@ -420,7 +428,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12 col-lg-6">
+            <div class="my-custom-class">
                 <div class="card">
                     @*<div class="card-header">
                     <h3 class="card-title">Sale</h3>
@@ -540,9 +548,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-12 col-lg-6">
+            <div class="my-custom-class">
                 <div class="card">
-
                     <div class="card-body" style="max-height: 700px">
                         <div class="form-inline mb-2">
                             <div class="col-6">

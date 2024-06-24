@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="~/dist/css/adminlte.min.css">
-     <!-- Select2 -->
+    <!-- Select2 -->
     @* <link rel="stylesheet" href="~/plugins/select2/css/select2.min.css">
     <link rel="stylesheet" href="~/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css"> *@
     <!-- overlayScrollbars -->
@@ -68,88 +68,40 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a asp-controller="SaleDashboard" asp-action="Index" class="nav-link">
-                                    <i class="far fa-clipboard nav-icon"></i>
-                                    <p>Sale Dashboard</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a asp-controller="MonthlySales" asp-action="Index" class="nav-link">
-                                    <i class="fas fa-chart-pie nav-icon"></i>
-                                    <p>Monthly Sales</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a asp-controller="YearlySales" asp-action="Index" class="nav-link">
-                                    <i class="fas fa-chart-bar nav-icon"></i>
-                                    <p>Yearly Sales</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a asp-controller="SalesAnalysis" asp-action="Index" class="nav-link">
-                                    <i class="fas fa-chart-line nav-icon"></i>
-                                    <p>Sales Analysis</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
                                 <a href="#" class="nav-link">
-                                    <i class="nav-icon fas fa-cubes"></i>
+                                    <i class="nav-icon fas fa-clipboard-list"></i>
                                     <p>
-                                        Stock Item Setup<i class="fas fa-angle-left right"></i>
+                                        Management<i class="fas fa-angle-left right"></i>
                                     </p>
                                 </a>
-
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
-                                        <a asp-controller="Stock" asp-action="Index" class="nav-link">
-                                            <i class="nav-icon fas fa-cube"></i>
-                                            <p>Stock</p>
+                                        <a asp-controller="SaleDashboard" asp-action="Index" class="nav-link">
+                                            <i class="far fa-clipboard nav-icon"></i>
+                                            <p>Sale Dashboard</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a asp-controller="ServiceItem" asp-action="Index" class="nav-link">
-                                            <i class="nav-icon fas fa-toolbox"></i>
-                                            <p>Services Item</p>
+                                        <a asp-controller="MonthlySales" asp-action="Index" class="nav-link">
+                                            <i class="fas fa-chart-pie nav-icon"></i>
+                                            <p>Monthly Sales</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a asp-controller="StockPackage" asp-action="Index" class="nav-link">
-                                            <i class="nav-icon fas fa-th"></i>
-                                            <p>Stock Package</p>
+                                        <a asp-controller="YearlySales" asp-action="Index" class="nav-link">
+                                            <i class="fas fa-chart-bar nav-icon"></i>
+                                            <p>Yearly Sales</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a asp-controller="StockBOM" asp-action="Index" class="nav-link">
-                                            <i class="nav-icon fas fa-box"></i>
-                                            <p>Stock Assembly</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-controller="StockCategory" asp-action="Index" class="nav-link">
-                                            <i class="nav-icon fas fa-folder"></i>
-                                            <p>Stock Category</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-controller="StockGroup" asp-action="Index" class="nav-link">
-                                            <i class="nav-icon fas fa-folder"></i>
-                                            <p>Stock Group</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-controller="Location" asp-action="Index" class="nav-link">
-                                            <i class="nav-icon fas fa-map-marker"></i>
-                                            <p>Location</p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a asp-controller="Currency" asp-action="Index" class="nav-link">
-                                            <i class="nav-icon fas fa-dollar-sign"></i>
-                                            <p>Currency</p>
+                                        <a asp-controller="SalesAnalysis" asp-action="Index" class="nav-link">
+                                            <i class="fas fa-chart-line nav-icon"></i>
+                                            <p>Sales Analysis</p>
                                         </a>
                                     </li>
                                 </ul>
                             </li>
+                            
                             <li class="nav-item">
                                 <a href="#" class="nav-link">
                                     <i class="nav-icon fas fa-warehouse"></i>
@@ -236,11 +188,70 @@
                                         </a>
                                     </li>
                                     @* <li class="nav-item">
-                                        <a asp-controller="SupplierSalesReport" asp-action="Index" class="nav-link">
-                                            <i class="nav-icon fas fa-file-invoice"></i>
-                                            <p>Supplier Sales Report</p>
+                                <a asp-controller="SupplierSalesReport" asp-action="Index" class="nav-link">
+                                <i class="nav-icon fas fa-file-invoice"></i>
+                                <p>Supplier Sales Report</p>
+                                </a>
+                                </li> *@
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon fas fa-cubes"></i>
+                                    <p>
+                                        Stock Item Setup<i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a asp-controller="Stock" asp-action="Index" class="nav-link">
+                                            <i class="nav-icon fas fa-cube"></i>
+                                            <p>Stock</p>
                                         </a>
-                                    </li> *@
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-controller="ServiceItem" asp-action="Index" class="nav-link">
+                                            <i class="nav-icon fas fa-toolbox"></i>
+                                            <p>Services Item</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-controller="StockPackage" asp-action="Index" class="nav-link">
+                                            <i class="nav-icon fas fa-th"></i>
+                                            <p>Stock Package</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-controller="StockBOM" asp-action="Index" class="nav-link">
+                                            <i class="nav-icon fas fa-box"></i>
+                                            <p>Stock Assembly</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-controller="StockCategory" asp-action="Index" class="nav-link">
+                                            <i class="nav-icon fas fa-folder"></i>
+                                            <p>Stock Category</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-controller="StockGroup" asp-action="Index" class="nav-link">
+                                            <i class="nav-icon fas fa-folder"></i>
+                                            <p>Stock Group</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-controller="Location" asp-action="Index" class="nav-link">
+                                            <i class="nav-icon fas fa-map-marker"></i>
+                                            <p>Location</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-controller="Currency" asp-action="Index" class="nav-link">
+                                            <i class="nav-icon fas fa-dollar-sign"></i>
+                                            <p>Currency</p>
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
                             <li class="nav-item">
@@ -272,21 +283,21 @@
                                 </ul>
                             </li>
                             @* <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    <i class="nav-icon fas fa-cogs"></i>
-                                    <p>
-                                        Settings<i class="fas fa-angle-left right"></i>
-                                    </p>
-                                </a>
-                                <ul class="nav nav-treeview">
-                                    <li class="nav-item">
-                                        <a asp-controller="AutoNumber" asp-action="Index" class="nav-link">
-                                            <i class="nav-icon fas fa-list-ol"></i>
-                                            <p>Auto Number</p>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li> *@
+                        <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-cogs"></i>
+                        <p>
+                        Settings<i class="fas fa-angle-left right"></i>
+                        </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                        <a asp-controller="AutoNumber" asp-action="Index" class="nav-link">
+                        <i class="nav-icon fas fa-list-ol"></i>
+                        <p>Auto Number</p>
+                        </a>
+                        </li>
+                        </ul>
+                        </li> *@
 
                         }
                         <li class="nav-item">
@@ -321,7 +332,7 @@
         <script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
         <!-- overlayScrollbars -->
         <script src="~/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
-         <!-- Select2 -->
+        <!-- Select2 -->
         @* <script src="~/plugins/select2/js/select2.full.min.js"></script> *@
         <!-- AdminLTE App -->
         <script src="~/dist/js/adminlte.js"></script>
