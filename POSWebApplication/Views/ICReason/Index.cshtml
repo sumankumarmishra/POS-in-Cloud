@@ -42,8 +42,8 @@
             <table id="reportedDataTable" class="table table-bordered table-hover">
                 <thead class="text-md-center">
                     <tr style="font-size: 14px">
-                        <th style="width: 80px;text-align: left">
-                            @Html.DisplayNameFor(model => model.ICReasonId)
+                        <th>
+                            No.
                         </th>
                         <th style="text-align: left">
                             @Html.DisplayNameFor(model => model.ICReasonCde)
@@ -57,19 +57,22 @@
                     </tr>
                 </thead>
                 <tbody class="text-md-center">
+                    @{
+                        var Counter = 1;
+                    }
                     @foreach (var item in Model)
                     {
                         <tr style="font-size: 14px">
-                            <td style="text-align: left"> 
-                                @Html.DisplayFor(modelItem => item.ICReasonId)
+                            <td > 
+                                @Counter
                             </td>
                             <td style="text-align: left">
                                 @Html.DisplayFor(modelItem => item.ICReasonCde)
                             </td>
                             @if (new[] { "accessLvl2" }.Contains(ViewData["User Role"]?.ToString()))
                             {
-                                <td>
-                                    <a style="cursor: pointer" onclick="callEditICReasonController('@item.ICReasonId')">
+                                <td class="text-center">
+                                    <a style="cursor: pointer" class="text-info" onclick="callEditICReasonController('@item.ICReasonId')">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                 </td>
@@ -82,8 +85,8 @@
                             }
                             @if (new[] { "accessLvl2" }.Contains(ViewData["User Role"]?.ToString()))
                             {
-                                <td>
-                                    <a style="cursor: pointer" onclick="callDeleteICReasonController('@item.ICReasonId')">
+                                <td class="text-center">
+                                    <a style="cursor: pointer" class="text-info" onclick="callDeleteICReasonController('@item.ICReasonId')">
                                         <i class="fas fa-trash"></i>
                                     </a>
                                 </td>
@@ -95,6 +98,7 @@
                                 </td>
                             }
                         </tr>
+                        Counter++;
                     }
                 </tbody>
             </table>
@@ -102,14 +106,14 @@
     </div>
 </div>
 <!-- jQuery -->
-<script async src="../../plugins/jquery/jquery.min.js"></script>
+<script  src="../../plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
-<script async src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script  src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- DataTables  & Plugins -->
-<script async src="../../plugins/datatables/jquery.dataTables.min.js"></script>
-<script async src="../../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-<script async src="../../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
-<script async src="../../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script  src="../../plugins/datatables/jquery.dataTables.min.js"></script>
+<script  src="../../plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script  src="../../plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script  src="../../plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
 <!-- CustomJs for Common-->
 <script src="../customjs/Common/Common.js"></script>
 <!-- CustomJs for ICReason -->

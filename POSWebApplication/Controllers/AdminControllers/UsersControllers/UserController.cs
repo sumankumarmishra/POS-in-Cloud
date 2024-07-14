@@ -101,14 +101,17 @@ namespace POSWebApplication.Controllers.AdminControllers.UsersControllers
                     await _dbContext.ms_user.AddAsync(user);
                     await _dbContext.SaveChangesAsync();
 
-
-                    var userPos = new UserPOS
+                    if (user.POSid != null)
                     {
-                        UserId = user.UserId,
-                        POSid = user.POSid
-                    };
+                        var userPos = new UserPOS
+                        {
+                            UserId = user.UserId,
+                            POSid = user.POSid
+                        };
 
-                    await _dbContext.ms_userpos.AddAsync(userPos);
+                        await _dbContext.ms_userpos.AddAsync(userPos);
+                    }
+
                     await _dbContext.SaveChangesAsync();
                     TempData["info message"] = "User is successfully created!";
                     return RedirectToAction(nameof(Index));
@@ -248,8 +251,28 @@ namespace POSWebApplication.Controllers.AdminControllers.UsersControllers
 
                     if (userPos != null)
                     {
-                        userPos.POSid = user.POSid;
-                        _dbContext.ms_userpos.Update(userPos);
+                        if (user.POSid != null)
+                        {
+                            userPos.POSid = user.POSid;
+                            _dbContext.ms_userpos.Update(userPos);
+                        }
+                        else
+                        {
+                            _dbContext.ms_userpos.Remove(userPos);
+                        }
+                    }
+                    else
+                    {
+                        if (user.POSid != null)
+                        {
+                            var newUserPOS = new UserPOS
+                            {
+                                UserId = user.UserId,
+                                POSid = user.POSid
+                            };
+
+                            await _dbContext.ms_userpos.AddAsync(newUserPOS);
+                        }
                     }
 
                     await _dbContext.SaveChangesAsync();

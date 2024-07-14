@@ -50,7 +50,7 @@
                 </table>
             </div>
             <div class="modal-footer">
-                <button id="modelCloseBtnId" class="btn" onclick="saveSupplierItems()" style="background-color: #31849B;color: white">Save</button>
+                <button id="modelCloseBtnId" class="btn btn-info" onclick="saveSupplierItems()" >Save</button>
             </div>
         </div>
     </div>
@@ -95,17 +95,20 @@
             <table id="reportedDataTable" class="table table-bordered table-hover">
                 <thead class="text-md-center">
                     <tr style="font-size: 14px">
-                        <th style="width: 120px;text-align: left">
+                        <th>
+                            No.
+                        </th>
+                        <th style="min-width: 120px;text-align: left">
                             @Html.DisplayNameFor(model => model.ApAcCde)
                         </th>
                         <th style="text-align: left">
                             @Html.DisplayNameFor(model => model.ApNme)
                         </th>
-                        <th>
-                            Items
-                        </th>
                         <th style="text-align: left">
                             @Html.DisplayNameFor(model => model.Phone)
+                        </th>
+                        <th>
+                            Items
                         </th>
                         <th style="width: 60px;text-align: left">
                             @Html.DisplayNameFor(model => model.BadStatus)
@@ -113,6 +116,7 @@
                         <th style="width: 60px;text-align: left">
                             @Html.DisplayNameFor(model => model.ActiveFlg)
                         </th>
+
                         <th style="width: 40px" >
                             Edit
                         </th>
@@ -122,22 +126,29 @@
                     </tr>
                 </thead>
                 <tbody class="text-md-center">
+                    @{
+                        var Counter = 1;
+                    }
                     @foreach (var supplier in Model)
                     {
                         <tr style="font-size: 14px">
+                            <td>
+                                @Counter
+                            </td>
                             <td style="text-align: left">
                                 @Html.DisplayFor(modelItem => supplier.ApAcCde )
                             </td>
                             <td style="text-align: left">
                                 @Html.DisplayFor(modelItem => supplier.ApNme)
                             </td>
-                            <td>
-                                <a style="cursor:pointer" onclick="editSupplierItems('@supplier.ApId','@supplier.ApNme')" class="btn-sm">
-                                    ...
-                                </a>
-                            </td>
+                            
                             <td style="text-align: left">
                                 @Html.DisplayFor(modelItem => supplier.Phone)
+                            </td>
+                            <td class="text-center">
+                                <a style="cursor:pointer" onclick="editSupplierItems('@supplier.ApId','@supplier.ApNme')" class="btn-sm">
+                                    <i class="fas fa-ellipsis-h text-info"></i>
+                                </a>
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => supplier.BadStatus)
@@ -147,8 +158,8 @@
                             </td>
                             @if (new[] { "accessLvl2" }.Contains(ViewData["User Role"]?.ToString()))
                             {
-                                <td>
-                                    <a style="cursor: pointer" onclick="callEditSupplierController('@supplier.ApId')">
+                                <td class="text-center">
+                                    <a style="cursor: pointer" class="text-info" onclick="callEditSupplierController('@supplier.ApId')">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                 </td>
@@ -161,8 +172,8 @@
                             }
                             @if (new[] { "accessLvl2" }.Contains(ViewData["User Role"]?.ToString()))
                             {
-                                <td>
-                                    <a style="cursor: pointer" onclick="callDeleteSupplierController('@supplier.ApId')">
+                                <td class="text-center">
+                                    <a style="cursor: pointer" class="text-info" onclick="callDeleteSupplierController('@supplier.ApId')">
                                         <i class="fas fa-trash"></i>
                                     </a>
                                 </td>
@@ -174,6 +185,7 @@
                                 </td>
                             }
                         </tr>
+                        Counter++;
                     }
                 </tbody>
             </table>

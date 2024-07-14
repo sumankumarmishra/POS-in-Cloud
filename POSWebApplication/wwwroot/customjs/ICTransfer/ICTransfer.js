@@ -54,6 +54,7 @@ function addNewDetailsRow() {
     url: "/ICTransfer/GetStocks",
     success: function (stocks) {
       var fragment = document.createDocumentFragment();
+      $("<option>").val('').text('Select One').appendTo(fragment);
       stocks.forEach(stock => {
         $("<option>").val(stock.itemId).text(stock.itemId).appendTo(fragment);
       });
@@ -324,6 +325,7 @@ function editInventoryTransfer(icmoveId) {
           url: "/ICTransfer/GetStocks",
           success: function (stocks) {
             var fragment = document.createDocumentFragment();
+            $("<option>").val('').text('Select One').appendTo(fragment);
             stocks.forEach(stock => {
               $("<option>").val(stock.itemId).text(stock.itemId).appendTo(fragment);
             });

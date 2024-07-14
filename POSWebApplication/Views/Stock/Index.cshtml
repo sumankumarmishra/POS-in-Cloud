@@ -56,7 +56,7 @@
                 </table>
             </div>
             <div class="modal-footer">
-                <button id="modelCloseBtnId" class="btn" onclick="saveStockUOMItems()" style="background-color: #31849B;color: white">Save Changes</button>
+                <button id="modelCloseBtnId" class="btn btn-info" onclick="saveStockUOMItems()" >Save Changes</button>
             </div>
         </div>
     </div>
@@ -108,6 +108,7 @@
             <table id="reportedDataTable" class="table table-bordered table-hover">
                 <thead class="text-md-center">
                     <tr style="font-size: 14px">
+                        <th>No.</th>
                         <th style="width: 120px;text-align: left">
                             @Html.DisplayNameFor(model => model.Stock.ItemId)
                         </th>
@@ -141,9 +142,15 @@
                     </tr>
                 </thead>
                 <tbody class="text-md-center">
+                    @{
+                        var Counter = 1;
+                    }
                     @foreach (var item in Model.StockList)
                     {
                         <tr style="font-size: 14px">
+                            <td>
+                                @Counter
+                            </td>
                             <td style="text-align: left">
                                 @Html.DisplayFor(modelItem => item.ItemId)
                             </td>
@@ -159,7 +166,7 @@
                             <td style="text-align: left">
                                 @Html.DisplayFor(modelItem => item.BaseUnit)
                                 <a style="cursor:pointer" onclick="editStockUOMItems('@item.ItemId')" class="btn-sm">
-                                    ...
+                                    <i class="fas fa-ellipsis-h text-info"></i>
                                 </a>
                             </td>
                             <td style="text-align: right">
@@ -171,21 +178,21 @@
                             @if (new[] { "accessLvl2" }.Contains(ViewData["User Role"]?.ToString()))
                             {
                                 <td>
-                                    <a style="cursor: pointer" onclick="callEditStockController('@item.ItemId')">
+                                    <a style="cursor: pointer" class="text-info" onclick="callEditStockController('@item.ItemId')">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                 </td>
                             }
                             else
                             {
-                                <td>
+                                <td class="text-center">
                                     <i class="fas fa-edit"></i>
                                 </td>
                             }
                             @if (new[] { "accessLvl2" }.Contains(ViewData["User Role"]?.ToString()))
                             {
-                                <td>
-                                    <a style="cursor: pointer" onclick="callDeleteStockController('@item.ItemId')">
+                                <td class="text-center">
+                                    <a style="cursor: pointer" class="text-info" onclick="callDeleteStockController('@item.ItemId')">
                                         <i class="fas fa-trash"></i>
                                     </a>
                                 </td>
@@ -197,6 +204,7 @@
                                 </td>
                             }
                         </tr>
+                        Counter++;
                     }
                 </tbody>
             </table>

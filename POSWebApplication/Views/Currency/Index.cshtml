@@ -45,8 +45,8 @@
             <table id="reportedDataTable" class="table table-bordered table-hover">
                 <thead class="text-md-center">
                     <tr style="font-size: 14px">
-                        <th style="width: 40px;text-align: left">
-                            @Html.DisplayNameFor(model => model.Currency.CurrId)
+                        <th>
+                            No.
                         </th>
                         <th style="text-align: left">
                             @Html.DisplayNameFor(model => model.Currency.CurrTyp)
@@ -54,7 +54,7 @@
                         <th style="text-align: left">
                             @Html.DisplayNameFor(model => model.Currency.CurrCde)
                         </th>
-                        <th style="width: 80px;text-align: left">
+                        <th style="min-width: 80px;text-align: left">
                             @Html.DisplayNameFor(model => model.Currency.CurrRate)
                         </th>
                         <th style="width: 40px" >
@@ -66,11 +66,14 @@
                     </tr>
                 </thead>
                 <tbody class="text-md-center">
+                    @{
+                        var Counter = 1;
+                    }
                     @foreach (var item in Model.Currencies)
                     {
                         <tr style="font-size: 14px">
-                            <td style="text-align: left">
-                                @Html.DisplayFor(modelItem => item.CurrId )
+                            <td>
+                               @Counter
                             </td>
                             <td style="text-align: left">
                                 @Html.DisplayFor(modelItem => item.CurrTyp)
@@ -83,8 +86,8 @@
                             </td>
                             @if (new[] { "accessLvl2" }.Contains(ViewData["User Role"]?.ToString()))
                             {
-                                <td>
-                                    <a style="cursor: pointer" onclick="callEditCurrencyController('@item.CurrId')">
+                                <td class="text-center">
+                                    <a style="cursor: pointer" class="text-info" onclick="callEditCurrencyController('@item.CurrId')">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                 </td>
@@ -97,8 +100,8 @@
                             }
                             @if (new[] { "accessLvl2" }.Contains(ViewData["User Role"]?.ToString()))
                             {
-                                <td>
-                                    <a style="cursor: pointer" onclick="callDeleteCurrencyController('@item.CurrId')">
+                                <td class="text-center">
+                                    <a style="cursor: pointer" class="text-info" onclick="callDeleteCurrencyController('@item.CurrId')">
                                         <i class="fas fa-trash"></i>
                                     </a>
                                 </td>
@@ -110,6 +113,7 @@
                                 </td>
                             }
                         </tr>
+                        Counter++;
                     }
                 </tbody>
             </table>

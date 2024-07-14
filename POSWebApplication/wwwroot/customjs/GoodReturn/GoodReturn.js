@@ -43,6 +43,7 @@ function addNewDetailsRow() {
     data: { apId: $('#selectApId').val() },
     success: function (stocks) {
       var fragment = document.createDocumentFragment();
+      $("<option>").val('').text('Select One').appendTo(fragment);
       stocks.forEach(stock => {
         $("<option>").val(stock.itemId).text(stock.itemId).appendTo(fragment);
       });
@@ -327,6 +328,7 @@ function editGoodReturn(arapid, apId) {
             data: { apId: apId },
             success: function (stocks) {
               var fragment = document.createDocumentFragment();
+              $("<option>").val('').text('Select One').appendTo(fragment);
               stocks.forEach(stock => {
                 $("<option>").val(stock.itemId).text(stock.itemId).appendTo(fragment);
               });
@@ -344,6 +346,7 @@ function editGoodReturn(arapid, apId) {
             data: { arapId: arapid },
             success: function (stocks) {
               var fragment = document.createDocumentFragment();
+              $("<option>").val('').text('Select One').appendTo(fragment);
               stocks.forEach(stock => {
                 $("<option>").val(stock.itemId).text(stock.itemId).appendTo(fragment);
               });

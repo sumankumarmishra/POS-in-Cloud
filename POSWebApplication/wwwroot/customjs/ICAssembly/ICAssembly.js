@@ -54,6 +54,7 @@ function addNewDetailsRow() {
     url: "/ICAssembly/GetStocks",
     success: function (stocks) {
       var fragment = document.createDocumentFragment();
+      $("<option>").val('').text('Select One').appendTo(fragment);
       stocks.forEach(stock => {
         $("<option>").val(stock.itemId).text(stock.itemId).appendTo(fragment);
       });
@@ -330,6 +331,7 @@ function editInventoryAssembly(icmoveId) {
           url: "/ICAssembly/GetStocks",
           success: function (stocks) {
             var fragment = document.createDocumentFragment();
+            $("<option>").val('').text('Select One').appendTo(fragment);
             stocks.forEach(stock => {
               $("<option>").val(stock.itemId).text(stock.itemId).appendTo(fragment);
             });
@@ -540,7 +542,7 @@ function calculateTotalAmount() {
   var billTotal = 0;
   const tableCells = $('#inventoryAssemblyDetailTable tr td:last-child');
   tableCells.each(function (index) {
-    billTotal = parseFloat(billTotal) + parseFloat($(this).text().replace(',',''));
+    billTotal = parseFloat(billTotal) + parseFloat($(this).text().replace(',', ''));
   })
   $('#inputBillAmt').val(billTotal.toLocaleString());
 }

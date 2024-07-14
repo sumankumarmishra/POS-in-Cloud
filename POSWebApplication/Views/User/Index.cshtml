@@ -25,7 +25,7 @@
     {
         <div id="defaultContainer"></div>
         <a asp-controller="User" asp-action="Create">
-            <button class="btn btn-primary m-1">
+            <button class="btn m-1" style="background-color: #31849B;color: white">
                 New
             </button>
         </a>
@@ -46,7 +46,7 @@
                 <thead class="text-md-center">
                     <tr style="font-size: 14px">
                         <th style="width: 10px;text-align: left">
-                            @Html.DisplayNameFor(model => model.UserId)
+                            No.
                         </th>
                         <th style="width: 100px;text-align: left">
                             @Html.DisplayNameFor(model => model.UserCde)
@@ -67,11 +67,14 @@
                     </tr>
                 </thead>
                 <tbody class="text-md-center">
+                    @{
+                        var Counter = 1;
+                    }
                     @foreach (var item in Model)
                     {
                         <tr style="font-size: 14px">
                             <td>
-                                @Html.DisplayFor(modelItem => item.UserId)
+                                @Counter
                             </td>
                             <td style="text-align: left">
                                 @Html.DisplayFor(modelItem => item.UserCde)
@@ -114,6 +117,7 @@
                                 
                             }
                         </tr>
+                        Counter++;
                     }
                 </tbody>
             </table>
@@ -135,7 +139,7 @@
         $('#reportedDataTable').DataTable({
             "paging": true,
             "lengthChange": false,
-            "searching": false,
+            "searching": true,
             "ordering": true,
             "info": false,
             "autoWidth": false,

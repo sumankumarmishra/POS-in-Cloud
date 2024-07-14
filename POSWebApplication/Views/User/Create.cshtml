@@ -64,6 +64,7 @@
                 <label asp-for="User.POSid" class="col-sm-2 col-form-label">POS ID</label>
                 <div class="col-sm-10">
                     <select asp-for="User.POSid" class="form-control form-select">
+                        <option value="">Select One</option>
                         @foreach (var item in Model.POSList)
                         {
                             <option value="@item">@item</option>
@@ -75,6 +76,7 @@
                 <label class="col-sm-2 col-form-label">Menu Group</label>
                 <div class="col-sm-10">
                     <select asp-for="User.MnuGrpId" class="form-control form-select">
+                        <option value="">Select One</option>
                         @foreach (var item in Model.UserMenuGroupList)
                         {
                             <option value="@item.MnuGrpId">@item.MnuGrpNme</option>

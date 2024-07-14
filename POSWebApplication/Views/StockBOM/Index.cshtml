@@ -74,6 +74,9 @@
             <table id="reportedDataTable" class="table table-bordered table-hover">
                 <thead class="text-md-center">
                     <tr style="font-size: 14px">
+                        <th>
+                            No.
+                        </th>
                         <th style="text-align: left">
                             @Html.DisplayNameFor(model => model.Stock.ItemId)
                         </th>
@@ -90,9 +93,15 @@
                     </tr>
                 </thead>
                 <tbody class="text-md-center">
+                    @{
+                        var Counter = 1;
+                    }
                     @foreach (var item in Model.Stocks)
                     {
                         <tr style="font-size: 14px">
+                            <td>
+                                @Counter
+                            </td>
                             <td style="text-align: left">
                                 @Html.DisplayFor(modelItem => item.ItemId)
                             </td>
@@ -107,8 +116,8 @@
                             </td>
                             @if (new[] { "accessLvl2" }.Contains(ViewData["User Role"]?.ToString()))
                             {
-                                <td>
-                                    <a style="cursor: pointer" onclick="callStockBOMController('@item.ItemId')">
+                                <td class="text-center">
+                                    <a style="cursor: pointer" class="text-info" onclick="callStockBOMController('@item.ItemId')">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                 </td>
@@ -120,6 +129,7 @@
                                 </td>
                             }
                         </tr>
+                        Counter++;
                     }
                 </tbody>
             </table>

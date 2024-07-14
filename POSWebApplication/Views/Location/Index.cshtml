@@ -42,6 +42,9 @@
             <table id="reportedDataTable" class="table table-bordered table-hover">
                 <thead class="text-md-center">
                     <tr style="font-size: 14px">
+                        <th>
+                            No.
+                        </th>
                         <th style="text-align: left">
                             @Html.DisplayNameFor(model => model.LocCde)
                         </th>
@@ -60,10 +63,16 @@
                     </tr>
                 </thead>
                 <tbody class="text-md-center">
+                    @{
+                        var Counter = 1;
+                    }
                     @foreach (var item in Model)
                     {
                         <tr style="font-size: 14px">
-                            <td style="width: 120px;text-align: left">
+                            <td>
+                                @Counter
+                            </td>
+                            <td style="min-width: 120px;text-align: left">
                                 @Html.DisplayFor(modelItem => item.LocCde)
                             </td>
                             <td style="text-align: left">
@@ -74,8 +83,8 @@
                             </td>
                             @if (new[] { "accessLvl2" }.Contains(ViewData["User Role"]?.ToString()))
                             {
-                                <td>
-                                    <a style="cursor: pointer" onclick="callEditLocationController('@item.LocCde')">
+                                <td class="text-center">
+                                    <a style="cursor: pointer" class="text-info" onclick="callEditLocationController('@item.LocCde')">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                 </td>
@@ -88,8 +97,8 @@
                             }
                             @if (new[] { "accessLvl2" }.Contains(ViewData["User Role"]?.ToString()))
                             {
-                                <td>
-                                    <a style="cursor: pointer" onclick="callDeleteLocationController('@item.LocCde')">
+                                <td class="text-center">
+                                    <a style="cursor: pointer" class="text-info" onclick="callDeleteLocationController('@item.LocCde')">
                                         <i class="fas fa-trash"></i>
                                     </a>
                                 </td>
@@ -101,6 +110,7 @@
                                 </td>
                             }
                         </tr>
+                        Counter++;
                     }
                 </tbody>
             </table>

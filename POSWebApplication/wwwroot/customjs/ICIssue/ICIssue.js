@@ -42,6 +42,7 @@ function addNewDetailsRow() {
     url: "/ICIssue/GetStocks",
     success: function (stocks) {
       var fragment = document.createDocumentFragment();
+      $("<option>").val('').text('Select One').appendTo(fragment);
       stocks.forEach(stock => {
         $("<option>").val(stock.itemId).text(stock.itemId).appendTo(fragment);
       });
@@ -304,6 +305,7 @@ function editInventoryIssue(icmoveId) {
           url: "/ICIssue/GetStocks",
           success: function (stocks) {
             var fragment = document.createDocumentFragment();
+            $("<option>").val('').text('Select One').appendTo(fragment);
             stocks.forEach(stock => {
               $("<option>").val(stock.itemId).text(stock.itemId).appendTo(fragment);
             });
@@ -358,10 +360,8 @@ function editInventoryIssue(icmoveId) {
         $.ajax({
           url: "/ICIssue/GetStockUOMs",
           data: inputData,
-          dataType: "html",
           success: function (uoms) {
-            var parsedUOM = JSON.parse(uoms);
-            parsedUOM.forEach(uom => {
+            uoms.forEach(uom => {
               $("<option>").val(uom.uomCde).text(uom.uomCde).appendTo(selectUOM);
             });
             selectUOM.val(icIssueDetail.uom);
