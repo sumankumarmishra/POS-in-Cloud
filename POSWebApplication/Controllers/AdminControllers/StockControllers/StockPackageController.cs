@@ -6,6 +6,7 @@ using POSinCloud.Services;
 using POSWebApplication.Data;
 using POSWebApplication.Models;
 using System.Text;
+using SixLabors.ImageSharp;
 
 namespace POSWebApplication.Controllers.AdminControllers.StockControllers
 {
