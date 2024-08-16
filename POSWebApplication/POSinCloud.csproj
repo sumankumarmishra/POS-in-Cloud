@@ -64,12 +64,6 @@
 	  <Content Update="wwwroot\Report\ICTransferReport.rdlc">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Content>
-	  <Content Update="wwwroot\Report\SaleDetailsSummaryReport.rdlc">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Content>
-	  <Content Update="wwwroot\Report\SaleSummaryReport.rdlc">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Content>
 	  <Content Update="wwwroot\Report\SelectedSaleCategoryReport.rdlc">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Content>

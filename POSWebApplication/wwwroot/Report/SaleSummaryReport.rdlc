@@ -779,12 +779,12 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!qty.Value</Value>
+                                  <Value>=FormatNumber(Fields!qty.Value,0)</Value>
                                   <Style />
                                 </TextRun>
                               </TextRuns>
                               <Style>
-                                <TextAlign>Center</TextAlign>
+                                <TextAlign>Right</TextAlign>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
@@ -995,12 +995,12 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=Sum(Fields!qty.Value, "DataSet1")</Value>
+                    <Value>=FormatNumber(Sum(Fields!qty.Value, "DataSet1"),0)</Value>
                     <Style />
                   </TextRun>
                 </TextRuns>
                 <Style>
-                  <TextAlign>Center</TextAlign>
+                  <TextAlign>Right</TextAlign>
                 </Style>
               </Paragraph>
             </Paragraphs>

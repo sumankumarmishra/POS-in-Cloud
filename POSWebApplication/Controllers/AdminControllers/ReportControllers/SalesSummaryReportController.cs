@@ -123,14 +123,14 @@ namespace POSWebApplication.Controllers.AdminControllers.ReportControllers
                     {
                         bizdte = group.h.BizDte.ToString("dd-MMM-yyyy"),
                         billno = group.h.BillNo,
-                        //loccde = group.h.LocCde,
-                        posid = group.h.POSId,
+                        loccde = group.h.LocCde,
+                        posid = group.h.POSId ?? "",
                         shiftno = group.h.ShiftNo,
-                        guestnme = group.d.ItemID, // manual assign for itemid
-                        loccde = s.ItemDesc, // manual assign for itemdesc
-                        cmpyid = group.d.Qty, // manual assign for Qty
-                        srvcchrgamt = group.d.Price, // manual assign for Price
-                        billdiscount = group.d.DiscAmt, // manual assign for DiscAmt
+                        guestnme = group.d.ItemID, 
+                        remark = s.ItemDesc ?? "", 
+                        cmpyid = group.d.Qty, 
+                        srvcchrgamt = group.d.Price, 
+                        billdiscount = group.d.DiscAmt, 
                         tableno = s.CatgCde
                     })
                 .ToList();

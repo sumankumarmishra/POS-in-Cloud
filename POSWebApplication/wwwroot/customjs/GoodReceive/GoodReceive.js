@@ -3,6 +3,12 @@
 
 const tBody = $('#goodReceiveDetailsBodyId');
 function addNewDetailsRow() {
+  var apId = $('#selectApId').val();
+  if (apId == "") {
+    alert('Please choose Supplier first.');
+    return;
+  }
+
   const newRow = $('<tr>').css({ 'font-size': '14px', 'text-align': 'center' });
 
   const columnStyles = {

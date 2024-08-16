@@ -467,13 +467,13 @@
                   <Width>1.06666in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.27001in</Width>
+                  <Width>1.64614in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.88333in</Width>
+                  <Width>1.03054in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.925in</Width>
+                  <Width>0.98335in</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>0.58833in</Width>
@@ -482,13 +482,13 @@
                   <Width>0.53832in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.95833in</Width>
+                  <Width>0.825in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1in</Width>
+                  <Width>0.8133in</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>1.37834in</Width>
+                  <Width>1.11668in</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
@@ -880,7 +880,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Discount</Value>
+                                  <Value>Disc</Value>
                                   <Style>
                                     <FontWeight>Bold</FontWeight>
                                   </Style>
@@ -1082,7 +1082,7 @@
                                 </TextRun>
                               </TextRuns>
                               <Style>
-                                <TextAlign>Center</TextAlign>
+                                <TextAlign>Left</TextAlign>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
@@ -1114,7 +1114,7 @@
                                 </TextRun>
                               </TextRuns>
                               <Style>
-                                <TextAlign>Center</TextAlign>
+                                <TextAlign>Left</TextAlign>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
@@ -1173,12 +1173,12 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!cmpyid.Value</Value>
+                                  <Value>=FormatNumber(Fields!cmpyid.Value,0)</Value>
                                   <Style />
                                 </TextRun>
                               </TextRuns>
                               <Style>
-                                <TextAlign>Center</TextAlign>
+                                <TextAlign>Right</TextAlign>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
@@ -1462,18 +1462,18 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=Sum(Fields!cmpyid.Value, "DataSet2")</Value>
+                    <Value>=FormatNumber(Sum(Fields!cmpyid.Value, "DataSet2"),0)</Value>
                     <Style />
                   </TextRun>
                 </TextRuns>
                 <Style>
-                  <TextAlign>Center</TextAlign>
+                  <TextAlign>Right</TextAlign>
                 </Style>
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox30</rd:DefaultName>
-            <Top>2.08834in</Top>
-            <Left>5.26333in</Left>
+            <Top>2.08in</Top>
+            <Left>5.84502in</Left>
             <Height>0.25in</Height>
             <Width>0.53832in</Width>
             <ZIndex>14</ZIndex>
@@ -1490,7 +1490,7 @@
           </Textbox>
           <Line Name="Line4">
             <Top>2.0189in</Top>
-            <Left>5.81162in</Left>
+            <Left>6.38334in</Left>
             <Height>0in</Height>
             <Width>-0.54829in</Width>
             <ZIndex>15</ZIndex>
@@ -1574,7 +1574,7 @@
         <Height>2.49167in</Height>
         <Style />
       </Body>
-      <Width>9.35in</Width>
+      <Width>9.60002in</Width>
       <Page>
         <PageHeight>8.27in</PageHeight>
         <PageWidth>11.69in</PageWidth>
