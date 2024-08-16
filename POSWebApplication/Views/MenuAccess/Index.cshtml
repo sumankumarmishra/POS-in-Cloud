@@ -10,13 +10,11 @@
     }
 </style>
 <div class="container-fluid">
-    
+
     @if (new[] { "accessLvl2" }.Contains(ViewData["User Role"]?.ToString()))
     {
-        <a asp-controller="MenuAccess" asp-action="Create">
-            <button class="btn btn-info m-1">
-                New
-            </button>
+        <a asp-controller="MenuAccess" asp-action="Create" class="btn btn-info m-1">
+            New
         </a>
     }
     else
@@ -37,16 +35,10 @@
                             No.
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.MnuGrpId)
+                            @Html.DisplayNameFor(model => model.MnuGrpNme)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.AccLevel)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.RevDtetime)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ByUserID)
+                            @Html.DisplayNameFor(model => model.AccountLevel)
                         </th>
                         <th style="width: 100px">
                             Edit
@@ -67,21 +59,15 @@
                                 @Counter
                             </td>
                             <td style="text-align: left">
-                                @Html.DisplayFor(modelItem => item.MnuGrpId)
+                                @Html.DisplayFor(modelItem => item.MnuGrpNme)
                             </td>
                             <td style="text-align: left">
-                                @Html.DisplayFor(modelItem => item.AccLevel)
-                            </td>
-                            <td style="text-align: left">
-                                @Html.DisplayFor(modelItem => item.RevDtetime)
-                            </td>
-                            <td style="text-align: left">
-                                @Html.DisplayFor(modelItem => item.ByUserID)
+                                @Html.DisplayFor(modelItem => item.AccountLevel)
                             </td>
                             @if (new[] { "accessLvl2" }.Contains(ViewData["User Role"]?.ToString()))
                             {
                                 <td class="text-center">
-                                    <a asp-controller="MenuAccess" asp-action="Edit"  asp-route-id="@item.AccessId">
+                                    <a asp-controller="MenuAccess" asp-action="Edit" asp-route-id="@item.AccessId">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                 </td>

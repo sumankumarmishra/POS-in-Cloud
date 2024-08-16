@@ -39,6 +39,11 @@ namespace POSWebApplication.Controllers.AdminControllers.UsersControllers
             try
             {
                 var menuAccessList = await _dbContext.ms_usermenuaccess.ToListAsync();
+                foreach (var menuAccess in menuAccessList)
+                {
+                    menuAccess.MnuGrpNme = await _dbContext.ms_usermenugrp.Where(g => g.MnuGrpId == menuAccess.MnuGrpId).Select(g => g.MnuGrpNme).FirstOrDefaultAsync() ?? "";
+                    menuAccess.AccountLevel = menuAccess.AccLevel == 0 ? "Disabled" : menuAccess.AccLevel == 1 ? "Read" : "Read/Write";
+                }
                 return View(menuAccessList);
             }
             catch (Exception ex)

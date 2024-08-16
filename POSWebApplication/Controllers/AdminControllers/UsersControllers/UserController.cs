@@ -67,7 +67,7 @@ namespace POSWebApplication.Controllers.AdminControllers.UsersControllers
             if (ViewData["User Role"]?.ToString() == "accessLvl2")
             {
                 var menuGroupList = _dbContext.ms_usermenugrp.ToList();
-                var posList = _dbContext.ms_autonumber.Select(pos => pos.PosId).ToList();
+                var posList = _dbContext.ms_autonumber.Where(an => an.PosDefLoc != null && an.PosDefLoc != "").Select(pos => pos.PosId).ToList();
 
                 var userModelList = new UserModelList
                 {
@@ -97,7 +97,7 @@ namespace POSWebApplication.Controllers.AdminControllers.UsersControllers
                         .Where(pos => pos.PosId == user.POSid)
                         .Select(pos => pos.CmpyId)
                         .FirstOrDefaultAsync();
-
+                    user.CreateDtetime = DateTime.Now;
                     await _dbContext.ms_user.AddAsync(user);
                     await _dbContext.SaveChangesAsync();
 
@@ -239,7 +239,6 @@ namespace POSWebApplication.Controllers.AdminControllers.UsersControllers
                     dbUser.UserCde = user.UserCde;
                     dbUser.UserNme = user.UserNme;
                     dbUser.MnuGrpId = user.MnuGrpId;
-                    dbUser.CreateDtetime = user.CreateDtetime;
                     dbUser.CmpyId = await _dbContext.ms_autonumber
                         .Where(pos => pos.PosId == user.POSid)
                         .Select(pos => pos.CmpyId)

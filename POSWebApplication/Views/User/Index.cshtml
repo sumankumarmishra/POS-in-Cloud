@@ -9,26 +9,23 @@
         white-space: nowrap;
     }
 </style>
+
+<div class="col-12">
+    <div id="messageBox1" class="alert alert-danger @((ViewBag.AlertMessage != null) ? "" : "d-none")" role="alert">
+        @ViewBag.AlertMessage
+    </div>
+</div>
+<div class="col-12">
+    <div id="messageBox2" class="alert alert-info @((ViewBag.InfoMessage != null) ? "" : "d-none")" role="alert">
+        @ViewBag.InfoMessage
+    </div>
+</div>
 <div class="container-fluid">
-    <div class="col-12">
-        <div id="messageBox1" class="alert alert-danger @((ViewBag.AlertMessage != null) ? "" : "d-none")" role="alert">
-            @ViewBag.AlertMessage
-        </div>
-    </div>
-    <div class="col-12">
-        <div id="messageBox2" class="alert alert-info @((ViewBag.InfoMessage != null) ? "" : "d-none")" role="alert">
-            @ViewBag.InfoMessage
-        </div>
-    </div>
 
     @if (new[] { "accessLvl2" }.Contains(ViewData["User Role"]?.ToString()))
     {
         <div id="defaultContainer"></div>
-        <a asp-controller="User" asp-action="Create">
-            <button class="btn m-1" style="background-color: #31849B;color: white">
-                New
-            </button>
-        </a>
+        <a asp-action="Create" class="btn btn-info mb-1">New</a>
     }
     else
     {
@@ -57,7 +54,7 @@
                         <th style="text-align: left">
                             @Html.DisplayNameFor(model => model.MnuGrp)
                         </th>
-                        
+
                         <th style="width: 40px">
                         </th>
                         <th style="width: 40px">
@@ -109,12 +106,12 @@
                                     <i class="fas fa-lock"></i>
                                 </td>
                                 <td>
-                                   <i class="fas fa-edit"></i>
+                                    <i class="fas fa-edit"></i>
                                 </td>
                                 <td>
                                     <i class="fas fa-trash"></i>
                                 </td>
-                                
+
                             }
                         </tr>
                         Counter++;

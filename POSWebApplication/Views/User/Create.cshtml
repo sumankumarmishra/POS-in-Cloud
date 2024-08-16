@@ -25,70 +25,80 @@
         @ViewBag.AlertMessage
     </div>
 </div>
-<div class="container">
-    <div class="card-header bg-dark">
-        <h3 class="card-title ">Create New User</h3>
+<div class="container-fluid">
+    <div class="mb-1">
+        <a class="btn btn-info" asp-action="Index" >Back To List</a>
     </div>
-    <form asp-action="Create" class="form-horizontal">
-        <div class="card-body">
-            <p>Please take note that the user will be created with default password 'User@123' if there is no password was provided.</p>
-            <div class="form-group row">
-                <label asp-for="User.UserCde" class="col-sm-2 col-form-label">User Code</label>
-                <div class="col-sm-10">
-                    <input asp-for="User.UserCde" type="text" class="form-control" id="inputServer" placeholder="User Code">
-                    <span asp-validation-for="User.UserCde" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label asp-for="User.UserNme" class="col-sm-2 col-form-label">UserName</label>
-                <div class="col-sm-10">
-                    <input asp-for="User.UserNme" type="text" class="form-control" id="inputServer" placeholder="UserName">
-                    <span asp-validation-for="User.UserNme" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label asp-for="User.Pwd" class="col-sm-2 col-form-label">Password</label>
-                <div class="col-sm-10">
-                    <input asp-for="User.Pwd" type="password" class="form-control" id="inputDatabase" placeholder="Password">
-                    <span asp-validation-for="User.Pwd" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label asp-for="User.ConfirmPwd" class="col-sm-2 col-form-label">Confirm Password</label>
-                <div class="col-sm-10">
-                    <input asp-for="User.ConfirmPwd" type="password" class="form-control" id="inputDatabase" placeholder="Confirm Password">
-                    <span asp-validation-for="User.ConfirmPwd" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label asp-for="User.POSid" class="col-sm-2 col-form-label">POS ID</label>
-                <div class="col-sm-10">
-                    <select asp-for="User.POSid" class="form-control form-select">
-                        <option value="">Select One</option>
-                        @foreach (var item in Model.POSList)
-                        {
-                            <option value="@item">@item</option>
-                        }
-                    </select>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Menu Group</label>
-                <div class="col-sm-10">
-                    <select asp-for="User.MnuGrpId" class="form-control form-select">
-                        <option value="">Select One</option>
-                        @foreach (var item in Model.UserMenuGroupList)
-                        {
-                            <option value="@item.MnuGrpId">@item.MnuGrpNme</option>
-                        }
-                    </select>
-                </div>
-            </div>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title ">Create New User</h3>
         </div>
-        <div class="card-footer">
-            <button type="submit" class="btn btn-primary">Create</button>
-        </div>
-    </form>
+        <form asp-action="Create" class="form-horizontal">
+            <div class="card-body">
+                <p>Please take note that the user will be created with default password 'User@123' if there is no password was provided.</p>
+                <div class="col-md-6 row">
+                    <div class="form-group row">
+                        <label asp-for="User.UserCde" class="col-sm-6 col-form-label">User Code</label>
+                        <div class="col-sm-6">
+                            <input asp-for="User.UserCde" type="text" class="form-control" id="inputServer" placeholder="User Code">
+                            <span asp-validation-for="User.UserCde" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="User.UserNme" class="col-sm-6 col-form-label">UserName</label>
+                        <div class="col-sm-6">
+                            <input asp-for="User.UserNme" type="text" class="form-control" id="inputServer" placeholder="UserName">
+                            <span asp-validation-for="User.UserNme" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="User.Pwd" class="col-sm-6 col-form-label">Password</label>
+                        <div class="col-sm-6">
+                            <input asp-for="User.Pwd" type="password" class="form-control" id="inputDatabase" placeholder="Password">
+                            <span asp-validation-for="User.Pwd" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="User.ConfirmPwd" class="col-sm-6 col-form-label">Confirm Password</label>
+                        <div class="col-sm-6">
+                            <input asp-for="User.ConfirmPwd" type="password" class="form-control" id="inputDatabase" placeholder="Confirm Password">
+                            <span asp-validation-for="User.ConfirmPwd" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="User.POSid" class="col-sm-6 col-form-label">POS ID</label>
+                        <div class="col-sm-6">
+                            <select asp-for="User.POSid" class="form-control form-select">
+                                <option value="">Select One</option>
+                                @foreach (var item in Model.POSList)
+                                {
+                                    <option value="@item">@item</option>
+                                }
+                            </select>
+                            <span asp-validation-for="User.POSid" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="User.MnuGrpId" class="col-sm-6 col-form-label"></label>
+                        <div class="col-sm-6">
+                            <select asp-for="User.MnuGrpId" class="form-control form-select">
+                                <option value="">Select One</option>
+                                @foreach (var item in Model.UserMenuGroupList)
+                                {
+                                    <option value="@item.MnuGrpId">@item.MnuGrpNme</option>
+                                }
+                            </select>
+                            <span asp-validation-for="User.MnuGrpId" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-info">Create</button>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
 </div>
 
 
