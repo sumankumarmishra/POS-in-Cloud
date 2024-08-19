@@ -31,6 +31,7 @@ namespace POSWebApplication.Controllers.AdminControllers.StockControllers
 
         }
 
+
         #region // Main methods //
 
         public async Task<IActionResult> Index()

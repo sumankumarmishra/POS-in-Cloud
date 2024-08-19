@@ -12,3 +12,9 @@ function cleanDefaultContainer() {
 function scrollToDiv() {
   $("#defaultContainer").get(0).scrollIntoView({ behavior: "smooth" });
 }
+
+function redirectToLogIn() {
+    alert('Session Expired!');
+    location.reload();
+}
+

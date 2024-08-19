@@ -1,56 +1,66 @@
 function callAddCustomerController() {
-  $.ajax({
-    url: "/Customer/AddCustomerPartial",
-    type: "GET",
-    success: function (data) {
-      $('#defaultContainer').html(data);
-    },
-    error: function (data) {
-      alert('error');
-    }
-  });
+    $('#loader-wrapper').show();
 
-  scrollToDiv();
+    $.ajax({
+        url: "/Customer/AddCustomerPartial",
+        type: "GET",
+        success: function (data) {
+            $('#defaultContainer').html(data);
+            $('#inputStart').focus();
+            $('#loader-wrapper').hide();
+        },
+        error: function () {
+            redirectToLogIn();
+        }
+    });
+
+    scrollToDiv();
 }
 
 function callEditCustomerController(ArId) {
-  var inputData = {
-    arId: ArId
-  };
+    $('#loader-wrapper').show();
 
-  $.ajax({
-    url: "/Customer/EditCustomerPartial",
-    type: "GET",
-    dataType: "html",
-    data: inputData,
-    success: function (data) {
-      $('#defaultContainer').html(data);
-    },
-    error: function (data) {
-      alert('error');
-    }
-  });
+    var inputData = {
+        arId: ArId
+    };
 
-  scrollToDiv();
+    $.ajax({
+        url: "/Customer/EditCustomerPartial",
+        type: "GET",
+        dataType: "html",
+        data: inputData,
+        success: function (data) {
+            $('#defaultContainer').html(data);
+            $('#loader-wrapper').hide();
+        },
+        error: function () {
+            redirectToLogIn();
+        }
+    });
+
+    scrollToDiv();
 }
 
 function callDeleteCustomerController(ArId) {
-  var inputData = {
-    arId: ArId
-  };
+    $('#loader-wrapper').show();
 
-  $.ajax({
-    url: "/Customer/DeleteCustomerPartial",
-    type: "GET",
-    dataType: "html",
-    data: inputData,
-    success: function (data) {
-      $('#defaultContainer').html(data);
-    },
-    error: function (data) {
-      alert('error');
-    }
-  });
+    var inputData = {
+        arId: ArId
+    };
 
-  scrollToDiv();
+    $.ajax({
+        url: "/Customer/DeleteCustomerPartial",
+        type: "GET",
+        dataType: "html",
+        data: inputData,
+        success: function (data) {
+            $('#defaultContainer').html(data);
+            $('#loader-wrapper').hide();
+        },
+        error: function () {
+            redirectToLogIn();
+        }
+    });
+
+    scrollToDiv();
 }

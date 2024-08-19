@@ -1,54 +1,70 @@
 function callAddServiceItemController() {
-  $.ajax({
-    url: "/ServiceItem/AddServiceItemPartial",
-    type: "GET",
-    success: function (data) {
-      $('#defaultContainer').html(data);
-    },
-    error: function (data) {
-      alert('error');
-    }
-  });
+    $('#loader-wrapper').show();
+    $.ajax({
+        url: "/ServiceItem/AddServiceItemPartial",
+        type: "GET",
+        success: function (data) {
+            $('#defaultContainer').html(data);
+            $('#inputStart').focus();
+            $('#loader-wrapper').hide();
+        },
+        error: function () {
+            $('#loader-wrapper').hide();
+            redirectToLogIn();
+        }
+    });
 
-  scrollToDiv();
+    scrollToDiv();
 }
 
 function callEditServiceItemController(SrvcId) {
-  var inputData = {
-    srvcId: SrvcId
-  };
-  $.ajax({
-    url: "/ServiceItem/EditServiceItemPartial",
-    type: "GET",
-    dataType: "html",
-    data: inputData,
-    success: function (data) {
-      $('#defaultContainer').html(data);
-    },
-    error: function (data) {
-      alert('error');
-    }
-  });
 
-  scrollToDiv();
+    $('#loader-wrapper').show();
+
+    var inputData = {
+        srvcId: SrvcId
+    };
+    $.ajax({
+        url: "/ServiceItem/EditServiceItemPartial",
+        type: "GET",
+        dataType: "html",
+        data: inputData,
+        success: function (data) {
+            $('#defaultContainer').html(data);
+            $('#loader-wrapper').hide();
+        },
+        error: function () {
+            $('#loader-wrapper').hide();
+            redirectToLogIn();
+        }
+    });
+
+    scrollToDiv();
 }
 
 function callDeleteServiceItemController(SrvcId) {
-  var inputData = {
-    srvcId: SrvcId
-  };
-  $.ajax({
-    url: "/ServiceItem/DeleteServiceItemPartial",
-    type: "GET",
-    dataType: "html",
-    data: inputData,
-    success: function (data) {
-      $('#defaultContainer').html(data);
-    },
-    error: function (data) {
-      alert('error');
-    }
-  });
 
-  scrollToDiv();
+    $('#loader-wrapper').show();
+
+    var inputData = {
+        srvcId: SrvcId
+    };
+    $.ajax({
+        url: "/ServiceItem/DeleteServiceItemPartial",
+        type: "GET",
+        dataType: "html",
+        data: inputData,
+        success: function (data) {
+            $('#defaultContainer').html(data);
+            $('#loader-wrapper').hide();
+        },
+        error: function () {
+            $('#loader-wrapper').hide();
+            redirectToLogIn();
+        }
+    });
+
+    scrollToDiv();
 }
+
+

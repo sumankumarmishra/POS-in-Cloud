@@ -16,52 +16,48 @@
         text-align: center;
         margin-top: 20px;
     }
+
+    #loader-wrapper {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        background: rgba(0,0,0,0.5);
+    }
+
+    #loader {
+        border: 8px solid #f3f3f3; /* light grey */
+        border-top: 8px solid #3498db; /* blue */
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+    }
+
+    #content {
+        text-align: center;
+        padding: 20px;
+    }
+
+    @@keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
 </style>
 
-@* <!--Stock BOM Items Modal -->
-<div class="modal" id="stockBOMItemsModal" tabindex="-1" role="dialog" aria-labelledby="billReprintModal" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Stock BOM For <span id="spanId"></span></h5>
-                <button type="button" class="close" onclick="closeStockBOMItemsModal()">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body table-responsive" style="max-height: 550px">
-                <button class="btn btn-info m-1" onclick="addStockBOMItems()">
-                    New
-                </button>
-                <div id="tableLoadingScreen" class="loading-text">Loading...</div>
-                <table id="stockBOMItemsTable" class="table table-bordered table-hover">
-                    <thead class="text-md-center">
-                        <tr style="font-size: 12px">
-                            <th style="text-align: left">
-                                Order
-                            </th>
-                            <th style="width: 200px;text-align: left">
-                                ItemID
-                            </th>
-                            <th style="width: 120px;text-align: left">
-                                BaseUnit
-                            </th>
-                            <th style="width: 70px;text-align: left">
-                                Qty
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody id="stockBOMItemsListId" class="text-md-left" style="font-size: 14px">
-                        Stock BOM Items list will be come from StockBOM.js
-                    </tbody>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button id="modelCloseBtnId" class="btn" onclick="saveStockBOMItemes()" style="background-color: #31849B;color: white">Save Changes</button>
-            </div>
-        </div>
-    </div>
-</div> *@
-
+<div id="loader-wrapper" style="display: none">
+    <div id="loader"></div>
+</div>
 
 <div class="container-fluid">
     <div id="defaultContainer"></div>

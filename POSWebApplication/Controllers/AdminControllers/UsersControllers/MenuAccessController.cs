@@ -132,7 +132,7 @@ namespace POSWebApplication.Controllers.AdminControllers.UsersControllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("AccessId,MnuGrpId,AccLevel,BtnNme,RevDtetime,ByUserID")] MenuAccess menuAccess)
+        public async Task<IActionResult> Edit(int id, [Bind("AccessId,MnuGrpId,AccLevel,BtnNme")] MenuAccess menuAccess)
         {
             SetLayOutData();
 
@@ -145,6 +145,12 @@ namespace POSWebApplication.Controllers.AdminControllers.UsersControllers
             {
                 try
                 {
+                    var userCde = HttpContext.User.Claims.FirstOrDefault()?.Value;
+                    var userId = await _dbContext.ms_user.Where(u => u.UserCde == userCde).Select(u => u.UserId).FirstOrDefaultAsync();
+
+                    menuAccess.BtnNme = "access";
+                    menuAccess.RevDtetime = DateTime.Now;
+                    menuAccess.ByUserID = userId;
                     _dbContext.Update(menuAccess);
                     await _dbContext.SaveChangesAsync();
                     TempData["info message"] = "Menu Access is successfully updated!";

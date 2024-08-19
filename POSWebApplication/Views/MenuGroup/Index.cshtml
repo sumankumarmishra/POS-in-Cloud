@@ -8,7 +8,49 @@
         overflow: hidden;
         white-space: nowrap;
     }
+
+    #loader-wrapper {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        background: rgba(0,0,0,0.5);
+    }
+
+    #loader {
+        border: 8px solid #f3f3f3; /* light grey */
+        border-top: 8px solid #3498db; /* blue */
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+    }
+
+    #content {
+        text-align: center;
+        padding: 20px;
+    }
+
+    @@keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
 </style>
+
+<div id="loader-wrapper" style="display: none">
+    <div id="loader"></div>
+</div>
+
 <div class="container-fluid">
     <div class="col-12">
         <div id="messageBox1" class="alert alert-danger @((ViewBag.WarningMessage != null) ? "" : "d-none")" role="alert">
@@ -26,7 +68,7 @@
         <button class="btn btn-info m-1" onclick="callAddMenuGroupController()">
             New
         </button>
-        
+
     }
     else
     {
@@ -34,7 +76,7 @@
             New
         </button>
     }
-    <div class="card">    
+    <div class="card">
         <div class="card-header">
             <h5>User Menu Group</h5>
         </div>
@@ -63,7 +105,7 @@
                     @foreach (var item in Model)
                     {
                         <tr style="font-size: 14px">
-                            <td> 
+                            <td>
                                 @Counter
                             </td>
                             <td style="text-align: left">
