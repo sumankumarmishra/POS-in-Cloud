@@ -7,6 +7,7 @@ using POSWebApplication.Data;
 using POSWebApplication.Models;
 using System.Text;
 using SixLabors.ImageSharp;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace POSWebApplication.Controllers.AdminControllers.StockControllers
 {
@@ -14,9 +15,10 @@ namespace POSWebApplication.Controllers.AdminControllers.StockControllers
     public class StockPackageController : Controller
     {
         private readonly POSWebAppDbContext _dbContext;
+        private readonly IMemoryCache _cache;
         private readonly IWebHostEnvironment _hostingEnvironment;
 
-        public StockPackageController(DatabaseServices dbServices, IHttpContextAccessor accessor, IWebHostEnvironment hostingEnvironment)
+        public StockPackageController(DatabaseServices dbServices, IHttpContextAccessor accessor, IWebHostEnvironment hostingEnvironment, IMemoryCache cache)
         {
             var connection = accessor.HttpContext?.Session.GetString("Connection") ?? "";
             if (connection.IsNullOrEmpty())
@@ -27,6 +29,7 @@ namespace POSWebApplication.Controllers.AdminControllers.StockControllers
             {
                 _dbContext = new POSWebAppDbContext(dbServices.ConnectDatabase(connection));
                 _hostingEnvironment = hostingEnvironment;
+                _cache = cache;
             }
 
         }
@@ -282,6 +285,62 @@ namespace POSWebApplication.Controllers.AdminControllers.StockControllers
         #endregion
 
 
+        #region // Stock cache method //
+
+        public List<Stock> GetAllStocks()
+        {
+            var dbName = HttpContext.Session.GetString("Database");
+            if (_cache.TryGetValue(dbName + "_StockList", out List<Stock>? stockList))
+            {
+                return stockList ?? new List<Stock>();
+            }
+            else
+            {
+                var stocks = _dbContext.ms_stock.ToList();
+                var pkgs = _dbContext.ms_stockpkgh.ToList();
+
+                if (pkgs != null)
+                {
+                    foreach (var pkg in pkgs)
+                    {
+                        var stockPkg = new Stock()
+                        {
+                            ItemId = pkg.PkgNme,
+                            ItemDesc = pkg.PkgNme,
+                            SellingPrice = pkg.SellingPrice,
+                            PkgHId = pkg.PkgHId,
+                            Image = pkg.Image
+                        };
+                        stocks.Add(stockPkg);
+                    }
+                }
+
+                foreach (var stock in stocks)
+                {
+                    stock.Base64Image = stock.Image != null ? Convert.ToBase64String(stock.Image) : "";
+                }
+                _cache.Set(dbName + "_StockList", stocks, TimeSpan.FromMinutes(30));
+
+                return stocks;
+            }
+        }
+
+        public List<Stock>? RestartStocks()
+        {
+            var dbName = HttpContext.Session.GetString("Database");
+            if (_cache.TryGetValue(dbName + "StockList", out List<Stock>? stockList))
+            {
+                _cache.Remove(dbName + "_StockList");
+            }
+
+            var stocks = GetAllStocks();
+
+            return stocks;
+        }
+
+        #endregion
+
+
         #region // Package Items methods //
 
         public IEnumerable<StockPkgD> GetPackageItemsList(int pkgHId)
@@ -293,15 +352,15 @@ namespace POSWebApplication.Controllers.AdminControllers.StockControllers
 
         public IEnumerable<Stock> GetStocks()
         {
-            var stocks = _dbContext.ms_stock.ToList();
+            var stocks = GetAllStocks();
 
             return stocks;
         }
 
         public Stock GetStockById(string itemId)
         {
-            var stock = _dbContext.ms_stock.FirstOrDefault(stk => stk.ItemId == itemId);
-            return stock;
+            var stock = GetAllStocks().FirstOrDefault(stk => stk.ItemId == itemId);
+            return stock ?? new Stock();
         }
 
         public async Task<List<StockUOM>> GetStockUOMs(string itemId)

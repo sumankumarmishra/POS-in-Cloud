@@ -62,5 +62,7 @@ namespace POSWebApplication.Controllers.PublicControllers
         }
 
         #endregion
+
+
     }
 }

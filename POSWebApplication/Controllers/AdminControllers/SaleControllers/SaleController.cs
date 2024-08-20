@@ -261,8 +261,8 @@ namespace POSWebApplication.Controllers
 
         public List<Stock> GetAllStocks()
         {
-
-            if (_cache.TryGetValue("StockList", out List<Stock>? stockList))
+            var dbName = HttpContext.Session.GetString("Database");
+            if (_cache.TryGetValue(dbName + "_StockList", out List<Stock>? stockList))
             {
                 return stockList ?? new List<Stock>();
             }
@@ -291,7 +291,7 @@ namespace POSWebApplication.Controllers
                 {
                     stock.Base64Image = stock.Image != null ? Convert.ToBase64String(stock.Image) : "";
                 }
-                _cache.Set("StockList", stocks, TimeSpan.FromMinutes(30));
+                _cache.Set(dbName + "_StockList", stocks, TimeSpan.FromMinutes(30));
 
                 return stocks;
             }
@@ -299,9 +299,10 @@ namespace POSWebApplication.Controllers
 
         public List<Stock>? RestartStocks()
         {
-            if (_cache.TryGetValue("StockList", out List<Stock>? stockList))
+            var dbName = HttpContext.Session.GetString("Database");
+            if (_cache.TryGetValue(dbName + "StockList", out List<Stock>? stockList))
             {
-                _cache.Remove("StockList");
+                _cache.Remove(dbName + "_StockList");
             }
 
             var stocks = GetAllStocks();

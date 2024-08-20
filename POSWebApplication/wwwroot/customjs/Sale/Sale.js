@@ -255,7 +255,6 @@ function addStockItem(ItemId, qty) { // Main method of adding
             }
 
             // UOM cell click
-
             tdBaseUnit.on('click', function () {
                 const uomList = document.getElementById('uomList');
                 uomList.style.display = 'block';
@@ -325,16 +324,6 @@ function addStockItem(ItemId, qty) { // Main method of adding
                     handleButtonClick(tdDiscount, buttonText);
                 })
             })
-
-            /*// Amount cell click
-            tdAmount.on('click', function () {
-              numberPad.style.display = "grid";
-              $('#display').val(tdAmount.text());
-              buttons.off('click').on('click', function () {
-                const buttonText = this.textContent;
-                handleButtonClick(tdAmount, buttonText);
-              })
-            })*/
 
             // Cancel btn click
             tdCancel.on('click', function () {
@@ -1104,8 +1093,7 @@ function voidBill(billhId) {
 /*Customer*/
 
 function chooseCustomer() {
-    const loadingScreen = document.getElementById('tableLoadingScreen');
-    loadingScreen.style.display = "block";
+    $('#customer-loader-wrapper').show();
     $('#customerModal').css("zIndex", "10000");
     $('#customerModal').show();
 
@@ -1113,7 +1101,7 @@ function chooseCustomer() {
         url: "/Sale/CustomerList",
         type: "GET",
         success: function (data) {
-            loadingScreen.style.display = "none";
+            $('#customer-loader-wrapper').hide();
             $('#customerListId').empty();
             data.forEach(function (cust) {
 
@@ -1467,7 +1455,6 @@ function printBillSlip(billNo) {
 
 /*Return*/
 
-
 function openReturnModal() {
     const returnTable = $('#returnTableBodyId');
 
@@ -1522,7 +1509,6 @@ function openReturnModal() {
     newRow.append(tdReturnAmt);
     returnTable.append(newRow);
 }
-
 
 function addAllReturnDataToTables() {
     const billNo = $('#billNoId').val();
@@ -1610,10 +1596,60 @@ function addAllReturnDataToTables() {
 
 /*** Stock item field ***/
 
+function allStocks() {
+    $('#tableContainer').empty();
+    $('#loader-wrapper').show();
+    $.ajax({
+        url: "/Sale/AllStockItems",
+        type: "GET",
+        dataType: "html",
+        success: function (data) {
+            $('#tableContainer').html(data);
+            $('#loader-wrapper').hide();
+        },
+        error: function () {
+            redirectToLogIn();
+        }
+    });
+}
+
+function assemblyStocks() {
+    $('#tableContainer').empty();
+    $('#loader-wrapper').show();
+    $.ajax({
+        url: "/Sale/AssemblyStockItems",
+        type: "GET",
+        dataType: "html",
+        success: function (data) {
+            $('#tableContainer').html(data);
+            $('#loader-wrapper').hide();
+        },
+        error: function () {
+            redirectToLogIn();
+        }
+    });
+}
+
+function packageStocks() {
+    $('#tableContainer').empty();
+    $('#loader-wrapper').show();
+    $.ajax({
+        url: "/Sale/PackageStockItems",
+        type: "GET",
+        dataType: "html",
+        success: function (data) {
+            $('#tableContainer').html(data);
+            $('#loader-wrapper').hide();
+        },
+        error: function () {
+            redirectToLogIn();
+        }
+    });
+}
 
 function changeStocks(categoryId) {
-    var loadingScreen = document.getElementById('loadingScreen');
-    loadingScreen.style.display = "block";
+    $('#tableContainer').empty();
+    $('#loader-wrapper').show();
 
     var inputData = {
         catgId: categoryId
@@ -1626,71 +1662,18 @@ function changeStocks(categoryId) {
         data: inputData,
         success: function (data) {
             $('#tableContainer').html(data);
-            loadingScreen.style.display = "none";
-        },
-        error: function (data) {
-            redirectToLogIn();
-        }
-    });
-
-}
-
-
-function allStocks() {
-    var loadingScreen = document.getElementById('loadingScreen');
-    loadingScreen.style.display = "block";
-    $.ajax({
-        url: "/Sale/AllStockItems",
-        type: "GET",
-        dataType: "html",
-        success: function (data) {
-            $('#tableContainer').html(data);
-            loadingScreen.style.display = "none";
+            $('#loader-wrapper').hide();
         },
         error: function () {
             redirectToLogIn();
         }
     });
-}
 
-function assemblyStocks() {
-    var loadingScreen = document.getElementById('loadingScreen');
-    loadingScreen.style.display = "block";
-    $.ajax({
-        url: "/Sale/AssemblyStockItems",
-        type: "GET",
-        dataType: "html",
-        success: function (data) {
-            $('#tableContainer').html(data);
-            loadingScreen.style.display = "none";
-        },
-        error: function () {
-            redirectToLogIn();
-        }
-    });
-}
-
-
-function packageStocks() {
-    var loadingScreen = document.getElementById('loadingScreen');
-    loadingScreen.style.display = "block";
-    $.ajax({
-        url: "/Sale/PackageStockItems",
-        type: "GET",
-        dataType: "html",
-        success: function (data) {
-            $('#tableContainer').html(data);
-            loadingScreen.style.display = "none";
-        },
-        error: function () {
-            redirectToLogIn();
-        }
-    });
 }
 
 function searchStock(keyword) {
-    var loadingScreen = document.getElementById('loadingScreen');
-    loadingScreen.style.display = "block";
+    $('#tableContainer').empty();
+    $('#loader-wrapper').show();
 
     var inputData = {
         keyword: keyword
@@ -1703,7 +1686,7 @@ function searchStock(keyword) {
         data: inputData,
         success: function (data) {
             $('#tableContainer').html(data);
-            loadingScreen.style.display = "none";
+            $('#loader-wrapper').hide();
         },
         error: function () {
             redirectToLogIn();
@@ -1712,6 +1695,8 @@ function searchStock(keyword) {
 }
 
 
+
+/*** Other methods ***/
 function redirectToLogIn() {
     alert('Session Expired!');
     location.reload();
