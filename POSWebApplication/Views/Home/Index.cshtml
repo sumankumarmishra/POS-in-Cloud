@@ -34,7 +34,7 @@
             <div class="info-box">
                 @if (Model.AutoNumber.CurShift >= Model.AutoNumber.NoOfShift)
                 {
-                    <a class="btn btn-primary" asp-controller="Home" asp-action="DayEnd" asp-route-posID="@Model.AutoNumber.PosId" onclick="return confirm('Are you sure to end day?')">
+                    <a class="btn btn-danger" asp-controller="Home" asp-action="DayEnd" asp-route-posID="@Model.AutoNumber.PosId" onclick="return confirm('Are you sure to end day?')">
                        <i class="fas fa-moon fa-2x"></i><br />End of Day
                     </a>
                 }
