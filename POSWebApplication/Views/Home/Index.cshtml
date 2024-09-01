@@ -30,18 +30,18 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-12 col-sm-6 col-lg-3">
+        <div class="col-6 col-lg-3">
             <div class="info-box">
                 @if (Model.AutoNumber.CurShift >= Model.AutoNumber.NoOfShift)
                 {
-                    <a asp-controller="Home" asp-action="DayEnd" asp-route-posID="@Model.AutoNumber.PosId">
-                        <button class="btn btn-primary" onclick="return confirm('Are you sure to end day?')"><i class="fas fa-moon fa-2x"></i><br />End of Day</button>
+                    <a class="btn btn-primary" asp-controller="Home" asp-action="DayEnd" asp-route-posID="@Model.AutoNumber.PosId" onclick="return confirm('Are you sure to end day?')">
+                       <i class="fas fa-moon fa-2x"></i><br />End of Day
                     </a>
                 }
                 else
                 {
-                    <a asp-controller="Home" asp-action="ShiftEnd" asp-route-posID="@Model.AutoNumber.PosId">
-                        <button class="btn btn-info" onclick="return confirm('Are you sure to end shift?')"><i class="fas fa-clock fa-2x"></i><br />End of Shift</button>
+                    <a asp-controller="Home" asp-action="ShiftEnd" asp-route-posID="@Model.AutoNumber.PosId" class="btn btn-info" onclick="return confirm('Are you sure to end shift?')">
+                        <i class="fas fa-clock fa-2x"></i><br />End of Shift
                     </a>
                 }
 
@@ -53,7 +53,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 col-sm-6 col-lg-3">
+        <div class="col-6 col-lg-3">
             <div class="info-box">
                 <div class="info-box-content text-center">
                     <h3 class="info-box-text" style="color: blue"><b>@Model.AutoNumber.BizDteString</b></h3>
@@ -63,7 +63,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 col-sm-6 col-lg-3">
+        <div class="col-6 col-lg-3">
             <div class="info-box">
                 <div class="info-box-content text-center">
                     <h3 class="info-box-text" style="color: blue"><b>@Model.AutoNumber.PosDefLoc</b></h3>
@@ -73,7 +73,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 col-sm-6 col-lg-3">
+        <div class="col-6 col-lg-3">
             <div class="info-box">
                 <div class="info-box-content text-center">
                     <h3 class="info-box-text" style="color: blue"><b>@Model.AutoNumber.PosId</b></h3>
@@ -84,7 +84,6 @@
             </div>
         </div>
     </div>
-    
     <div class="row mt-1">
         <div class="col-md-12">
             <div class="card">
@@ -103,8 +102,8 @@
                     </div>
                     <div class="col-sm-6 col-lg-3 row">
                         <label class="col-6 col-form-label">Shift No</label>
-                        <div class="col-4">
-                            <input id="filterShiftNo" type="number" class="form-control" oninput="search()" />
+                        <div class="col-6">
+                            <input id="filterShiftNo" type="number" min="0" class="form-control" oninput="search()" />
                         </div>
                     </div>
                 </div>
@@ -115,9 +114,6 @@
                                 <th>
                                     BillNo
                                 </th>
-                                @* <th>
-                                Action
-                                </th> *@
                                 <th>
                                     BizDate
                                 </th>
@@ -160,9 +156,6 @@
                                     <td style="text-align: left">
                                         @Html.DisplayFor(modelItem => billH.BillNo)
                                     </td>
-                                    @* <td style="text-align: left">
-                                @Html.DisplayFor(modelItem => billH.Action)
-                                </td> *@
                                     <td style="text-align: left">
                                         @Convert.ToDateTime(billH.BizDte).ToString("dd-MM-yyyy")
                                     </td>
@@ -205,28 +198,28 @@
         </div>
 
     </div>
-    <div class="row mt-1">
-        <div class="col-6 col-md-4 col-lg-3 row">
-            <div class="col-6">
+    <div class="container-fluid row mt-1">
+        <div class="col-md-6 col-lg-3 form-group row">
+            <label class="col-6 col-form-label">
                 Sale Total
-            </div>
-            <div class="card col-6 text-success text-right">
+            </label>
+            <div class="col-6 form-control text-success text-right">
                 @Model.SalesTotal.ToString("N0")
             </div>
         </div>
-        <div class="col-6 col-md-4 col-lg-3 row">
-            <div class="col-6">
+        <div class="col-md-6 col-lg-3 form-group row">
+            <label class="col-6 col-form-label">
                 Return Total
-            </div>
-            <div class="card col-6 text-danger text-right">
+            </label>
+            <div class="col-6 form-control text-danger text-right">
                 @Model.ReturnTotal.ToString("N0")
             </div>
         </div>
-        <div class="col-6 col-md-4 col-lg-3 row">
-            <div class="col-6">
+        <div class="col-md-6 col-lg-3 form-group row">
+            <label class="col-6 col-form-label">
                 Void Total
-            </div>
-            <div class="card col-6 text-warning text-right">
+            </label>
+            <div class="col-6 form-control text-warning text-right">
                 @Model.VoidTotal.ToString("N0")
             </div>
         </div>

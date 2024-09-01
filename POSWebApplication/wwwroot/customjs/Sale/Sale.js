@@ -2,8 +2,10 @@
 
 /*** Barcode methods ***/
 function focusInput() {
-    if (!$('#searchID').is(':focus') && !$('#returnRemarkID').is(':focus')) {
-        $('#barcodeID').focus();
+    if (window.matchMedia('(min-width: 768px)').matches) {
+        if (!$('#searchID').is(':focus') && !$('#returnRemarkID').is(':focus')) {
+            $('#barcodeID').focus();
+        }
     }
 }
 
